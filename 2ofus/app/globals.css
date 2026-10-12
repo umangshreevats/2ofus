@@ -1,0 +1,142 @@
+@import "tailwindcss";
+
+
+/*DEW - light*/
+:root[data-palette="dew"][data-theme="light"] {
+
+    --background: #F2F6F2;
+    --surface: #E3E8E3;
+    --primary-text: #222A26;
+    --secondary-text: #587068;
+    --accent: #BD3A58;
+
+}
+
+/*DEW - dark*/
+:root[data-palette="dew"][data-theme="dark"] {
+
+    --background: #101A17;
+    --surface: #1A2824;
+    --primary-text: #E5FCF2;
+    --secondary-text: #90B5A8;
+    --accent: #F280A6;
+}
+
+/*BLOOM - light*/
+:root[data-palette="bloom"][data-theme="light"] {
+
+    --background: #FFF1F4;
+    --surface: #FFE6EB;
+    --primary-text: #2D1830;
+    --secondary-text: #6B5A80;
+    --accent: #D42A6C;
+}
+
+/*BLOOM - dark*/
+:root[data-palette="bloom"][data-theme="dark"] {
+
+    --background: #1C1226;
+    --surface: #2A1838;
+    --primary-text: #FDEFFE;
+    --secondary-text: #C4AEDB;
+    --accent: #FF6FA5;
+
+}
+
+/*TIDE - light*/
+:root[data-palette="tide"][data-theme="light"] {
+
+    --background: #F1F7F9;
+    --surface: #DFECF0;
+    --primary-text: #12283A;
+    --secondary-text: #4A6B80;
+    --accent: #CC7A00;
+
+}
+
+
+/*TIDE - dark*/
+:root[data-palette="tide"][data-theme="dark"] {
+
+    --background: #0C1A26;
+    --surface: #14293A;
+    --primary-text: #E4F1FA;
+    --secondary-text: #85B3C8;
+    --accent: #FFB84D;
+}
+
+
+/*SLATE - light*/
+:root[data-palette="slate"][data-theme="light"] {
+
+    --background: #F4F4F2;
+    --surface: #E7E7E4;
+    --primary-text: #1C1C1B;
+    --secondary-text: #6B6B6F;
+    --accent: #3A6EA5;
+
+}
+
+
+/*SLATE - dark*/
+:root[data-palette="slate"][data-theme="dark"] {
+
+    --background: #121212;
+    --surface: #1E1E1E;
+    --primary-text: #EDEDED;
+    --secondary-text: #A3A3A0;
+    --accent: #5B84CE;
+
+}
+
+
+/*EMBER - light (default)*/
+:root,
+:root[data-patette="ember"][data-theme="light"] {
+
+    --background: #FAF4EC;
+    --surface: #F3E8DB;
+    --primary-text: #382A24;
+    --secondary-text: #746358;
+    --accent: #BC4833;
+
+}
+
+
+/*EMBER - dark*/
+:root[data-palette="ember"][data-theme="dark"] {
+
+    --background: #1F1512;
+    --surface: #2C1E1A;
+    --primary-text: #F6EADF;
+    --secondary-text: #BFA597;
+    --accent: #FE806A;
+
+}
+
+/* Tailwind CSS v4 semantic color utilities */
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-primary-text: var(--primary-text);
+  --color-secondary-text: var(--secondary-text);
+  --color-accent: var(--accent);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--primary-text);
+}
+
+
+
+.parent-box {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.child-box {
+    width: 85%;
+    flex-shrink: 0;
+}
