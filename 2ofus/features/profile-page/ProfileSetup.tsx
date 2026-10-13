@@ -7,7 +7,8 @@ export interface ProfileData {
     profileImg: File | null;
     firstname: string;
     lastname: string;
-    dob: Date | null
+    dob: Date | null;
+    gender: "male" | "female" | "other" | null
 }
 
 const ProfileSetup = () => {
@@ -16,7 +17,8 @@ const ProfileSetup = () => {
         firstname: "",
         lastname: "",
         dob: null,
-        profileImg: null
+        profileImg: null,
+        gender: null
     });
 
     return (<div>
