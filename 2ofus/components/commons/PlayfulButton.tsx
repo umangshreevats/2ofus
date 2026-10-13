@@ -1,17 +1,23 @@
 'use client';
 import { LucideIcon } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
-
+import type { CSSProperties } from "react";
 
 interface PlayfulButtonProps {
     text: string;
     onClick: () => void | Promise<void>;
     icon?: LucideIcon | null;
+    width?: "auto" | number;
+    wScale?: "%" | "px" | "rem";
+    textAlign?: CSSProperties["textAlign"];
 }
 const PlayfulButton: React.FC<PlayfulButtonProps> = ({
     text = "",
     onClick,
-    icon = null
+    width = "auto",
+    wScale = "px",
+    icon = null,
+    textAlign = "center"
 }) => {
 
     const [onButton, setOnButton] = useState(false);
@@ -64,7 +70,7 @@ const PlayfulButton: React.FC<PlayfulButtonProps> = ({
         onPointerDown={onTap}
         onPointerUp={onRelease}
         onPointerCancel={onRelease}
-        className={`text-center cursor-pointer border-4 border-solid font-bold rounded-full`}
+        className={`cursor-pointer border-4 border-solid font-bold rounded-full`}
         style={{
             backgroundColor: `var(--background)`,
             color: `var(--primary-text)`,
@@ -72,7 +78,8 @@ const PlayfulButton: React.FC<PlayfulButtonProps> = ({
             borderColor: `var(--accent)`,
             boxShadow: `-6px 6px 0px 0px var(--accent)`,
             transition: "all 0.15s ease-out",
-
+            width: `${width === "auto" ? width : width + wScale}`,
+            textAlign: textAlign
         }}
     >
         {Icon && <Icon />} {text}
