@@ -1,10 +1,12 @@
 'use client';
 
 import { ProfileData } from "@/features/profile-page/ProfileSetup";
-import { SetStateAction, useMemo, useEffect } from "react";
+import { SetStateAction, useMemo, useEffect, ChangeEvent } from "react";
 import Image from "next/image";
 import { defaultUser } from "@/data/images";
 import DatePicker from "../commons/DatePicker";
+import PlayfulInput from "../commons/PlayfulInput";
+
 
 interface ProfileFormProps {
     profileData: ProfileData;
@@ -77,24 +79,30 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ profileData, setProfileData }
                 <label htmlFor="firstname" className="w-full">
 
                     <label className="w-full text-lg font-bold">First name: </label>
-                    <input
-                        value={profileData.firstname}
-                        onChange={(e) => setProfileData(prev => ({ ...prev, firstname: e.target.value }))}
-                        type="text"
-                        id="firstname"
-                        placeholder="Enter First Name"
-                        className="p-2 rounded-sm w-full outline-accent" />
+
+                    <PlayfulInput
+                    textAlign="start"
+                    width={100}
+                    wScale="%"
+                    text={profileData.firstname}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => setProfileData(prev => ({ ...prev, firstname: e.target.value }))}
+                    placeholder="Enter First Name"
+                    id="firstname"
+                    />
                 </label>
 
                 <label htmlFor="lastname" className="w-full">
                     <label className="w-full text-lg font-bold">Last name: </label>
-                    <input
-                        value={profileData.lastname}
-                        onChange={(e) => setProfileData(prev => ({ ...prev, lastname: e.target.value }))}
-                        type="text"
-                        id="lastname"
-                        placeholder="Enter Last Name"
-                        className="p-2 rounded-sm w-full outline-accent" />
+    
+                    <PlayfulInput
+                    textAlign="start"
+                    width={100}
+                    wScale="%"
+                    text={profileData.lastname}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => setProfileData(prev => ({ ...prev, lastname: e.target.value }))}
+                    placeholder="Enter Last Name"
+                    id="lastname"
+                    />
                 </label>
             </div>
 
