@@ -7,6 +7,9 @@ import Auth from "@/components/auth/Auth";
 import { useThemeSettings } from "@/app/theme-provider";
 import { useState } from "react";
 import { Moon, Sun } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { headerFooterMain } from "@/data/routingBehaviors";
+
 
 type NavLocations = {
     name: string;
@@ -26,7 +29,14 @@ const TopNav: React.FC<TopNavProps> = ({ display, navLocations }) => {
     const [button, setButton] = useState(0);
     const { theme, setTheme } = useThemeSettings();
 
-    return <div className="parent-box">
+    const pathname = usePathname();
+
+    const show = Object.entries(headerFooterMain).find(
+        ([route]) => pathname === route || (route !== "/" && pathname.startsWith(route))
+    )?.[1].show ?? true;
+    
+    
+    return <div className={`${show ? "parent-box" : "hidden"}`}>
         <nav className={`child-box px-3 py-1 h-20 justify-between items-center gap-20 ${display ? "flex" : "hidden"}`}>
             <Link href="/">
                 <h1 className="text-3xl text-primary-text font-bold">

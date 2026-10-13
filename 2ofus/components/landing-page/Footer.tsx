@@ -1,13 +1,19 @@
 'use client';
 
 import { appName } from "@/data/info";
-
+import { usePathname } from "next/navigation";
+import { headerFooterMain } from "@/data/routingBehaviors";
 
 
 const Footer = () => {
 
+    const pathname = usePathname();
 
-    return <div className="w-full">
+    const show = Object.entries(headerFooterMain).find(
+        ([route]) => pathname === route || (route !== "/" && pathname.startsWith(route))
+    )?.[1].show ?? true;
+
+    return <div className={`${show ? "w-full" : "hidden"}`}>
         <div className="w-full h-20 bg-accent">
             <div className="w-full h-full bg-background rounded-b-full" />
         </div>

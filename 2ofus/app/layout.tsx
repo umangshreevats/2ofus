@@ -13,15 +13,15 @@ export const metadata: Metadata = {
 };
 
 const rubik = Rubik({
-    subsets: ["latin"],
-    weight: ["400", "500", "600", "700"],
-    variable: "--font-rubik",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-rubik",
 });
 
 const comfortaa = Comfortaa({
-    subsets: ["latin"],
-    weight: ["400", "500", "600", "700"],
-    variable: "--font-comfortaa",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-comfortaa",
 });
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
