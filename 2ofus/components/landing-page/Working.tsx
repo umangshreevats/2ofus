@@ -29,7 +29,7 @@ const functionalities = [
 const Functionality = ({ functionality, theme }: { theme: "light" | "dark", functionality: { left: number, top: number, step: number, text: string } }) => {
 
     return (
-        <div key={functionality.step} className={`w-[250px] hover:scale-110 transition-all duration-300 ease-in-out h-[190px] absolute`}
+        <div className={`lg:w-[250px] w-full hover:scale-110 transition-all duration-300 ease-in-out lg:h-[190px] lg:absolute`}
         style={{
             left: `${functionality.left}px`,
             top: `${functionality.top}px`
@@ -57,7 +57,7 @@ const Working = () => {
             </h4>
 
             <div className="w-full h-full relative">
-                <Image src={theme === "light" ? workingLight : workingDark} alt="working-background image" className="object-cover" />
+                <Image src={theme === "light" ? workingLight : workingDark} alt="working-background image" className="hidden lg:block object-cover" />
                 {functionalities.map((f, _) => (
                     <Functionality theme={theme} functionality={f} />
                 ))}

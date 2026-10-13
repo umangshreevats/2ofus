@@ -22,16 +22,16 @@ const Footer = () => {
                 <h4 className="w-full sm:col-span-3 text-3xl font-bold border-b border-b-primary-text border-b-solid px-1">{appName}</h4>
 
                 <div className="w-full h-full p-1">
-                    <h5 className="font-bold text-primary-text mb-2">Your Account</h5>
-                    <ul className="w-full text-sm flex flex-col gap-2">
+                    <h5 className="font-bold text-primary-text mb-3">Your Account</h5>
+                    <ul className="w-full text-sm flex flex-col gap-3">
                         <li className="w-full">Sign In</li>
                         <li className="w-full">Sign Up</li>
                     </ul>
                 </div>
 
                 <div className="w-full h-full p-1">
-                    <h5 className="font-bold text-primary-text mb-2">About Us</h5>
-                    <ul className="w-full text-sm flex flex-col gap-2">
+                    <h5 className="font-bold text-primary-text mb-3">About Us</h5>
+                    <ul className="w-full text-sm flex flex-col gap-3">
                         <li className="w-full">About</li>
                         <li className="w-full">Home</li>
                         <li className="w-full">Couples</li>

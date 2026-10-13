@@ -1,10 +1,11 @@
 'use client';
 import type { LucideIcon } from 'lucide-react';
+import { IconType } from 'react-icons';
 import { useThemeSettings } from '@/app/theme-provider';
 
 interface ButtonProps {
     type?: "button" | "submit" | "reset";
-    icon?: LucideIcon;
+    icon?: LucideIcon | IconType;
     onClick?: (...params: any[]) => any | Promise<any>;
     text: string;
     backgroundColor?: string | "accent";
@@ -49,7 +50,7 @@ const Button: React.FC<ButtonProps> = ({
     const finalTextColor =
         textColor ?? (theme === "light" ? "white" : "black");
 
-    return <button onClick={onClick} type={type} className={`rounded-full font-bold text-center cursor-pointer`}
+    return <button onClick={onClick} type={type} className={`flex items-center gap-5 justify-center rounded-full font-bold text-center cursor-pointer`}
         style={{
             backgroundColor: `var(--${finalBackgroundColor}, ${finalBackgroundColor})`,
             color: finalTextColor,
