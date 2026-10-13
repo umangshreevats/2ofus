@@ -137,6 +137,13 @@ body {
 }
 
 .child-box {
-    width: 85%;
+    width: 990px;
     flex-shrink: 0;
+}
+
+
+@media(max-width: 768px) {
+    .child-box {
+        width: 100%;
+    }
 }
