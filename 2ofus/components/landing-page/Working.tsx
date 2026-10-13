@@ -8,20 +8,20 @@ import Image from "next/image";
 const functionalities = [
     {
         step: 1,
-        left: 40,
+        left: 80,
         top: 40,
         text: "Create an account, to be a part of this community",
     },
     {
         step: 2,
-        left: 640,
+        left: 730,
         top: 40,
         text: "Find your love ❤️, and create a profile together"
     },
     {
         step: 3,
-        left: 640,
-        top: 302,
+        left: 670,
+        top: 320,
         text: "Enjoy, being together forever along"
     }
 ];
@@ -29,15 +29,17 @@ const functionalities = [
 const Functionality = ({ functionality, theme }: { theme: "light" | "dark", functionality: { left: number, top: number, step: number, text: string } }) => {
 
     return (
-        <div key={functionality.step} className={`w-[250px] transition-all duration-300 ease-in-out hover:w-[270px] hover:h-[170px] h-[190px] absolute`}
+        <div key={functionality.step} className={`w-[250px] hover:scale-110 transition-all duration-300 ease-in-out h-[190px] absolute`}
         style={{
-            backgroundColor: `${theme === "light" ? "white" : "black"}`,
             left: `${functionality.left}px`,
             top: `${functionality.top}px`
         }}>
-            <div className={`w-full h-full p-5 text-center
+            <div className={`w-full h-full p-5 text-center border-4 border-solid rounded-2xl
     ${theme === "light" ? "shadow-[4px_4px_0px_0px_rgba(0,0,0,1),_-2px_-2px_6px_0px_rgba(0,0,0,0.1)]" : "shadow-[4px_4px_0px_0px_rgba(255,255,255,1),_-2px_-2px_6px_0px_rgba(255,255,255,0.1)]"} 
-    border ${theme === "light" ? "border-black" : "border-white"}`}>
+    border ${theme === "light" ? "border-black" : "border-white"}`}
+    style={{
+        backgroundColor: `${theme === "light" ? "white" : "black"}`
+    }}>
                 <span className="text-secondary-text font-bold text-2xl">Step {functionality.step} </span>{functionality.text}
             </div>
         </div>);

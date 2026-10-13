@@ -4,11 +4,13 @@ import { useState, useEffect, useRef } from "react";
 
 
 interface PlayfulButtonProps {
-    text: string,
-    icon?: LucideIcon | null
+    text: string;
+    onClick: () => void | Promise<void>;
+    icon?: LucideIcon | null;
 }
 const PlayfulButton: React.FC<PlayfulButtonProps> = ({
     text = "",
+    onClick,
     icon = null
 }) => {
 
@@ -54,6 +56,7 @@ const PlayfulButton: React.FC<PlayfulButtonProps> = ({
         buttonRef.current.style.boxShadow = `-6px 6px 0px 0px var(--accent)`;
     }
     return <button
+    onClick={onClick}
         ref={buttonRef}
         type={"button"}
         onMouseEnter={() => setOnButton(true)}
@@ -61,7 +64,7 @@ const PlayfulButton: React.FC<PlayfulButtonProps> = ({
         onPointerDown={onTap}
         onPointerUp={onRelease}
         onPointerCancel={onRelease}
-        className={`text-center cursor-pointer border-3 border-solid font-bold rounded-full`}
+        className={`text-center cursor-pointer border-4 border-solid font-bold rounded-full`}
         style={{
             backgroundColor: `var(--background)`,
             color: `var(--primary-text)`,

@@ -3,16 +3,23 @@ import { joinUsOpen, joinUsClosed } from "@/data/images";
 import Image from "next/image";
 import { useState } from "react";
 import PlayfulButton from "../commons/PlayfulButton";
-
+import Popups from "../commons/Popups";
+import Auth from "../auth/Auth";
 
 const Letter = ({ onVelop }: { onVelop: boolean }) => {
 
-    return <div onClick={e => e.stopPropagation()} className={`${onVelop ? "flex" : "hidden"} gap-4 flex-col items-center p-5 absolute left-[400px] top-[300px]`}>
-        <p className="text-primary-text font-bold">
+    const [signIn, setSignIn] = useState(false);
+
+    return <div onClick={e => e.stopPropagation()} className={`${onVelop ? "flex" : "hidden"} gap-4 flex-col items-center p-5 absolute left-[280px] top-[190px]`}>
+        <p className="text-black font-bold">
             Login to you account to connect with your partner!
         </p>
 
-        <PlayfulButton text="Sign In" />
+        <PlayfulButton onClick={() => setSignIn(true)} text="Sign In" />
+
+        <Popups open={signIn} setOpen={setSignIn}>
+            <Auth signIn={true} setOpen={setSignIn} />
+        </Popups>
     </div>
 }
 const Invitation = () => {
