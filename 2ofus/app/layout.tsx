@@ -4,6 +4,7 @@ import { ThemeProvider } from "./theme-provider";
 import TopNav from "@/components/landing-page/TopNav";
 import { navLocations } from "@/data/info";
 import { Rubik, Comfortaa } from "next/font/google";
+import Footer from "@/components/landing-page/Footer";
 
 
 export const metadata: Metadata = {
@@ -35,6 +36,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             <TopNav display={true} navLocations={navLocations} />
           </header>
           <main>{children}</main>
+          <footer>
+            <Footer />
+          </footer>
         </body>
       </ThemeProvider>
     </html>
