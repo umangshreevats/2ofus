@@ -1,4 +1,5 @@
 import Features from "@/components/landing-page/Features";
+import Invitation from "@/components/landing-page/Invitation";
 import Mid from "@/components/landing-page/Mid";
 import Working from "@/components/landing-page/Working";
 
@@ -8,6 +9,7 @@ export default function Home() {
       <Mid />
       <Features />
       <Working />
+      <Invitation />
     </section>
   );
 }
