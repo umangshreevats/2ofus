@@ -23,7 +23,7 @@ interface ButtonProps {
 
 const Button: React.FC<ButtonProps> = ({
     type = "submit",
-    onClick = () => { console.log("text") },
+    onClick = () => { console.log(text) },
     backgroundColor,
     text,
     hoverColor = "",

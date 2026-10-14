@@ -7,15 +7,19 @@ import { defaultUser } from "@/data/images";
 import DatePicker from "../commons/DatePicker";
 import PlayfulInput from "../commons/PlayfulInput";
 import PlayfulButton from "../commons/PlayfulButton";
+import Button from "../commons/Button";
+import { useThemeSettings } from "@/app/theme-provider";
 
 
 interface ProfileFormProps {
     profileData: ProfileData;
     setProfileData: React.Dispatch<SetStateAction<ProfileData>>;
+    setPage: React.Dispatch<SetStateAction<number>>;
 }
 
-const ProfileForm: React.FC<ProfileFormProps> = ({ profileData, setProfileData }) => {
+const ProfileForm: React.FC<ProfileFormProps> = ({ profileData, setProfileData, setPage }) => {
 
+    const { theme } = useThemeSettings();
     // Profile Image
     const imagePreview = useMemo(() => {
         return profileData.profileImg
@@ -171,6 +175,11 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ profileData, setProfileData }
 
             </div>
             <p className="w-full text-secondary-text font-light">Choose whichever best describes you.</p>
+
+            <Button text="Continue" />
+            <Button type="button" onClick={() => {
+                setPage(2);
+            }} text="Skip" backgroundColor="background" textColor={theme === "light" ? "black" : "white"} />
         </form>
     </div>
 }

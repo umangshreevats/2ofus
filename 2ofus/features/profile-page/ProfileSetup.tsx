@@ -13,6 +13,8 @@ export interface ProfileData {
 
 const ProfileSetup = () => {
 
+
+    const [page, setPage] = useState(1);
     const [profileData, setProfileData] = useState<ProfileData>({
         firstname: "",
         lastname: "",
@@ -22,7 +24,8 @@ const ProfileSetup = () => {
     });
 
     return (<div>
-        <ProfileForm profileData={profileData} setProfileData={setProfileData} />
+        {page === 1 && <ProfileForm profileData={profileData} setProfileData={setProfileData} />}
+        {page === 2 && <div></div>}
     </div>);
 }
 
