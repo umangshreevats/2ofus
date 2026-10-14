@@ -177,9 +177,9 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ profileData, setProfileData, 
             <p className="w-full text-secondary-text font-light">Choose whichever best describes you.</p>
 
             <Button text="Continue" />
-            <Button type="button" onClick={() => {
-                setPage(2);
-            }} text="Skip" backgroundColor="background" textColor={theme === "light" ? "black" : "white"} />
+            <Button type="button" 
+            onClick={() => setPage(2)} 
+            text="Skip" backgroundColor="background" textColor={theme === "light" ? "black" : "white"} />
         </form>
     </div>
 }

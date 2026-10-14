@@ -15,8 +15,16 @@ interface PlayfulButtonProps {
     backgroundColor?: string;
     textColor?: string;
     borderColor?: string;
+    onlyOnce?: boolean;
+    clickTextColor?: string;
+    clickBackColor?: string;
+    clickBorderColor?: string;
 }
 const PlayfulButton: React.FC<PlayfulButtonProps> = ({
+    onlyOnce = false,
+    clickTextColor = "",
+    clickBackColor = "",
+    clickBorderColor = "",
     text = "",
     onClick,
     width = "auto",
@@ -27,9 +35,10 @@ const PlayfulButton: React.FC<PlayfulButtonProps> = ({
     textAlign = "center",
     backgroundColor = "",
     textColor = "",
-    borderColor = ""
+    borderColor = "",
 }) => {
 
+    const [clicked, setClicked] = useState(false);
     const [onButton, setOnButton] = useState(false);
     const Icon = icon;
     const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -45,9 +54,12 @@ const PlayfulButton: React.FC<PlayfulButtonProps> = ({
             }
 
             if (onButton) {
+
+                if(onlyOnce && clicked) return;
                 buttonRef.current.style.translate = `2px -2px`;
                 buttonRef.current.style.boxShadow = `-8px 8px 0px 0px ${shadowColor}`;
             } else {
+                if(onlyOnce && clicked) return;
                 buttonRef.current.style.translate = `0px 0px`;
                 buttonRef.current.style.boxShadow = `-6px 6px 0px 0px ${shadowColor}`;
             }
@@ -61,18 +73,25 @@ const PlayfulButton: React.FC<PlayfulButtonProps> = ({
         if (!buttonRef.current) {
             return;
         }
-
+        setClicked(true);
         buttonRef.current.style.translate = `-4px 4px`;
-        buttonRef.current.style.boxShadow = `-4px 4px 0px 0px ${shadowColor}`;
+        buttonRef.current.style.boxShadow = `-4px 4px 0px 0px ${clickBorderColor.length > 0 ? clickBorderColor : shadowColor}`;
+        clickBackColor.length > 0 ? buttonRef.current.style.backgroundColor = clickBackColor : null;
+        clickTextColor.length > 0 ? buttonRef.current.style.color = clickTextColor : null;
+        clickBorderColor.length > 0 ? buttonRef.current.style.borderColor = clickBorderColor : null;
     }
 
     const onRelease = () => {
+        if(onlyOnce && clicked) return;
+
         if (!buttonRef.current) {
             return;
         }
 
         buttonRef.current.style.translate = `0px 0px`;
         buttonRef.current.style.boxShadow = `-6px 6px 0px 0px ${shadowColor}`;
+        buttonRef.current.style.backgroundColor = backgroundColor.length === 0 ? "var(--background)" : backgroundColor;
+        buttonRef.current.style.color = textColor.length === 0 ? "var(--primary-text)" : textColor;
     }
     return <button
         onClick={onClick}
