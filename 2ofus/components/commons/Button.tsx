@@ -18,11 +18,13 @@ interface ButtonProps {
     wscale?: "px" | "%" | "em" | "rem",
     hscale?: "px" | "%" | "em" | "rem",
     tscale?: "px" | "%" | "em" | "rem",
-    pscale?: "px" | "%" | "em" | "rem"
+    pscale?: "px" | "%" | "em" | "rem",
+    disabled?: boolean;
 };
 
 const Button: React.FC<ButtonProps> = ({
     type = "submit",
+    disabled = false,
     onClick = () => { console.log(text) },
     backgroundColor,
     text,
@@ -50,7 +52,7 @@ const Button: React.FC<ButtonProps> = ({
     const finalTextColor =
         textColor ?? (theme === "light" ? "white" : "black");
 
-    return <button onClick={onClick} type={type} className={`flex items-center gap-5 justify-center rounded-full font-bold text-center cursor-pointer`}
+    return <button disabled={disabled} onClick={onClick} type={type} className={`flex disabled:cursor-not-allowed items-center gap-5 justify-center rounded-full font-bold text-center cursor-pointer`}
         style={{
             backgroundColor: `var(--${finalBackgroundColor}, ${finalBackgroundColor})`,
             color: finalTextColor,

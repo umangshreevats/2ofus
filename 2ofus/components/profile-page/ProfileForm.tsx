@@ -1,7 +1,7 @@
 'use client';
 
 import { ProfileData } from "@/features/profile-page/ProfileSetup";
-import { SetStateAction, useMemo, useEffect, ChangeEvent } from "react";
+import { SetStateAction, useMemo, useEffect, ChangeEvent, useState } from "react";
 import Image from "next/image";
 import { defaultUser } from "@/data/images";
 import DatePicker from "../commons/DatePicker";
@@ -20,6 +20,7 @@ interface ProfileFormProps {
 const ProfileForm: React.FC<ProfileFormProps> = ({ profileData, setProfileData, setPage }) => {
 
     const { theme } = useThemeSettings();
+    const [loading, setLoading] = useState(false);
     // Profile Image
     const imagePreview = useMemo(() => {
         return profileData.profileImg
@@ -35,9 +36,43 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ profileData, setProfileData, 
         };
     }, [imagePreview]);
 
+    const handleProfileSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+
+        e.preventDefault();
+
+        if (profileData.firstname.length === 0 || profileData.lastname.length === 0 || !profileData.dob || !profileData.gender) {
+            alert("One or more entries are empty");
+            return;
+        }
+        setLoading(true);
+
+        try {
+
+            const response = await fetch("/api/profile", {
+                method: "POST",
+                body: JSON.stringify({
+                    firstname: profileData.firstname,
+                    lastname: profileData.lastname,
+                    dob: profileData.dob?.toISOString() ?? null,
+                    gender: profileData.gender,
+                }),
+            });
+
+            const result = await response.json();
+            if (!response.ok) {
+                throw new Error(result.message || "Profile creation failed");
+            }
+            setPage(2);
+        } catch (err) {
+            alert("An error occured");
+        } finally {
+            setLoading(false);
+        }
+    }
+
 
     return <div className="w-full">
-        <form className="w-full p-5 flex flex-col gap-5">
+        <form onSubmit={handleProfileSubmit} className="w-full p-5 flex flex-col gap-5">
             <div className="w-full flex justify-center items-center p-5">
                 <div className="flex flex-col items-center gap-3">
 
@@ -176,10 +211,10 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ profileData, setProfileData, 
             </div>
             <p className="w-full text-secondary-text font-light">Choose whichever best describes you.</p>
 
-            <Button text="Continue" />
-            <Button type="button" 
-            onClick={() => setPage(2)} 
-            text="Skip" backgroundColor="background" textColor={theme === "light" ? "black" : "white"} />
+            <Button text={loading ? "Creating Profile..." : "Continue"} disabled={loading} />
+            <Button type="button"
+                onClick={() => setPage(2)}
+                text="Skip" backgroundColor="background" textColor={theme === "light" ? "black" : "white"} />
         </form>
     </div>
 }

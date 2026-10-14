@@ -1,4 +1,5 @@
 export const headerFooterMain = {
     "/": { show: true },
-    "/profile": { show: false }
+    "/profile": { show: false },
+    "/home": { show: true }
 }

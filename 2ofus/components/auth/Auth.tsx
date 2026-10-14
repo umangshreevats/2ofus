@@ -1,13 +1,18 @@
 'use client';
-import { useState, SetStateAction, FormEvent } from "react";
+import React, { useState, SetStateAction, FormEvent } from "react";
 import Button from "../commons/Button";
 import { X } from 'lucide-react';
 import { FcGoogle } from "react-icons/fc";
+import { createClient } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
 
 
 // This component is very complicated, rather than dividing the sign in, and sign up pages in two different component,
 // it wraps both in same, to slow up down the separate operations
 const Auth = ({ setOpen, signIn: si }: { signIn: boolean, setOpen: React.Dispatch<SetStateAction<boolean>> }) => {
+
+    const router = useRouter();
+    const supabase = createClient();
 
     const [signIn, setSign] = useState(si);
 
@@ -15,24 +20,66 @@ const Auth = ({ setOpen, signIn: si }: { signIn: boolean, setOpen: React.Dispatc
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
 
-
-    const handleSignInSubmit = (e: FormEvent) => {
+    const handleSignInSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
 
         e.preventDefault();
-        alert("Email: " + email + "\nPassword: " + password);
-        setUsername("");
-        setEmail("");
-        setPassword("");
+
+        setLoading(true);
+
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
+
+        setLoading(false);
+
+        if (error) {
+            alert(error.message);
+            return;
+        }
+
+        router.push("/profile");
     }
 
-    const handleSignUpSubmit = (e: FormEvent) => {
+
+
+    const handleSignUpSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
         e.preventDefault();
-        alert("Username: " + username + "\nEmail: " + email + "\nPassword: " + password);
-        setUsername("");
-        setEmail("");
-        setPassword("");
+
+        setLoading(true);
+
+        if(username.length === 0 || email.length === 0 || password.length === 0) {
+            alert("Some or all entries are empty");
+            return;
+        }
+
+        const { data, error } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                data: {
+                    username
+                }
+            }
+        });
+
+        setLoading(false);
+
+        if(error) {
+            alert(error.message);
+            return;
+        }
+
+        if (data.session) {
+            // User is authenticated immediately.
+            router.push("/profile");
+        } else {
+            // Email confirmation is enabled.
+            alert("Please check your email to verify your account.");
+        }
     }
 
 
@@ -63,10 +110,11 @@ const Auth = ({ setOpen, signIn: si }: { signIn: boolean, setOpen: React.Dispatc
         </label>
 
         {/*Submit Button*/}
-        <Button text="Sign In" width={100} wscale="%" />
+        <Button text={loading ? "Signning In..." : "Sign In"} disabled={loading} width={100} wscale="%" />
 
         <div className="w-full flex justify-center">{signIn ? "Don't have an account yet? " : "Already have an account! "} <button
             onClick={() => setSign(!signIn)}
+            disabled={loading}
             type="button" className="cursor-pointer text-secondary-text inline">{signIn ? " sign-up" : " sign-in"}</button></div>
 
         <div className="w-full flex gap-1 items-center">
@@ -106,10 +154,11 @@ const Auth = ({ setOpen, signIn: si }: { signIn: boolean, setOpen: React.Dispatc
         </label>
 
         {/*Submit Button*/}
-        <Button text="Sign Up" width={100} wscale="%" />
+        <Button text={loading ? "Signning up..." : `Sign Up`} disabled={loading} width={100} wscale="%" />
 
         <div className="w-full flex justify-center">{signIn ? "Don't have an account yet? " : "Already have an account! "} <button
             onClick={() => setSign(!signIn)}
+            disabled={loading}
             type="button" className="cursor-pointer text-secondary-text inline">{signIn ? "sign-up" : "sign-in"}</button></div>
 
         <div className="w-full flex gap-1 items-center">
