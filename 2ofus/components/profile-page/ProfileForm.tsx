@@ -15,9 +15,10 @@ interface ProfileFormProps {
     profileData: ProfileData;
     setProfileData: React.Dispatch<SetStateAction<ProfileData>>;
     setPage: React.Dispatch<SetStateAction<number>>;
+    username: string;
 }
 
-const ProfileForm: React.FC<ProfileFormProps> = ({ profileData, setProfileData, setPage }) => {
+const ProfileForm: React.FC<ProfileFormProps> = ({ username, profileData, setProfileData, setPage }) => {
 
     const { theme } = useThemeSettings();
     const [loading, setLoading] = useState(false);

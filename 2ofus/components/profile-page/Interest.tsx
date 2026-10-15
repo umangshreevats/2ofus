@@ -44,11 +44,12 @@ const Interest = ({ option, setPage, setOption, setInterests }: IntersetProps) =
                                 <div key={index}>
                                     <PlayfulButton
                                         text={option}
-                                        onClick={() => {}}
+                                        onClick={() => { }}
                                         onlyOnce={true}
                                         clickBackColor={theme === "light" ? "white" : "black"}
                                         clickTextColor={theme === "light" ? "black" : "white"}
                                         clickBorderColor={theme === "light" ? "black" : "white"}
+                                        pressUp={true}
                                     /></div>
                             ))}
                             <p className="mt-5 w-full h-0 border-2 border-dashed border-secondary-text" />

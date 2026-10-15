@@ -13,7 +13,7 @@ export interface ProfileData {
     gender: "male" | "female" | "other" | null
 }
 
-const ProfileSetup = () => {
+const ProfileSetup = ({ username }: { username: string }) => {
 
 
     const [page, setPage] = useState(1);
@@ -74,7 +74,7 @@ const ProfileSetup = () => {
     const [option, setOption] = useState<"places" | "hobbies" | "food" | "entertainment" | "music" | "sports" | "lifestyle" | null>(null);
 
     return (<div>
-        {page === 1 && <ProfileForm profileData={profileData} setProfileData={setProfileData} setPage={setPage} />}
+        {page === 1 && <ProfileForm username={username} profileData={profileData} setProfileData={setProfileData} setPage={setPage} />}
         {page === 2 && <InterestCategory setPage={setPage} setOption={setOption} />}
         {page === 3 && <Interest setInterests={setInterests} setPage={setPage} setOption={setOption} option={option} />}
     </div>);
