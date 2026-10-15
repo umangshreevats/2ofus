@@ -20,10 +20,11 @@ type NavLocations = {
 interface TopNavProps {
     display: boolean;
     navLocations: NavLocations[];
+    userData: any;
 }
 
 // Main nav bar for the page
-const TopNav: React.FC<TopNavProps> = ({ display, navLocations }) => {
+const TopNav: React.FC<TopNavProps> = ({ display, navLocations, userData }) => {
 
     const [signIn, setSignIn] = useState(false);
     const [button, setButton] = useState(0);
@@ -44,13 +45,13 @@ const TopNav: React.FC<TopNavProps> = ({ display, navLocations }) => {
                 </h1>
             </Link>
 
-            <ul className="hidden sm:flex gap-10 items-center">
+            {!userData && <ul className="hidden sm:flex gap-10 items-center">
                 {navLocations.map((nl: NavLocations, index: number) => (
                     <li key={index} className="text-primary-text font-medium"><Link href={nl.path}>
                         {nl.icon ?? ""} <span>{nl.name}</span>
                     </Link></li>
                 ))}
-            </ul>
+            </ul>}
 
 
             <ul className="gap-5 flex">

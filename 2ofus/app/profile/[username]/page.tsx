@@ -8,10 +8,13 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
 
     const { username } = await params;
 
-    console.log(username);
+    const cleanUsername = decodeURIComponent(username)
+        .replace(/^@/, "")
+        .trim();
+
     const supabase = await createClient();
 
-    const { data: profile , error } = await supabase.from("users").select("*").eq("username", username).single();
+    const { data: profile, error } = await supabase.from("users").select("*").eq("username", cleanUsername).single();
 
     if (error || !profile) {
         console.log("Error: ", error);
@@ -25,7 +28,7 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
                 Get Started with {appName}
             </h1>
 
-            <ProfileSetup username={username} />
+            <ProfileSetup username={cleanUsername} />
         </div>
     </div>
 }

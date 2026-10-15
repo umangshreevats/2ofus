@@ -54,7 +54,7 @@ const Auth = ({ setOpen, signIn: si }: { signIn: boolean, setOpen: React.Dispatc
             return;
         }
 
-        router.push(`/profile/${profile.username}`);
+        router.push(`/profile/@${profile.username}`);
     }
 
 
@@ -89,7 +89,7 @@ const Auth = ({ setOpen, signIn: si }: { signIn: boolean, setOpen: React.Dispatc
 
         if (data.session) {
             // User is authenticated immediately.
-            router.push(`/profile/${username}`);
+            router.push(`/profile/@${username}`);
         } else {
             // Email confirmation is enabled.
             alert("Please check your email to verify your account.");

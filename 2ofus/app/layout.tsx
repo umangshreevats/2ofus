@@ -5,6 +5,7 @@ import TopNav from "@/components/landing-page/TopNav";
 import { navLocations } from "@/data/info";
 import { Rubik, Comfortaa } from "next/font/google";
 import Footer from "@/components/landing-page/Footer";
+import { getCurrentUser } from "@/lib/auth";
 
 
 export const metadata: Metadata = {
@@ -24,23 +25,26 @@ const comfortaa = Comfortaa({
   variable: "--font-comfortaa",
 });
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+
+  const { userData } = await getCurrentUser();
+
   return (
     <html
       lang="en"
       data-palette="ember" data-theme="light"
     >
-      <ThemeProvider>
-        <body className={`${rubik.variable} ${comfortaa.variable} antialiased`}>
-          <header>
-            <TopNav display={true} navLocations={navLocations} />
-          </header>
-          <main>{children}</main>
-          <footer>
-            <Footer />
-          </footer>
-        </body>
-      </ThemeProvider>
+        <ThemeProvider>
+          <body className={`${rubik.variable} ${comfortaa.variable} antialiased`}>
+            <header>
+              <TopNav display={true} navLocations={navLocations} userData={userData} />
+            </header>
+            <main>{children}</main>
+            <footer>
+              <Footer />
+            </footer>
+          </body>
+        </ThemeProvider>
     </html>
   );
 }
