@@ -5,7 +5,8 @@ import type { CSSProperties } from "react";
 
 interface PlayfulButtonProps {
     text: string;
-    onClick: () => void | Promise<void>;
+    onClick?: (...args: any[]) => void | Promise<void>;
+    onSecondClick?: (...args: any[]) => void | Promise<void>;
     icon?: LucideIcon | null;
     width?: "auto" | number;
     height?: "auto" | number;
@@ -20,6 +21,7 @@ interface PlayfulButtonProps {
     clickBackColor?: string;
     clickBorderColor?: string;
     pressUp?: boolean;
+    pressed?: boolean;
 }
 const PlayfulButton: React.FC<PlayfulButtonProps> = ({
     onlyOnce = false,
@@ -28,6 +30,7 @@ const PlayfulButton: React.FC<PlayfulButtonProps> = ({
     clickBorderColor = "",
     text = "",
     onClick,
+    onSecondClick,
     width = "auto",
     height = "auto",
     hScale = "px",
@@ -37,10 +40,11 @@ const PlayfulButton: React.FC<PlayfulButtonProps> = ({
     backgroundColor = "",
     textColor = "",
     borderColor = "",
-    pressUp = false
+    pressUp = false,
+    pressed = false
 }) => {
 
-    const [clicked, setClicked] = useState(false);
+    const [clicked, setClicked] = useState(pressed);
     const [onButton, setOnButton] = useState(false);
     const Icon = icon;
     const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -48,6 +52,9 @@ const PlayfulButton: React.FC<PlayfulButtonProps> = ({
         ? "var(--accent)"
         : borderColor;
 
+    useEffect(() => {
+        setClicked(pressed);
+    }, [pressed]);
     useEffect(() => {
         const onHover = () => {
 
@@ -77,14 +84,16 @@ const PlayfulButton: React.FC<PlayfulButtonProps> = ({
         }
 
         if (clicked && pressUp) {
+            onSecondClick?.();
             buttonRef.current.style.translate = `0px 0px`;
             buttonRef.current.style.boxShadow = `-6px 6px 0px 0px ${shadowColor}`;
             buttonRef.current.style.backgroundColor = backgroundColor.length === 0 ? "var(--background)" : backgroundColor;
             buttonRef.current.style.color = textColor.length === 0 ? "var(--primary-text)" : textColor;
-            buttonRef.current.style.borderColor = borderColor.length === 0 ? "var(--primary-text" : borderColor;
+            buttonRef.current.style.borderColor = borderColor.length === 0 ? "var(--accent)" : borderColor;
             setClicked(false);
             return;
         }
+        onClick?.();
         setClicked(true);
         buttonRef.current.style.translate = `-4px 4px`;
         buttonRef.current.style.boxShadow = `-4px 4px 0px 0px ${clickBorderColor.length > 0 ? clickBorderColor : shadowColor}`;
@@ -104,10 +113,9 @@ const PlayfulButton: React.FC<PlayfulButtonProps> = ({
         buttonRef.current.style.boxShadow = `-6px 6px 0px 0px ${shadowColor}`;
         buttonRef.current.style.backgroundColor = backgroundColor.length === 0 ? "var(--background)" : backgroundColor;
         buttonRef.current.style.color = textColor.length === 0 ? "var(--primary-text)" : textColor;
-        buttonRef.current.style.borderColor = borderColor.length === 0 ? "var(--primary-text" : borderColor;
+        buttonRef.current.style.borderColor = borderColor.length === 0 ? "var(--accent)" : borderColor;
     }
     return <button
-        onClick={onClick}
         ref={buttonRef}
         type={"button"}
         onMouseEnter={() => setOnButton(true)}
@@ -117,16 +125,31 @@ const PlayfulButton: React.FC<PlayfulButtonProps> = ({
         onPointerCancel={onRelease}
         className={`cursor-pointer border-4 border-solid font-bold rounded-full`}
         style={{
-            backgroundColor: `${backgroundColor.length === 0 ? "var(--background)" : backgroundColor}`,
-            color: `${textColor.length === 0 ? "var(--primary-text)" : textColor}`,
-            padding: `1rem`,
-            borderColor: borderColor.length === 0
-                ? "var(--accent)"
-                : borderColor,
-            boxShadow: `-6px 6px 0px 0px ${shadowColor}`,
+            backgroundColor: clicked
+                ? (clickBackColor || backgroundColor || "var(--background)")
+                : (backgroundColor || "var(--background)"),
+
+            color: clicked
+                ? (clickTextColor || textColor || "var(--primary-text)")
+                : (textColor || "var(--primary-text)"),
+
+            padding: "1rem",
+
+            borderColor: clicked
+                ? (clickBorderColor || borderColor || "var(--accent)")
+                : (borderColor || "var(--accent)"),
+
+            boxShadow: clicked
+                ? `-4px 4px 0px 0px ${clickBorderColor || shadowColor}`
+                : `-6px 6px 0px 0px ${shadowColor}`,
+
+            translate: clicked ? "-4px 4px" : "0px 0px",
+
             transition: "all 0.15s ease-out",
-            width: `${width === "auto" ? width : width + wScale}`,
-            height: `${height === "auto" ? height : height + hScale}`,
+
+            width: width === "auto" ? width : `${width}${wScale}`,
+            height: height === "auto" ? height : `${height}${hScale}`,
+
             textAlign: textAlign
         }}
     >

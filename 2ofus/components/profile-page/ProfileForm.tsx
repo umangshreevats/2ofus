@@ -49,7 +49,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ username, profileData, setPro
 
         try {
 
-            const response = await fetch("/api/profile", {
+            const response = await fetch(`/api/profile/${username}`, {
                 method: "POST",
                 body: JSON.stringify({
                     firstname: profileData.firstname,

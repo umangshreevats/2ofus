@@ -10,9 +10,10 @@ interface IntersetProps {
     setPage: React.Dispatch<SetStateAction<number>>;
     setOption: React.Dispatch<SetStateAction<any>>;
     setInterests: React.Dispatch<SetStateAction<any>>;
+    interests: any
 }
 
-const Interest = ({ option, setPage, setOption, setInterests }: IntersetProps) => {
+const Interest = ({ option, setPage, setOption, setInterests, interests }: IntersetProps) => {
 
     useEffect(() => {
         if (!option) {
@@ -40,16 +41,30 @@ const Interest = ({ option, setPage, setOption, setInterests }: IntersetProps) =
                     <div key={question.id} className="w-full gap-5">
                         <h3 className="w-full text-lg">Q.{i + 1} {question.question}</h3>
                         <div className="w-full flex flex-wrap gap-2">
-                            {question.options.map((option, index) => (
+                            {question.options.map((opt, index) => (
                                 <div key={index}>
                                     <PlayfulButton
-                                        text={option}
-                                        onClick={() => { }}
+                                        text={opt}
+                                        onClick={() =>
+                                            setInterests((prev: any) => ({
+                                                ...prev,
+                                                [option]: [...prev[option], opt]
+                                            }))
+                                        }
+                                        onSecondClick={() =>
+                                            setInterests((prev: any) => ({
+                                                ...prev,
+                                                [option]: prev[option].filter(
+                                                    (item: any) => item !== opt
+                                                )
+                                            }))
+                                        }
                                         onlyOnce={true}
                                         clickBackColor={theme === "light" ? "white" : "black"}
                                         clickTextColor={theme === "light" ? "black" : "white"}
                                         clickBorderColor={theme === "light" ? "black" : "white"}
                                         pressUp={true}
+                                        pressed={interests[option].includes(opt)}
                                     /></div>
                             ))}
                             <p className="mt-5 w-full h-0 border-2 border-dashed border-secondary-text" />

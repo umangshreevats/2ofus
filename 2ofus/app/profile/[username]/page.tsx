@@ -4,21 +4,23 @@ import { createClient } from "@/utils/supabase/server";
 import { notFound } from "next/navigation";
 
 
-export default async function ProfilePage ({ params }: { params: Promise<{ username: string }> }) {
+export default async function ProfilePage({ params }: { params: Promise<{ username: string }> }) {
 
     const { username } = await params;
 
+    console.log(username);
     const supabase = await createClient();
 
-    const { data: { profile, error } } = await supabase.from("users").select("*").eq("username", username).maybeSingle();
+    const { data: profile , error } = await supabase.from("users").select("*").eq("username", username).single();
 
-    if(error || !profile) {
+    if (error || !profile) {
+        console.log("Error: ", error);
+        console.log("Profile: ", profile);
         notFound();
     }
 
     return <div className="parent-box flex-col justify-start items-center">
         <div className="child-box p-10 flex flex-col gap-5">
-
             <h1 className="w-full text-3xl text-center font-bold">
                 Get Started with {appName}
             </h1>

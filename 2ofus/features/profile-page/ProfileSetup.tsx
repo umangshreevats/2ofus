@@ -2,7 +2,7 @@
 import Interest from "@/components/profile-page/Interest";
 import InterestCategory from "@/components/profile-page/InterestCategory";
 import ProfileForm from "@/components/profile-page/ProfileForm";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 
 export interface ProfileData {
@@ -27,56 +27,48 @@ const ProfileSetup = ({ username }: { username: string }) => {
 
 
     const [interests, setInterests] = useState({
-        places: [
-            { Q1: [] }, // What kind of places do you love visiting?
-            { Q2: [] }, // What is your preferred travel style?
-            { Q3: [] }, // Which destinations would you love to visit?
-        ],
+        places: [],
 
-        hobbies: [
-            { Q1: [] }, // What do you enjoy doing in your free time?
-            { Q2: [] }, // What are your creative interests?
-            { Q3: [] }, // How do you prefer spending your weekends?
-        ],
+        hobbies: [],
 
-        food: [
-            { Q1: [] }, // Which cuisines do you enjoy?
-            { Q2: [] }, // What kind of food do you prefer?
-            { Q3: [] }, // What are your favourite drinks?
-        ],
+        food: [],
 
-        entertainment: [
-            { Q1: [] }, // What movie genres do you enjoy?
-            { Q2: [] }, // What kind of shows do you enjoy watching?
-            { Q3: [] }, // What entertainment activities do you enjoy?
-        ],
+        entertainment: [],
 
-        music: [
-            { Q1: [] }, // What genres of music do you listen to?
-            { Q2: [] }, // What kind of music matches your mood?
-            { Q3: [] }, // Which languages do you enjoy listening to?
-        ],
+        music: [],
 
-        sports: [
-            { Q1: [] }, // Which sports do you enjoy?
-            { Q2: [] }, // What fitness activities do you enjoy?
-            { Q3: [] }, // What sports do you love watching?
-        ],
+        sports: [],
 
-        lifestyle: [
-            { Q1: [] }, // How would you describe your lifestyle?
-            { Q2: [] }, // What matters most to you in life?
-            { Q3: [] }, // What does your ideal day look like?
-        ]
+        lifestyle: []
     });
+
+    useEffect(() => {
+        const savedPage = localStorage.getItem("page");
+
+        if (savedPage) {
+            const parsedPage = Number(savedPage);
+
+            if ([1, 2, 3].includes(parsedPage)) {
+                setPage(parsedPage);
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        localStorage.setItem("page", String(page));
+    }, [page]);
+
+    useEffect(() => {
+        console.log(interests);
+    }, [interests]);
 
 
     const [option, setOption] = useState<"places" | "hobbies" | "food" | "entertainment" | "music" | "sports" | "lifestyle" | null>(null);
 
     return (<div>
         {page === 1 && <ProfileForm username={username} profileData={profileData} setProfileData={setProfileData} setPage={setPage} />}
-        {page === 2 && <InterestCategory setPage={setPage} setOption={setOption} />}
-        {page === 3 && <Interest setInterests={setInterests} setPage={setPage} setOption={setOption} option={option} />}
+        {page === 2 && <InterestCategory username={username} interestsList={interests} setPage={setPage} setOption={setOption} />}
+        {page === 3 && <Interest interests={interests} setInterests={setInterests} setPage={setPage} setOption={setOption} option={option} />}
     </div>);
 }
 

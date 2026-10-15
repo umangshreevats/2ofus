@@ -25,7 +25,7 @@ export default function DatePicker({ value, onChange }: DatePickerProps) {
             />
 
             {isOpen && (
-                <div className="absolute z-50 mt-2 rounded-xl p-3 shadow-lg">
+                <div className="absolute z-50 mt-2 bg-background rounded-xl p-3 shadow-lg">
                     <DayPicker
                         mode="single"
                         selected={value ?? undefined}
