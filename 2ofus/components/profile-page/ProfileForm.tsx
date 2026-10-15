@@ -49,14 +49,22 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ username, profileData, setPro
 
         try {
 
+            const formData = new FormData();
+
+            formData.append("firstname", profileData.firstname);
+            formData.append("lastname", profileData.lastname);
+            if (profileData.dob instanceof Date) {
+                formData.append("dob", profileData.dob.toISOString());
+            }
+
+            formData.append("gender", profileData.gender);
+            if (profileData.profileImg instanceof File) {
+                formData.append("profileImg", profileData.profileImg);
+            }
+
             const response = await fetch(`/api/profile/${username}`, {
                 method: "POST",
-                body: JSON.stringify({
-                    firstname: profileData.firstname,
-                    lastname: profileData.lastname,
-                    dob: profileData.dob?.toISOString() ?? null,
-                    gender: profileData.gender,
-                }),
+                body: formData
             });
 
             const result = await response.json();

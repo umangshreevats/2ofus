@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
-
+import { uploadProfileImage } from "@/lib/supabase/storage";
 
 // POST: /api/profile/:username
 export const POST = async (request: NextRequest, { params }: { params: Promise<{ username: string }> }) => {
@@ -24,7 +24,7 @@ export const POST = async (request: NextRequest, { params }: { params: Promise<{
             .from("users")
             .select("username")
             .eq("id", user.id)
-            .maybeSingle();
+            .single();
 
         if (profileError) {
             throw profileError;
@@ -37,16 +37,39 @@ export const POST = async (request: NextRequest, { params }: { params: Promise<{
             );
         }
 
-        const body = await request.json();
+        const formData = await request.formData();
 
-        const { firstname, lastname, dob, gender } = body;
+        const firstname = formData.get("firstname");
+        const lastname = formData.get("lastname");
+        const dob = formData.get("dob");
+        const gender = formData.get("gender");
+        const profileImg = formData.get("profileImg");
 
-        const { data, error } = await supabase.from("users").update({
+         let uploadedImage: {
+            path: string;
+            publicUrl: string;
+        } | null = null;
+
+        if (profileImg instanceof File && profileImg.size > 0) {
+            uploadedImage = await uploadProfileImage(
+                supabase,
+                profileImg,
+                user.id
+            );
+        }
+
+        const updateData: Record<string, unknown> = {
             firstname,
             lastname,
-            dob,
+            dob: dob ? String(dob) : null,
             gender
-        }).eq("id", user.id).select().maybeSingle();
+        };
+
+        if (uploadedImage) {
+            updateData.profile_image = uploadedImage.publicUrl;
+        }
+
+        const { data, error } = await supabase.from("users").update(updateData).eq("id", user.id).select().single();
 
         if (error) {
             console.error("Profile update error:", error);
