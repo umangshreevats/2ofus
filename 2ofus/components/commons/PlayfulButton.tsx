@@ -4,14 +4,16 @@ import { useState, useEffect, useRef } from "react";
 import type { CSSProperties } from "react";
 
 interface PlayfulButtonProps {
-    text: string;
+    text?: string;
     onClick?: (...args: any[]) => void | Promise<void>;
     onSecondClick?: (...args: any[]) => void | Promise<void>;
     icon?: LucideIcon | null;
     width?: "auto" | number;
     height?: "auto" | number;
+    padding?: number;
     wScale?: "%" | "px" | "rem";
     hScale?: "%" | "px" | "rem";
+    pScale?: "%" | "px" | "rem";
     textAlign?: CSSProperties["textAlign"];
     backgroundColor?: string;
     textColor?: string;
@@ -22,6 +24,8 @@ interface PlayfulButtonProps {
     clickBorderColor?: string;
     pressUp?: boolean;
     pressed?: boolean;
+    noRight?: boolean;
+    type?: "button" | "submit" | "reset";
 }
 const PlayfulButton: React.FC<PlayfulButtonProps> = ({
     onlyOnce = false,
@@ -33,6 +37,8 @@ const PlayfulButton: React.FC<PlayfulButtonProps> = ({
     onSecondClick,
     width = "auto",
     height = "auto",
+    padding = 1,
+    pScale = "rem",
     hScale = "px",
     wScale = "px",
     icon = null,
@@ -41,7 +47,9 @@ const PlayfulButton: React.FC<PlayfulButtonProps> = ({
     textColor = "",
     borderColor = "",
     pressUp = false,
-    pressed = false
+    pressed = false,
+    noRight = false,
+    type = "button"
 }) => {
 
     const [clicked, setClicked] = useState(pressed);
@@ -117,13 +125,13 @@ const PlayfulButton: React.FC<PlayfulButtonProps> = ({
     }
     return <button
         ref={buttonRef}
-        type={"button"}
+        type={type}
         onMouseEnter={() => setOnButton(true)}
         onMouseLeave={() => setOnButton(false)}
         onPointerDown={onTap}
         onPointerUp={onRelease}
         onPointerCancel={onRelease}
-        className={`cursor-pointer border-4 border-solid font-bold rounded-full`}
+        className={`cursor-pointer border-4 border-solid font-bold ${noRight ? "rounded-l-full" : "rounded-full"}`}
         style={{
             backgroundColor: clicked
                 ? (clickBackColor || backgroundColor || "var(--background)")
@@ -133,7 +141,7 @@ const PlayfulButton: React.FC<PlayfulButtonProps> = ({
                 ? (clickTextColor || textColor || "var(--primary-text)")
                 : (textColor || "var(--primary-text)"),
 
-            padding: "1rem",
+            padding: `${padding+pScale}`,
 
             borderColor: clicked
                 ? (clickBorderColor || borderColor || "var(--accent)")

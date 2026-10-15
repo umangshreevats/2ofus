@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
+import SearchPartner from "@/features/profile-page/SearchPartner";
 
 
 export default async function HomePage() {
@@ -10,5 +11,7 @@ export default async function HomePage() {
         redirect("/");
     }
 
-    return <div></div>
+    return <div>
+        <SearchPartner />
+    </div>
 }
