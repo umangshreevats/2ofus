@@ -4,7 +4,7 @@ import PlayfulButton from "@/components/commons/PlayfulButton";
 import PlayfulInput from "@/components/commons/PlayfulInput";
 import { Search } from 'lucide-react';
 import { useState } from "react";
-
+import { useRouter } from "next/navigation";
 
 interface SearchBarProps {
     width?: "auto" | number;
@@ -16,12 +16,23 @@ const SearchBar: React.FC<SearchBarProps> = ({ width = "auto", wScale = "px", pa
 
     const [searchQuery, setSearchQuery] = useState("");
 
+    const router = useRouter();
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const query = searchQuery.trim();
+
+        if (!query) return;
+
+        router.push(`/home/search?query=${encodeURIComponent(query)}`);
+    };
+
     return <div className="rounded-full"
         style={{
             width: width === "auto" ? "auto" : `${width}${wScale}`
         }}>
 
-        <form
+        <form onSubmit={handleSearch}
             style={{
                 width: width === "auto" ? "auto" : `${width}${wScale}`
             }}>

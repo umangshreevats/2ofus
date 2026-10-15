@@ -4,8 +4,6 @@ import SearchBar from "@/components/profile-page/nav-bar/SearchBar";
 import Link from "next/link";
 
 const SearchPartner = () => {
-
-
     return <div className="parent-box">
         <div className="child-box p-10 flex flex-col items-center gap-10">
 
