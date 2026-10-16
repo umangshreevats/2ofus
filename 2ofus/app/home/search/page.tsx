@@ -1,9 +1,9 @@
 import { createClient } from "@/utils/supabase/server";
 import UserProfile from "@/components/profile-page/UserProfile";
 import { getCurrentUser } from "@/lib/auth";
-import { redirect } from "next/navigation";
-import Link from 'next/link';
 import Pagination from "@/components/commons/Pagination";
+import { redirect } from "next/navigation";
+
 
 interface Props {
     searchParams: Promise<{
@@ -64,7 +64,7 @@ const SearchPage = async ({ searchParams }: Props) => {
     );
     return (
         <div className="parent-box">
-            <div className="child-box flex-col justify-start items-center gap-5 min-h-screen">
+            <div className="child-box flex flex-col justify-start gap-5 min-h-screen">
                 <h1>Search results for "{query}"</h1>
 
                 {users?.length ? (

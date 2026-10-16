@@ -1,16 +1,20 @@
 "user client";
 import Image from "next/image";
+import { Mars, Venus, VenusAndMars } from "lucide-react";
+import Button from "../commons/Button";
 
 const UserProfile = ({ profileInfo }: { profileInfo: any }) => {
 
+    const sendCoupleRequest = async () => {
 
-    return <div className="w-full rounded-full flex gap-5 items-center p-2 shadow-[0_0_6px_var(--accent)]">
-        <div className="w-10 h-10 rounded-full">
-            {(profileInfo.profile_image && profileInfo.profile_image.length > 0 ) ?
+    }
+    return <div className="relative w-full rounded-full flex gap-5 items-center p-2 hover:shadow-[0_0_6px_var(--accent)]">
+        <div className="w-16 h-16 rounded-full">
+            {(profileInfo.profile_image && profileInfo.profile_image.length > 0) ?
                 <Image src={profileInfo.profile_image} alt={`profile-image-@${profileInfo.username}`}
-                    width={150} height={150} className="object-cover rounded-full" /> : 
+                    width={150} height={150} className="object-cover rounded-full" /> :
                 <div className="w-full h-full flex 
-                justify-center rounded-full items-center bg-accent font-bold text-white">
+                justify-center rounded-full items-center bg-accent text-2xl font-bold text-white">
                     {profileInfo.username[0] ?? profileInfo.firstname[0] ?? profileInfo.lastname[0]}
                 </div>}
         </div>
@@ -20,7 +24,11 @@ const UserProfile = ({ profileInfo }: { profileInfo: any }) => {
             <p className="w-full font-light text-secondary-text">@{profileInfo.username}</p>
         </div>
 
-        <div>{profileInfo.gender}</div>
+        <div>{profileInfo.gender === "male" ? <Mars color="green" /> : profileInfo.gender === "female" ? <Venus color="pink" /> : <VenusAndMars color="orange" />}</div>
+
+        <div className="relative right-2">
+            <Button text="Send Request" />
+        </div>
     </div>
 }
 
