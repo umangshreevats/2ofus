@@ -3,7 +3,7 @@ import { SetStateAction, useEffect, useRef, useState } from "react";
 
 const DropDown = ({
     children,
-    dropDownOptions,
+    dropDownOptions = [],
     left,
     top,
     bottom,
@@ -12,10 +12,11 @@ const DropDown = ({
     width = "auto",
     wScale = "px",
     iconPos = "center",
-    setOpen
+    setOpen,
+    innerHTML = null
 }: {
     children: React.ReactNode,
-    dropDownOptions: any[],
+    dropDownOptions?: any[],
     left?: number,
     top?: number,
     right?: number,
@@ -24,7 +25,8 @@ const DropDown = ({
     wScale?: "px" | "rem" | "%",
     iconPos?: string,
     open: boolean,
-    setOpen: React.Dispatch<SetStateAction<boolean>>
+    setOpen: React.Dispatch<SetStateAction<boolean>>;
+    innerHTML?: React.ReactNode;
 }) => {
 
     const [leftPos, setLeftPos] = useState<number>(0);
@@ -66,7 +68,14 @@ const DropDown = ({
             {children}
         </div>
 
-        <ul
+        {innerHTML ? <div className={`absolute ${open ? "flex" : "hidden"} rounded-sm shadow-[0px_0px_6px_var(--accent)]`}
+        style={{
+                left: (left && left > 0) ? `${leftPos}px` : "",
+                top: (top && top > 0) ? `${topPos}px` : "",
+                right: (right && right > 0) ? `${rightPos}px` : "",
+                bottom: (bottom && bottom > 0) ? `${bottomPos}px` : ""
+            }}>{innerHTML}
+        </div> : <ul
             className={`absolute ${open ? "flex" : "hidden"} rounded-sm shadow-[0px_0px_6px_var(--accent)] 
         flex-col gap-2 p-2 bg-background`}
             style={{
@@ -80,7 +89,7 @@ const DropDown = ({
                     {opt.name}
                 </li>
             ))}
-        </ul>
+        </ul>}
     </div>
 }
 

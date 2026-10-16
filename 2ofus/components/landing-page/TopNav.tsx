@@ -12,6 +12,10 @@ import { headerFooterMain } from "@/data/routingBehaviors";
 import SearchBar from "../profile-page/nav-bar/SearchBar";
 import { useAuth } from "@/app/auth-provider";
 import ProfileIcon from "../profile-page/nav-bar/ProfileIcon";
+import { createClient } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
+import DropDown from "../commons/DropDown";
+import Notifications from "../profile-page/nav-bar/Notifications";
 
 
 type NavLocations = {
@@ -46,10 +50,26 @@ const RightSideNavElements = ({ userData }: { userData: any }) => {
         </>
     }
 
+    const supabase = createClient();
+
+    const router = useRouter();
+
+    const [openNav, setOpenNav] = useState(false);
+    const handleSignOut = async () => {
+        const { error } = await supabase.auth.signOut();
+
+        if (error) {
+            console.error("Sign out failed:", error.message);
+            return;
+        }
+
+        router.replace("/");
+    };
+
     return <div className="gap-5 flex items-center">
-        <button type="button" className="common-button">
+        <DropDown open={openNav} setOpen={setOpenNav} right={10} top={10} innerHTML={<Notifications />}>
             <Bell />
-        </button>
+        </DropDown>
         <SearchBar />
         <ProfileIcon />
     </div>
