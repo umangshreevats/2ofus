@@ -5,8 +5,8 @@ import Button from "../commons/Button";
 import Popups from "@/components/commons/Popups";
 import Auth from "@/components/auth/Auth";
 import { useThemeSettings } from "@/app/theme-provider";
-import { SetStateAction, useState } from "react";
-import { Moon, Sun } from "lucide-react";
+import { useState } from "react";
+import { Bell, Moon, Sun } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { headerFooterMain } from "@/data/routingBehaviors";
 import SearchBar from "../profile-page/nav-bar/SearchBar";
@@ -47,6 +47,9 @@ const RightSideNavElements = ({ userData }: { userData: any }) => {
     }
 
     return <div className="gap-5 flex items-center">
+        <button type="button" className="common-button">
+            <Bell />
+        </button>
         <SearchBar />
         <ProfileIcon />
     </div>

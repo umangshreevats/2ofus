@@ -24,7 +24,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ width = "auto", wScale = "px", pa
 
         if (!query) return;
 
-        router.push(`/home/search?query=${encodeURIComponent(query)}`);
+        router.push(`/home/search?query=${encodeURIComponent(query)}&page=1`);
     };
 
     return <div className="rounded-full"

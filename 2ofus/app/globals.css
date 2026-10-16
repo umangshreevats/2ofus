@@ -116,16 +116,16 @@
 
 /* Tailwind CSS v4 semantic color utilities */
 @theme inline {
-  --color-background: var(--background);
-  --color-surface: var(--surface);
-  --color-primary-text: var(--primary-text);
-  --color-secondary-text: var(--secondary-text);
-  --color-accent: var(--accent);
+    --color-background: var(--background);
+    --color-surface: var(--surface);
+    --color-primary-text: var(--primary-text);
+    --color-secondary-text: var(--secondary-text);
+    --color-accent: var(--accent);
 }
 
 body {
-  background-color: var(--background);
-  color: var(--primary-text);
+    background-color: var(--background);
+    color: var(--primary-text);
 }
 
 
@@ -141,6 +141,19 @@ body {
     flex-shrink: 0;
 }
 
+
+/* Hovering button props */
+.common-button {
+    text-align: center;
+    padding: 0.5rem;
+    border-radius: 100%;
+    cursor: pointer;
+}
+
+.common-button:hover {
+    background-color: var(--primary-text);
+    opacity: 0.7;
+}
 
 @media(max-width: 768px) {
     .child-box {
