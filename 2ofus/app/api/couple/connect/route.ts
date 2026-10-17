@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
 
     try {
         const supabase = await createClient();
-        const { user } = await getCurrentUser();
+        const { user, userData } = await getCurrentUser();
 
         if (!user) {
             return NextResponse.json(
@@ -65,7 +65,43 @@ export async function POST(request: NextRequest) {
                 { status: 409 }
             );
         }
+
+        const { data: sendRequest, error: sendRequestError } = await supabase
+        .from("couples_requests")
+        .insert({
+            sender_id: user.id,
+            receiver_id: requestedId,
+            status: "pending"
+        }).select().single();
+
+        if (sendRequestError) throw sendRequestError;
+
+
+        const { data: notification, error: notificationError } = await supabase
+        .from("notifications")
+        .insert({
+            sender: user.id,
+            receiver: requestedId,
+            is_read: false,
+            title: "You Got a couple request:",
+            message: `${userData.username} send you a request, might be your loved one!`,
+        }).select().single();
+
+        if (notificationError) throw notificationError;
+
+        return NextResponse.json({
+            message: "Request send successfully!",
+            notification,
+            sendRequest
+        }, {
+            status: 201
+        });
     } catch (err) {
 
+        return NextResponse.json({
+            message: "Internal Server Error"
+        }, {
+            status: 500
+        })
     }
 } 
