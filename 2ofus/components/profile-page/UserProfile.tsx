@@ -1,12 +1,34 @@
-"user client";
+"use client";
 import Image from "next/image";
 import { Mars, Venus, VenusAndMars } from "lucide-react";
 import Button from "../commons/Button";
+import { useState } from "react";
 
 const UserProfile = ({ profileInfo }: { profileInfo: any }) => {
 
+    const [requestLoading, setRequestLoading] = useState(false);
     const sendCoupleRequest = async () => {
 
+        setRequestLoading(true);
+        try {
+
+            const response = await fetch("/api/couple/connect", {
+                method: "POST",
+                body: JSON.stringify({
+                    requestedId: profileInfo.id,
+                })
+            });
+
+            const result = response.json();
+
+            if(!response.ok){
+                alert("An Error occured");
+            }
+        } catch(err) {
+            alert("An Error Occured");
+        } finally {
+            setRequestLoading(false);
+        }
     }
     return <div className="relative w-full rounded-full flex gap-5 items-center p-2 hover:shadow-[0_0_6px_var(--accent)]">
         <div className="w-16 h-16 rounded-full">
@@ -27,7 +49,7 @@ const UserProfile = ({ profileInfo }: { profileInfo: any }) => {
         <div>{profileInfo.gender === "male" ? <Mars color="green" /> : profileInfo.gender === "female" ? <Venus color="pink" /> : <VenusAndMars color="orange" />}</div>
 
         <div className="relative right-2">
-            <Button text="Send Request" />
+            <Button onClick={sendCoupleRequest} text={requestLoading ? "Sending..." : "Send Request"} disabled={requestLoading} />
         </div>
     </div>
 }

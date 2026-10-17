@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
         }
 
         const { data: senderPending, error: senderPendingError } = await supabase
-            .from("couples_requests")
+            .from("coupling_requests")
             .select("id")
             .eq("status", "pending")
             .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
         }
 
         const { data: receiverPending, error: receiverPendingError } = await supabase
-            .from("couples_requests")
+            .from("coupling_requests")
             .select("id")
             .eq("status", "pending")
             .or(`sender_id.eq.${requestedId},receiver_id.eq.${requestedId}`)
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
         }
 
         const { data: sendRequest, error: sendRequestError } = await supabase
-        .from("couples_requests")
+        .from("coupling_requests")
         .insert({
             sender_id: user.id,
             receiver_id: requestedId,
@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
             status: 201
         });
     } catch (err) {
-
+        console.error(err);
         return NextResponse.json({
             message: "Internal Server Error"
         }, {
