@@ -28,7 +28,7 @@ const BioPicture = ({ bio, profileOne, profileTwo }: { bio?: string | null, prof
                 <Heart color="pink" />
             </div>
         </div>
-        <div className="relative w-full h-[200px] rounded-3xl border border-dashed border-secondary-text">
+        <div className="relative w-full h-[500px] rounded-3xl border border-dashed border-secondary-text">
             {(bio && bio.length > 0) ?
                 <Image src={bio} alt="couple-bio-image" className="rounded-3xl object-cover" /> :
                 <div className="rounded-3xl bg-pink-500/50 w-full text-lg font-bold h-full flex justify-center items-center">
