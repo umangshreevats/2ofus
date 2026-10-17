@@ -1,14 +1,15 @@
 "use client";
-import { Brain, MessagesSquare, Gamepad2, Library } from "lucide-react";
+import { Brain, MessagesSquare, Gamepad2, Library, Home } from "lucide-react";
 import Link from "next/link";
 
 const CoupleNav = () => {
 
     const coupleNavItems = [
+        { name: "Home", icon: Home, href: "/home/my-couple" },
         { name: "Know Me", icon: Brain, href: "/home/my-couple/know-me" },
         { name: "Tell & Get", icon: MessagesSquare, href: "/home/my-couple/tell-and-get" },
         { name: "Fun", icon: Gamepad2, href: "/home/my-couple/fun" },
-        { name: "Library", icon: Library, href: "/home/my-couple/library" },
+        { name: "Your Album", icon: Library, href: "/home/my-couple/album" },
     ];
     return <nav className="w-full h-[80px]
     border-b-5 border-b-solid border-b-primary-text">
