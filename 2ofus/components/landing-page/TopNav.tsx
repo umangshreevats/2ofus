@@ -38,7 +38,7 @@ const RightSideNavElements = ({ userData }: { userData: any }) => {
         const [button, setButton] = useState(0);
         const { theme, setTheme } = useThemeSettings();
         return <>
-            <ul className="gap-5 flex">
+            <ul className="sm:gap-5 gap-2 flex">
                 <li><Button text={""} onClick={() => setTheme(theme === "light" ? "dark" : "light")} type="button" backgroundColor={`${theme === "light" ? "white" : "black"}`} textColor={`${theme === "light" ? "black" : "white"}`} icon={theme === "light" ? Moon : Sun} /></li>
                 <li><Button onClick={() => { setSignIn(true); setButton(1) }} type="button" text="sign-in" backgroundColor="background" textColor={`${theme === "light" ? "black" : "white"}`} /></li>
                 <li><Button onClick={() => { setSignIn(true); setButton(2) }} type="button" text="sign-up" /></li>
@@ -72,6 +72,9 @@ const RightSideNavElements = ({ userData }: { userData: any }) => {
         </DropDown>
         <SearchBar />
         <ProfileIcon />
+        <button onClick={handleSignOut}>
+            Logout
+        </button>
     </div>
 }
 
@@ -86,24 +89,26 @@ const TopNav: React.FC<TopNavProps> = ({ display, navLocations }) => {
 
 
     return <div className={`${show ? "parent-box" : "hidden"}`}>
-        <nav className={`child-box px-3 py-1 h-20 justify-between items-center gap-20 ${display ? "flex" : "hidden"}`}>
-            <Link href="/">
-                <h1 className="text-3xl text-primary-text font-bold">
-                    {appName}
-                </h1>
-            </Link>
+        <div className="child-box">
+            <nav className={`flex px-3 py-1 h-20 justify-between items-center gap-5 sm:gap-20 ${display ? "flex" : "hidden"}`}>
+                <Link href="/">
+                    <h1 className="text-3xl text-primary-text font-bold">
+                        {appName}
+                    </h1>
+                </Link>
 
-            {!userData && <ul className="hidden sm:flex gap-10 items-center">
-                {navLocations.map((nl: NavLocations, index: number) => (
-                    <li key={index} className="text-primary-text font-medium"><Link href={nl.path}>
-                        {nl.icon ?? ""} <span>{nl.name}</span>
-                    </Link></li>
-                ))}
-            </ul>}
+                {!userData && <ul className="hidden sm:flex gap-10 items-center">
+                    {navLocations.map((nl: NavLocations, index: number) => (
+                        <li key={index} className="text-primary-text font-medium"><Link href={nl.path}>
+                            {nl.icon ?? ""} <span>{nl.name}</span>
+                        </Link></li>
+                    ))}
+                </ul>}
 
 
-            <RightSideNavElements userData={userData} />
-        </nav>
+                <RightSideNavElements userData={userData} />
+            </nav>
+        </div>
     </div>
 }
 

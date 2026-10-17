@@ -1,5 +1,5 @@
 "use client";
-import { Heart } from "lucide-react";
+import { Camera, Heart } from "lucide-react";
 import Image from "next/image";
 
 
@@ -31,7 +31,7 @@ const BioPicture = ({ bio, profileOne, profileTwo }: { bio?: string | null, prof
         <div className="relative w-full h-[200px] rounded-3xl border border-dashed border-secondary-text">
             {(bio && bio.length > 0) ?
                 <Image src={bio} alt="couple-bio-image" className="rounded-3xl object-cover" /> :
-                <div className="rounded-3xl bg-pink-500/50 w-full text-lg font-bold h-full flex justify-center items-center">
+                <div className="rounded-3xl bg-pink-500/95 w-full text-lg font-bold h-full flex justify-center items-center">
                     Your Together, and best Image goes here</div>}
         </div>
     </div>

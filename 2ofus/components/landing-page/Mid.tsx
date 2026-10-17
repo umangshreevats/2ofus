@@ -10,8 +10,8 @@ import { appName } from "@/data/info";
 const Mid = () => {
     const [signIn, setSignIn] = useState(false);
 
-    return <div className="parent-box"><div className="rounded-2xl child-box grid grid-rows-2 grid-cols-1 sm:grid-rows-1 sm:grid-cols-2">
-        <div className="w-full h-full">
+    return <div className="parent-box"><div className="rounded-2xl child-box grid grid-rows-1 grid-cols-1 md:grid-rows-1 md:grid-cols-2">
+        <div className="w-full h-full hidden md:block">
             <Image src={frontImage} className="rounded-tl-2xl sm:rounded-bl-2xl rounded-tr-2xl sm:rounded-br-none object-cover" alt="front-image" />
         </div>
 
