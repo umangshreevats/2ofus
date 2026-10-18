@@ -4,7 +4,7 @@ import SearchPartner from "@/features/profile-page/SearchPartner";
 import { createClient } from "@/utils/supabase/server";
 
 export default async function HomePage() {
-    const { user, userData } = await getCurrentUser();
+    const { user, userData, coupleData } = await getCurrentUser();
 
     if (!user) {
         redirect("/");
@@ -12,6 +12,10 @@ export default async function HomePage() {
 
     if (!userData) {
         throw new Error("User profile not found");
+    }
+
+    if(coupleData) {
+        redirect("/home/my-couple");
     }
 
     const supabase = await createClient();

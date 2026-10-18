@@ -19,7 +19,10 @@ export async function getCurrentUser() {
 
     //user joint profile created with the loved ones
     const { data: coupleData, error: coupleDataError } = await supabase.from("couples")
-    .select("*")
+    .select(`*,
+        partner_1:users!partner_1(*),
+        partner_2:users!partner_2(*)
+        `)
     .or(`partner_1.eq.${user.id}, partner_2.eq.${user.id}`)
     .single();
 
