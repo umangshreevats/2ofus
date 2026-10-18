@@ -68,7 +68,7 @@ const DropDown = ({
             {children}
         </div>
 
-        {innerHTML ? <div className={`absolute ${open ? "flex" : "hidden"} rounded-sm shadow-[0px_0px_6px_var(--accent)]`}
+        {innerHTML ? <div className={`absolute ${open ? "flex" : "hidden"} rounded-sm z-[999] shadow-[0px_0px_6px_var(--accent)]`}
         style={{
                 left: (left && left > 0) ? `${leftPos}px` : "",
                 top: (top && top > 0) ? `${topPos}px` : "",
@@ -76,7 +76,7 @@ const DropDown = ({
                 bottom: (bottom && bottom > 0) ? `${bottomPos}px` : ""
             }}>{innerHTML}
         </div> : <ul
-            className={`absolute ${open ? "flex" : "hidden"} rounded-sm shadow-[0px_0px_6px_var(--accent)] 
+            className={`absolute ${open ? "flex" : "hidden"} z-[999] rounded-sm shadow-[0px_0px_6px_var(--accent)] 
         flex-col gap-2 p-2 bg-background`}
             style={{
                 left: (left && left > 0) ? `${leftPos}px` : "",

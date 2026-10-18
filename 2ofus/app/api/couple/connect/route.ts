@@ -77,21 +77,8 @@ export async function POST(request: NextRequest) {
         if (sendRequestError) throw sendRequestError;
 
 
-        const { data: notification, error: notificationError } = await supabase
-        .from("notifications")
-        .insert({
-            sender: user.id,
-            receiver: requestedId,
-            is_read: false,
-            title: "You Got a couple request:",
-            message: `${userData.username} send you a request, might be your loved one!`,
-        }).select().single();
-
-        if (notificationError) throw notificationError;
-
         return NextResponse.json({
             message: "Request send successfully!",
-            notification,
             sendRequest
         }, {
             status: 201
