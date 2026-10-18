@@ -10,6 +10,7 @@ import {
 type AuthContextType = {
   user: any;
   userData: any;
+  coupleData: any;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);

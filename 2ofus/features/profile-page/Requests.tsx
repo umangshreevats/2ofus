@@ -1,10 +1,36 @@
 "use client";
 import Button from "@/components/commons/Button";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const Requests = ({ requestsSend, requestsReceived }: { requestsSend: any, requestsReceived: any }) => {
 
+    const router = useRouter();
+    const handleRequest = async (request: "accept" | "reject" | "cancel", requestId: string) => {
 
+        try {
+
+            const response = await fetch(`/api/couple/coupling-request/${requestId}/${request}`, {
+                method: "PATCH",
+                headers: {
+                    "content-type": "applications/json"
+                }
+            });
+
+            if(!response.ok) {
+                alert("An error occured!");
+                return;
+            }
+
+            alert("success");
+
+            if(request === "accept") {
+                router.push("/home/my-couple");
+            }
+        } catch (err) {
+            alert("An error occured!");
+        }
+    }
 
     return <div className="w-full grid grid-cols-1 grid-rows-[1fr_repeat(2, 2fr)] md:grid-rows-[1fr_2fr] md:grid-cols-2">
 
@@ -32,7 +58,7 @@ const Requests = ({ requestsSend, requestsReceived }: { requestsSend: any, reque
                         <span className="font-bold">@{req.receiver.username}</span>
                     </div>
 
-                    <Button type="button" text="cancel" className="ml-5"/>
+                    <Button onClick={() => handleRequest("cancel", req.id)} type="button" text="cancel" className="ml-5" />
                 </div>
             ))}
         </div>
@@ -47,15 +73,19 @@ const Requests = ({ requestsSend, requestsReceived }: { requestsSend: any, reque
 
                     <div className="w-10 h-10 rounded-full">
                         {(req.sender.profile_image && req.sender.profile_image.length > 0) ?
-                            <Image src={req.sender.profile_image} alt={`User-${req.sender_id}`} className="object-cover rounded-full" /> :
+                            <Image width={150}
+                                height={150} src={req.sender.profile_image} alt={`User-${req.sender_id}`} className="object-cover rounded-full" /> :
                             <div className="w-full h-full rounded-full bg-accent text-white flex items-center justify-center">
                                 {req.sender.username[0]}
                             </div>}
                     </div>
                     <div className="h-full flex-flex-col">
-                        <span className="font-medium">{req.sender.firstname ?? ""} {req.sender.lastname ?? ""}</span>
-                        <span className="font-bold">@{req.sender.username}</span>
+                        <p className="font-medium">{req.sender.firstname ?? ""} {req.sender.lastname ?? ""}</p>
+                        <p className="font-bold">@{req.sender.username}</p>
                     </div>
+
+                    <Button onClick={() => handleRequest("reject", req.id)} type="button" text="reject" className="ml-5" />
+                    <Button onClick={() => handleRequest("accept", req.id)} type="button" text="accept" />
                 </div>
             ))}
         </div>

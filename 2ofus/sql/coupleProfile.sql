@@ -65,3 +65,54 @@ USING (
     auth.uid() = partner_1
     OR auth.uid() = partner_2
 );
+
+
+
+CREATE OR REPLACE FUNCTION public.process_coupling_request (
+    p_request_id UUID
+)
+
+RETURN JSONB
+LANGUAGE plpsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_sender UUID;
+  v_receiver UUID;
+  v_couple_id;
+
+BEGIN
+
+  SELECT sender_id, receiver_id
+  INTO v_sender, v_receiver
+  FROM coupling_requests
+  WHERE id = p_request_id
+  AND status = 'pending'
+  FOR UPDATE;
+
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'Request not found';
+  END IF;
+
+  INSERT INTO couples(
+    partner_1,
+    partner_2
+  ) VALUES (
+    v_sender,
+    v_receiver
+  ) RETURNING id INTO v_couple_id;
+
+  UPDATE coupling_requests
+  SET status = 'accepted'
+  WHERE id = p_request_id;
+
+  RETURN jsonb_build_object(
+    'success' true,
+    'couple_id' v_couple_id
+  );
+
+END;
+$$
+
+GRAND EXECUTION ON FUNCTION public.process_coupling_request(UUID) TO authenticated;
