@@ -31,7 +31,7 @@ interface TopNavProps {
 
 
 // dynamic nav elements:
-const RightSideNavElements = ({ userData }: { userData: any }) => {
+const RightSideNavElements = ({ userData, coupleData }: { userData: any, coupleData: any }) => {
 
     if (!userData) {
         const [signIn, setSignIn] = useState(false);
@@ -70,7 +70,7 @@ const RightSideNavElements = ({ userData }: { userData: any }) => {
         <DropDown open={openNav} setOpen={setOpenNav} right={10} top={10} innerHTML={<Notifications />}>
             <Bell />
         </DropDown>
-        <SearchBar />
+        {!coupleData && <SearchBar />}
         <ProfileIcon />
         <button onClick={handleSignOut}>
             Logout
@@ -82,7 +82,7 @@ const RightSideNavElements = ({ userData }: { userData: any }) => {
 const TopNav: React.FC<TopNavProps> = ({ display, navLocations }) => {
 
     const pathname = usePathname();
-    const { userData } = useAuth();
+    const { userData, coupleData } = useAuth();
     const show = Object.entries(headerFooterMain).find(
         ([route]) => pathname === route || (route !== "/" && pathname.startsWith(route))
     )?.[1].show ?? true;
@@ -106,7 +106,7 @@ const TopNav: React.FC<TopNavProps> = ({ display, navLocations }) => {
                 </ul>}
 
 
-                <RightSideNavElements userData={userData} />
+                <RightSideNavElements userData={userData} coupleData={coupleData} />
             </nav>
         </div>
     </div>
