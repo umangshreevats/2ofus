@@ -72,9 +72,6 @@ const RightSideNavElements = ({ userData, coupleData }: { userData: any, coupleD
         </DropDown>
         {!coupleData && <SearchBar />}
         <ProfileIcon />
-        <button onClick={handleSignOut}>
-            Logout
-        </button>
     </div>
 }
 

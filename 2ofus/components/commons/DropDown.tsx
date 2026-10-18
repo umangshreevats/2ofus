@@ -1,5 +1,6 @@
 "use client";
 import { SetStateAction, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 
 const DropDown = ({
     children,
@@ -36,7 +37,11 @@ const DropDown = ({
     const iconRef = useRef<HTMLDivElement | null>(null);
     const parentRef = useRef<HTMLDivElement | null>(null);
 
-
+    const closeDropDown = () => setOpen(false);
+    const handleClick = async (callback?: () => Promise<void>) => {
+        await callback?.();
+        closeDropDown();
+    };
     useEffect(() => {
         const setDropDownPos = () => {
 
@@ -58,18 +63,18 @@ const DropDown = ({
     }, [])
 
     return <div ref={parentRef} className="relative"
-    style={{
-        width: `${width === "auto" ? width : width+wScale}`,
-        display: "flex",
-        justifyContent: iconPos,
-        alignItems: "center"
-    }}>
+        style={{
+            width: `${width === "auto" ? width : width + wScale}`,
+            display: "flex",
+            justifyContent: iconPos,
+            alignItems: "center"
+        }}>
         <div ref={iconRef} onClick={() => setOpen(prev => !prev)} className="cursor-pointer">
             {children}
         </div>
 
         {innerHTML ? <div className={`absolute ${open ? "flex" : "hidden"} rounded-sm z-[999] shadow-[0px_0px_6px_var(--accent)]`}
-        style={{
+            style={{
                 left: (left && left > 0) ? `${leftPos}px` : "",
                 top: (top && top > 0) ? `${topPos}px` : "",
                 right: (right && right > 0) ? `${rightPos}px` : "",
@@ -84,11 +89,39 @@ const DropDown = ({
                 right: (right && right > 0) ? `${rightPos}px` : "",
                 bottom: (bottom && bottom > 0) ? `${bottomPos}px` : ""
             }}>
-            {dropDownOptions.map((opt, i) => (
-                <li key={opt?.id ?? i} onClick={() => setOpen(false)} className="w-full p-2">
-                    {opt.name}
-                </li>
-            ))}
+            {dropDownOptions.map((opt) => {
+                const Icon = opt.icon;
+
+                const commonClass = `
+                            w-full p-2 cursor-pointer flex items-center gap-2
+                            rounded-sm hover:bg-accent/10 transition-colors
+                            ${opt.danger ? "text-red-600" : ""}
+                        `;
+
+                return (
+                    <li key={opt.id}>
+                        {opt.href ? (
+                            <Link
+                                href={opt.href}
+                                onClick={closeDropDown}
+                                className={commonClass}
+                            >
+                                {Icon && <Icon size={17} />}
+                                {opt.name}
+                            </Link>
+                        ) : (
+                            <button
+                                type="button"
+                                onClick={() => handleClick(opt.onClick)}
+                                className={commonClass}
+                            >
+                                {Icon && <Icon size={17} />}
+                                {opt.name}
+                            </button>
+                        )}
+                    </li>
+                );
+            })}
         </ul>}
     </div>
 }
