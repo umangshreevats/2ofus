@@ -44,7 +44,7 @@ const Auth = ({ setOpen, signIn: si }: { signIn: boolean, setOpen: React.Dispatc
 
         const { data: profile, error: profileError } = await supabase
             .from("users")
-            .select("username")
+            .select("username, is_profile_completed")
             .eq("id", userId)
             .single();
 
@@ -52,6 +52,10 @@ const Auth = ({ setOpen, signIn: si }: { signIn: boolean, setOpen: React.Dispatc
         if (profileError || !profile) {
             alert(profileError.message);
             return;
+        }
+
+        if(profile.is_profile_completed) {
+            router.push("/home");
         }
 
         router.push(`/profile/@${profile.username}`);

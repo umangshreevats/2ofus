@@ -1,7 +1,7 @@
 import { appName } from "@/data/info";
 import ProfileSetup from "@/features/profile-page/ProfileSetup";
 import { createClient } from "@/utils/supabase/server";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 
 export default async function ProfilePage({ params }: { params: Promise<{ username: string }> }) {
@@ -21,6 +21,14 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
         console.log("Profile: ", profile);
         notFound();
     }
+
+    if(profile.is_profile_completed) {
+        redirect("/home");
+    }
+    
+    const { error: profileUpdateError } = await supabase.from("users").update({ is_profile_completed: true }).eq("username", cleanUsername).single();
+
+    if(profileUpdateError) throw profileUpdateError;
 
     return <div className="parent-box flex-col justify-start items-center">
         <div className="child-box p-10 flex flex-col gap-5">
