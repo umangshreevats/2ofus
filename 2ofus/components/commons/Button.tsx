@@ -20,6 +20,7 @@ interface ButtonProps {
     tscale?: "px" | "%" | "em" | "rem",
     pscale?: "px" | "%" | "em" | "rem",
     disabled?: boolean;
+    className?: string;
 };
 
 const Button: React.FC<ButtonProps> = ({
@@ -38,7 +39,8 @@ const Button: React.FC<ButtonProps> = ({
     pscale = "rem",
     height = "auto",
     textColor,
-    padding = 0.5
+    padding = 0.5,
+    className = ""
 }) => {
 
     const Icon = icon || null;
@@ -52,7 +54,7 @@ const Button: React.FC<ButtonProps> = ({
     const finalTextColor =
         textColor ?? (theme === "light" ? "white" : "black");
 
-    return <button disabled={disabled} onClick={onClick} type={type} className={`flex disabled:cursor-not-allowed items-center gap-5 justify-center rounded-full font-bold text-center cursor-pointer`}
+    return <button disabled={disabled} onClick={onClick} type={type} className={`${className} flex disabled:cursor-not-allowed items-center gap-5 justify-center rounded-full font-bold text-center cursor-pointer`}
         style={{
             backgroundColor: `var(--${finalBackgroundColor}, ${finalBackgroundColor})`,
             color: finalTextColor,

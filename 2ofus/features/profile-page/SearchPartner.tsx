@@ -1,9 +1,9 @@
 "use client";
 
 import SearchBar from "@/components/profile-page/nav-bar/SearchBar";
-import Link from "next/link";
+import Requests from "./Requests";
 
-const SearchPartner = () => {
+const SearchPartner = ({ requestsSend, requestsReceived }: { requestsSend: any, requestsReceived: any }) => {
     return <div className="parent-box">
         <div className="child-box p-10 flex flex-col items-center gap-10">
 
@@ -12,11 +12,7 @@ const SearchPartner = () => {
                 <p className="w-full text-md font-medium">Find your person and create your own little world together.</p>
             </div>
             <SearchBar width={100} padding={1.5} wScale="%" />
-
-            <div className="flex flex-col items-center gap-5">
-                <p className="text-md font-medium text-secondary-text">Already received an invitation?</p>
-                <Link href="/home" className="text-accent">View invitations →</Link>
-            </div>
+            <Requests requestsSend={requestsSend} requestsReceived={requestsReceived} />
         </div>
     </div>
 }
