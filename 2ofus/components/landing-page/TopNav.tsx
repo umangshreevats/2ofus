@@ -80,9 +80,15 @@ const TopNav: React.FC<TopNavProps> = ({ display, navLocations }) => {
 
     const pathname = usePathname();
     const { userData, coupleData } = useAuth();
-    const show = Object.entries(headerFooterMain).find(
-        ([route]) => pathname === route || (route !== "/" && pathname.startsWith(route))
-    )?.[1].show ?? true;
+    const matchedRoute = Object.entries(headerFooterMain)
+        .sort(([a], [b]) => b.length - a.length)
+        .find(([route]) =>
+            route === "/"
+                ? pathname === "/"
+                : pathname === route || pathname.startsWith(`${route}/`)
+        );
+
+    const show = matchedRoute?.[1].show ?? true;
 
 
     return <div className={`${show ? "parent-box" : "hidden"}`}>

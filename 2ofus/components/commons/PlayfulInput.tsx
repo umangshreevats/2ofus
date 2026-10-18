@@ -16,7 +16,9 @@ interface PlayfulInputProps {
     padding?: number;
     textAlign?: CSSProperties["textAlign"];
     onChange: (...props: any) => void;
+    onClick?: (...props: any) => void;
     noLeft?: boolean;
+    disabled?: boolean;
 }
 
 const PlayfulInput: React.FC<PlayfulInputProps> = ({
@@ -29,15 +31,19 @@ const PlayfulInput: React.FC<PlayfulInputProps> = ({
     textAlign = "center",
     text = "",
     onChange,
+    onClick = () => {},
     id,
     type = "text",
     placeholder = "Enter Something",
-    noLeft = false
+    noLeft = false,
+    disabled = false
 }) => {
 
 
     return <input
-        className={`border-4 border-solid flex font-bold outline-none ${noLeft ? "rounded-r-full" : "rounded-full"}`}
+    onClick={() => onClick()}
+    disabled={disabled}
+        className={`disabled:cursor-not-allowed border-4 border-solid flex font-bold outline-none ${noLeft ? "rounded-r-full" : "rounded-full"}`}
         style={{
             boxShadow: `
     inset 3px -3px 5px rgba(0,0,0,0.08),

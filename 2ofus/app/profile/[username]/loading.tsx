@@ -1,7 +1,9 @@
+import HeartBeatLoader from "@/components/commons/HeartBeatLoader";
+
 export default function ProfileLoading() {
 
 
-    return <div>
-        loading...
+    return <div className="w-full min-h-screen flex items-center justify-center">
+        <HeartBeatLoader />
     </div>
 }

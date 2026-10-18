@@ -9,9 +9,15 @@ const Footer = () => {
 
     const pathname = usePathname();
 
-    const show = Object.entries(headerFooterMain).find(
-        ([route]) => pathname === route || (route !== "/" && pathname.startsWith(route))
-    )?.[1].show ?? true;
+    const matchedRoute = Object.entries(headerFooterMain)
+        .sort(([a], [b]) => b.length - a.length)
+        .find(([route]) =>
+            route === "/"
+                ? pathname === "/"
+                : pathname === route || pathname.startsWith(`${route}/`)
+        );
+
+    const show = matchedRoute?.[1].show ?? true;
 
     return <div className={`${show ? "w-full" : "hidden"}`}>
         <div className="w-full h-20 bg-accent">

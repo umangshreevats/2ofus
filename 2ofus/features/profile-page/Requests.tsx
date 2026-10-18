@@ -17,15 +17,16 @@ const Requests = ({ requestsSend, requestsReceived }: { requestsSend: any, reque
                 }
             });
 
+            const result = await response.json();
             if(!response.ok) {
-                alert("An error occured!");
+                alert("An error occured!"+result.message);
                 return;
             }
 
             alert("success");
 
             if(request === "accept") {
-                router.push("/home/my-couple");
+                router.push(`/home/couple-setup/${result?.couplingRequest?.couple_id}`);
             }
         } catch (err) {
             alert("An error occured!");
