@@ -6,6 +6,7 @@ import DropDown from "@/components/commons/DropDown";
 import { User, Settings, LogOut } from 'lucide-react';
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
+import PhotoFrame from "@/components/commons/PhotoFrame";
 
 const ProfileIcon = () => {
 
@@ -32,14 +33,15 @@ const ProfileIcon = () => {
     ];
     return <DropDown iconPos="end" open={open} setOpen={setOpen} right={10} top={10} dropDownOptions={dropDownOptions}>
         <div className="w-10 h-10 rounded-full font-bold">
-
-            {(userData.profile_image && userData.profile_image.length > 0) ?
-                <Image src={userData.profile_image}
-                    width={150}
-                    height={150} alt="profile-Image" className="object-cover rounded-full" /> :
-                <div className="w-full h-full rounded-full bg-accent text-white flex items-center justify-center">
-                    {userData.username[0] ?? "U"}
-                </div>}
+            <PhotoFrame width={100} height={100} wscale="%" hscale="%" round={true}>
+                {(userData.profile_image && userData.profile_image.length > 0) ?
+                    <Image src={userData.profile_image}
+                        width={150}
+                        height={150} alt="profile-Image" className="object-cover rounded-full" /> :
+                    <div className="w-full h-full rounded-full bg-accent text-white flex items-center justify-center">
+                        {userData.username[0].toUpperCase() ?? "U"}
+                    </div>}
+            </PhotoFrame>
         </div>
     </DropDown>
 }
