@@ -4,13 +4,16 @@ import DropDown from "@/components/commons/DropDown";
 import PlayfulInput from "@/components/commons/PlayfulInput";
 import { useState } from "react";
 import DatePicker from "@/components/commons/DatePicker";
-
+import Photograph from "@/components/commons/Photograph";
+import Button from "@/components/commons/Button";
 
 const CoupleSetup = () => {
 
     const [coupleName, setCoupleName] = useState("");
     const [relationshipStatus, setRelationShipStatus] = useState("");
     const [aniversaryDate, setAniversaryDate] = useState<Date | null>(null);
+    const [bioImage, setBioImage] = useState<File | null>(null);
+    const [description, setDescription] = useState("");
 
     const dropDownOptions = [
         {
@@ -87,11 +90,63 @@ const CoupleSetup = () => {
                             id="aniversary"
                             value={aniversaryDate}
                             onChange={(date) =>
-                        setAniversaryDate(date)}
+                                setAniversaryDate(date)}
                         />
                         <p className="w-full text-secondary-text font-light">Your aniversary is the special date of your life! 🎂</p>
 
                     </label>
+
+
+                    <label htmlFor="bio" className="w-full flex flex-col gap-3">
+
+                        <label className="w-full text-lg font-bold">
+                            Pick a photograph you both enjoy:
+                        </label>
+
+                        <Photograph
+                            photograph={bioImage}
+                            fwidth={100}
+                            fwscale="%"
+                            fheight={300}
+                            fhscale="px"
+                            alternate="Your photograph goes here"
+                        />
+
+                        <input
+                            className="hidden"
+                            type="file"
+                            id="bio"
+                            accept="image/*"
+                            onChange={(e) => {
+                                const file = e.target.files?.[0] ?? null;
+                                setBioImage(file);
+                            }}
+                        />
+
+                        <label
+                            htmlFor="bio"
+                            className="cursor-pointer text-center border border-dashed p-3 rounded-lg hover:opacity-70"
+                        >
+                            📸 Choose Photograph
+                        </label>
+
+                        <Button type="button" className={`${!bioImage && "hidden"}`} onClick={() => setBioImage(null)} text={"Remove Image"} backgroundColor="background" textColor="red" />
+
+                    </label>
+
+
+                    <label htmlFor="description" className="w-full flex flex-col gap-2">
+                        <label className="w-full text-lg font-bold">
+                            Write a short description about your relationship:
+                        </label>
+
+                        <PlayfulInput placeholder="Description about your relationship..." text={description} onChange={(e) => setDescription(e.target.value)}
+                            textArea={true} width={100} height={200} wScale="%" id="description" textAlign="start" />
+                    </label>
+
+
+                    <Button text={"Continue"} width={100} wscale="%"/>
+
                 </form>
             </div>
         </div>
