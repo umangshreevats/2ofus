@@ -55,7 +55,8 @@ const PhotoFrame: React.FC<PhotoFrameProps> = ({
             >
                 {/* Photograph */}
                 <div
-                    className={`w-full h-full overflow-hidden ${round ? "rounded-full" : "rounded-[2px]"} bg-background`}
+                    className={`relative w-full h-full overflow-hidden ${round ? "rounded-full" : "rounded-[2px]"
+                        } bg-background`}
                     style={{
                         boxShadow: "0 2px 8px rgba(0,0,0,0.18)",
                     }}
