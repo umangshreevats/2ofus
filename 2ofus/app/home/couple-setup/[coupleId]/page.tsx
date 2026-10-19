@@ -8,6 +8,6 @@ export default async function CoupleSetupPage ({ params }: { params: Promise<{ c
         throw Error("Couple Id is required");
     }
     return <section className="w-full">
-        <CoupleSetup />
+        <CoupleSetup profileId={coupleId} />
     </section>
 }

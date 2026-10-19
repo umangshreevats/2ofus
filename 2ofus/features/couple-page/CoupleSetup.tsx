@@ -2,18 +2,69 @@
 
 import DropDown from "@/components/commons/DropDown";
 import PlayfulInput from "@/components/commons/PlayfulInput";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import DatePicker from "@/components/commons/DatePicker";
 import Photograph from "@/components/commons/Photograph";
 import Button from "@/components/commons/Button";
+import { useRouter } from "next/navigation";
 
-const CoupleSetup = () => {
+const CoupleSetup = ({ profileId }: { profileId: string }) => {
 
+    const router = useRouter();
     const [coupleName, setCoupleName] = useState("");
     const [relationshipStatus, setRelationShipStatus] = useState("");
     const [aniversaryDate, setAniversaryDate] = useState<Date | null>(null);
     const [bioImage, setBioImage] = useState<File | null>(null);
     const [description, setDescription] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+
+        e.preventDefault();
+
+        console.log(profileId);
+        setLoading(true);
+
+        try {
+            const formData = new FormData();
+            formData.append("coupleName", coupleName);
+            if (bioImage instanceof File) {
+                formData.append("bioImage", bioImage);
+            }
+
+            if (aniversaryDate instanceof Date) {
+                formData.append("aniversaryDate", aniversaryDate.toISOString());
+            }
+            formData.append("description", description);
+            formData.append("relationShipStatus", relationshipStatus.toLowerCase());
+
+            const response = await fetch(`/api/profile/couple-profile/${profileId}`, {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if(!response.ok) {
+                alert("Something went wrong: "+result.message);
+                setLoading(false);
+                return;
+            }
+
+            router.push("/home/my-couple");
+
+        } catch (err) {
+            if(err instanceof Error) {
+                alert("Something went wrong: "+err.message);
+                return;
+            }
+
+            alert("Something went wrong");
+        } finally {
+            setLoading(false);
+        }
+    }
+
 
     const dropDownOptions = [
         {
@@ -43,7 +94,7 @@ const CoupleSetup = () => {
     return <section>
         <div className="parent-box">
             <div className="child-box">
-                <form className="w-full flex flex-col gap-5 items-center p-10">
+                <form onSubmit={handleSubmit} className="w-full flex flex-col gap-5 items-center p-10">
 
 
                     <h2 className="w-full text-3xl font-bold text-primary-text">
@@ -145,7 +196,7 @@ const CoupleSetup = () => {
                     </label>
 
 
-                    <Button text={"Continue"} width={100} wscale="%"/>
+                    <Button text={loading ? "Processing.." : "Continue"} disabled={loading} width={100} wscale="%" />
 
                 </form>
             </div>

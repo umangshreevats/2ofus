@@ -5,9 +5,8 @@ import { uploadBioImage } from "@/lib/supabase/storage";
 
 
 // POST: /api/profile/couple-profile/:profileId
-export async function POST(request: NextRequest, params: Promise<{ profileId?: string }>) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ profileId: string }> }) {
     try {
-
         const supabase = await createClient();
 
         const { user } = await getCurrentUser();
@@ -64,12 +63,13 @@ export async function POST(request: NextRequest, params: Promise<{ profileId?: s
             .update({
                 couple_name: coupleName,
                 relationship_status: status,
-                aniversary_date: aniversaryDate,
+                anniversary_date: aniversaryDate,
                 cover_image: uploadedImage?.publicUrl ?? null,
                 bio: description
             }).eq("id", profileId).select().single();
 
         if (profileSetupError) {
+            console.error(profileSetupError);
             return NextResponse.json(
                 { message: "Internal Server Error: while updating the profile data" },
                 { status: 500 }
@@ -86,6 +86,7 @@ export async function POST(request: NextRequest, params: Promise<{ profileId?: s
 
     } catch (err) {
 
+        console.error(err);
         return NextResponse.json(
             {
                 message: "Internal Server Error"
