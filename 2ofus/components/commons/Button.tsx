@@ -1,7 +1,8 @@
 'use client';
-import type { LucideIcon } from 'lucide-react';
+import { type LucideIcon } from 'lucide-react';
 import { IconType } from 'react-icons';
 import { useThemeSettings } from '@/app/theme-provider';
+import { useState } from 'react';
 
 interface ButtonProps {
     type?: "button" | "submit" | "reset";
@@ -21,6 +22,8 @@ interface ButtonProps {
     pscale?: "px" | "%" | "em" | "rem",
     disabled?: boolean;
     className?: string;
+    selectButton?: boolean;
+    selectColor?: string;
 };
 
 const Button: React.FC<ButtonProps> = ({
@@ -40,21 +43,34 @@ const Button: React.FC<ButtonProps> = ({
     height = "auto",
     textColor,
     padding = 0.5,
-    className = ""
+    className = "",
+    selectButton = false,
+    selectColor = ""
 }) => {
 
     const Icon = icon || null;
 
     const { theme } = useThemeSettings();
+    const [select, setSelect] = useState(false);
+
+    const finalBackgroundColor = selectButton && select
+        ? selectColor || (theme === "light" ? "black" : "white")
+        : backgroundColor ?? (theme === "light" ? "black" : "white");
+
+    const finalTextColor = selectButton && select
+    ? (theme === "light" ? "white" : "black")
+    : textColor ?? (theme === "light" ? "white" : "black");
 
 
-    const finalBackgroundColor =
-        backgroundColor ?? (theme === "light" ? "black" : "white");
+    const handleOnClick = async () => {
+        await onClick();
 
-    const finalTextColor =
-        textColor ?? (theme === "light" ? "white" : "black");
+        if (selectButton) {
+            setSelect?.(!select);
+        }
+    };
 
-    return <button disabled={disabled} onClick={onClick} type={type} className={`${className} flex disabled:cursor-not-allowed items-center gap-5 justify-center rounded-full font-bold text-center cursor-pointer`}
+    return <button disabled={disabled} onClick={handleOnClick} type={type} className={`${className} flex disabled:cursor-not-allowed items-center gap-2 justify-center rounded-full font-bold text-center cursor-pointer`}
         style={{
             backgroundColor: `var(--${finalBackgroundColor}, ${finalBackgroundColor})`,
             color: finalTextColor,
