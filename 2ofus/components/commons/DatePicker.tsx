@@ -4,24 +4,29 @@ import { useState } from "react";
 import { DayPicker } from "react-day-picker";
 import { format } from "date-fns";
 import "react-day-picker/style.css";
-import PlayfulButton from "./PlayfulButton";
+import PlayfulInput from "./PlayfulInput";
 
 interface DatePickerProps {
     value: Date | null;
     onChange: (date: Date | null) => void;
+    id: string;
+    placeholder?: string;
 }
 
-export default function DatePicker({ value, onChange }: DatePickerProps) {
+export default function DatePicker({ value, onChange, id, placeholder }: DatePickerProps) {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
         <div className="relative">
-            <PlayfulButton
+            <PlayfulInput
+                placeholder={placeholder || "Enter Something"}
+                id={id}
                 width={100}
                 textAlign="start"
                 wScale="%"
-                text={value ? format(value, "dd MMMM yyyy") : "Select your date of birth"}
+                text={value ? format(value, "dd MMMM yyyy") : ""}
                 onClick={() => setIsOpen(prev => !prev)}
+                onChange={() => { }}
             />
 
             {isOpen && (

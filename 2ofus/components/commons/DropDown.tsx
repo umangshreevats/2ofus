@@ -64,16 +64,16 @@ const DropDown = ({
 
     return <div ref={parentRef} className="relative"
         style={{
-            width: `${width === "auto" ? width : width + wScale}`,
+            width: `${width === "auto" ? width : width+wScale}`,
             display: "flex",
             justifyContent: iconPos,
             alignItems: "center"
         }}>
-        <div ref={iconRef} onClick={() => setOpen(prev => !prev)} className="cursor-pointer">
+        <div ref={iconRef} onClick={() => setOpen(prev => !prev)} className="w-full cursor-pointer">
             {children}
         </div>
 
-        {innerHTML ? <div className={`absolute ${open ? "flex" : "hidden"} rounded-sm z-[999] shadow-[0px_0px_6px_var(--accent)]`}
+        {innerHTML ? <div className={`absolute ${open ? "flex" : "hidden"} min-w-full rounded-sm z-[999] shadow-[0px_0px_6px_var(--accent)]`}
             style={{
                 left: (left && left > 0) ? `${leftPos}px` : "",
                 top: (top && top > 0) ? `${topPos}px` : "",
@@ -81,7 +81,7 @@ const DropDown = ({
                 bottom: (bottom && bottom > 0) ? `${bottomPos}px` : ""
             }}>{innerHTML}
         </div> : <ul
-            className={`absolute ${open ? "flex" : "hidden"} z-[999] rounded-sm shadow-[0px_0px_6px_var(--accent)] 
+            className={`absolute ${open ? "flex" : "hidden"} z-[999] min-w-full rounded-sm shadow-[0px_0px_6px_var(--accent)] 
         flex-col gap-2 p-2 bg-background`}
             style={{
                 left: (left && left > 0) ? `${leftPos}px` : "",

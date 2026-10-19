@@ -162,17 +162,21 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ username, profileData, setPro
             </div>
 
             {/*DOB*/}
-            <label className="w-full text-lg font-bold">Date of Birth: </label>
-            <DatePicker
-                value={profileData.dob}
-                onChange={(date) =>
-                    setProfileData(prev => ({
-                        ...prev,
-                        dob: date
-                    }))
-                }
-            />
-            <p className="w-full text-secondary-text font-light">Your birthday helps us celebrate your special day! 🎂</p>
+            <label htmlFor="dob" className="w-full">
+                <label className="w-full text-lg font-bold">Date of Birth: </label>
+                <DatePicker
+                    id="dob"
+                    placeholder="Enter you Date of Birth"
+                    value={profileData.dob}
+                    onChange={(date) =>
+                        setProfileData(prev => ({
+                            ...prev,
+                            dob: date
+                        }))
+                    }
+                />
+                <p className="w-full text-secondary-text font-light">Your birthday helps us celebrate your special day! 🎂</p>
+            </label>
 
             {/*Gender*/}
 

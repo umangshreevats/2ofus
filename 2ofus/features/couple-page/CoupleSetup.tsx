@@ -3,12 +3,14 @@
 import DropDown from "@/components/commons/DropDown";
 import PlayfulInput from "@/components/commons/PlayfulInput";
 import { useState } from "react";
+import DatePicker from "@/components/commons/DatePicker";
 
 
 const CoupleSetup = () => {
 
     const [coupleName, setCoupleName] = useState("");
     const [relationshipStatus, setRelationShipStatus] = useState("");
+    const [aniversaryDate, setAniversaryDate] = useState<Date | null>(null);
 
     const dropDownOptions = [
         {
@@ -76,6 +78,19 @@ const CoupleSetup = () => {
                                 onChange={() => { }}
                             />
                         </DropDown>
+                    </label>
+
+                    <label htmlFor="aniversary" className="w-full">
+                        <label className="w-full text-lg font-bold">Aniversary Date: </label>
+                        <DatePicker
+                            placeholder="Pick an aniversary date"
+                            id="aniversary"
+                            value={aniversaryDate}
+                            onChange={(date) =>
+                        setAniversaryDate(date)}
+                        />
+                        <p className="w-full text-secondary-text font-light">Your aniversary is the special date of your life! 🎂</p>
+
                     </label>
                 </form>
             </div>
