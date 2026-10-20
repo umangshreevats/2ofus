@@ -16,9 +16,9 @@ const AlbumTopSec = () => {
     const [show, setShow] = useState(false);
     const options = [
         { id: "all", name: "All", icon: LayoutGrid, route: "/home/my-couple/album?m=all" },
-        { id: "photo", name: "Photos", icon: Image, route: "/home/my-couple/album?m=photos" },
-        { id: "date", name: "Dates", icon: CalendarHeart, route: "/home/my-couple/album?m=dates" },
-        { id: "note", name: "Notes", icon: NotebookPen, route: "/home/my-couple/album?m=notes" }
+        { id: "photo", name: "Photos", icon: Image, route: "/home/my-couple/album?m=image" },
+        { id: "date", name: "Dates", icon: CalendarHeart, route: "/home/my-couple/album?m=date" },
+        { id: "note", name: "Notes", icon: NotebookPen, route: "/home/my-couple/album?m=note" }
     ];
 
     const [selected, setSelected] = useState<string | null>(null);
