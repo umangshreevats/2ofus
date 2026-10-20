@@ -4,13 +4,14 @@
 import { SetStateAction, useEffect, useState } from "react";
 import {
     Image,
-    NotebookPen
+    NotebookPen,
+    Heart
 } from "lucide-react";
 import PlayfulInput from "@/components/commons/PlayfulInput";
 import Photograph from "@/components/commons/Photograph";
 import Button from "@/components/commons/Button";
 import DatePicker from "@/components/commons/DatePicker";
-
+import { useAuth } from "@/app/auth-provider";
 type MemoryType = "image" | "note";
 
 
@@ -32,15 +33,76 @@ const MemoryManager: React.FC<MemoryManagerProps> = ({
     setShow,
     memoryData
 }) => {
+
+    const { coupleData } = useAuth();
     const [memoryType, setMemoryType] = useState<MemoryType | null>(null);
     const [title, setTitle] = useState("");
     const [note, setNote] = useState("");
     const [image, setImage] = useState<File | null>(null);
     const [memoryDate, setMemoryDate] = useState<Date | null>(null);
+    const [priority, setPriority] = useState(0);
+    const [loading, setLoading] = useState(false);
+
+    const handleMemoryFormSubmit = async (e: any) => {
+        e.preventDefault();
+
+        if(!memoryType) return;
+
+        setLoading(true);
+        try {
+
+            const formData = new FormData();
+
+            formData.append("title", title);
+            formData.append("content_type", memoryType);
+
+            if(memoryType=== "image") {
+                if(!image) {
+                    alert("Select Image");
+                    return;
+                }
+                formData.append("content", image);
+            }
+
+            if(memoryType=== "note") {
+                if(note.length === 0) {
+                    alert("Write something");
+                    return;
+                }
+                formData.append("content", note);
+            }
+
+            if(!memoryDate) {
+                alert("Give a memory date");
+                return;
+            }
+            formData.append("memory_date", memoryDate.toISOString());
+
+            formData.append("priority", String(priority));
+
+            const response = await fetch(`/api/couple/album/${coupleData.id}`, {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if(!response.ok) {
+                alert("Something went wrong! "+result.message);
+                return;
+            }
+            setShow(false);
+        } catch (err) {
+            alert("Something went wrong!");
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     useEffect(() => {
 
-        if(show) {
+        if (show) {
             document.body.style.overflow = "hidden";
         } else {
             document.body.style.overflow = "";
@@ -81,7 +143,7 @@ const MemoryManager: React.FC<MemoryManagerProps> = ({
                         </div>
 
                         <div className="w-full p-5">
-                            <form className="w-full flex flex-col gap-2">
+                            <form onSubmit={handleMemoryFormSubmit} className="w-full flex flex-col gap-2">
 
                                 <label className="w-full font-medium text-primary-text">
                                     Enter a title:
@@ -137,7 +199,19 @@ const MemoryManager: React.FC<MemoryManagerProps> = ({
                                         setMemoryDate(date)}
                                 />
 
-                                <Button text="Submit" />
+                                <label className="w-full text-lg font-bold">How much is this memory close to your heart?: </label>
+                                <div className="flex flex-wrap gap-2">
+                                    {[1, 2, 3, 4, 5].map((value) => (
+                                        <Heart
+                                            key={value}
+                                            onClick={() => setPriority(value)}
+                                            className={`cursor-pointer ${value <= priority ? "fill-red-500 text-red-500" : "text-gray-400"
+                                                }`}
+                                        />
+                                    ))}
+                                </div>
+
+                                <Button text={loading ? "Saving..." : "Save Memory"} disabled={loading} />
                             </form>
                         </div>
 
