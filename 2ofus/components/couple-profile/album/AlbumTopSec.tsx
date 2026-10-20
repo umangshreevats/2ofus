@@ -9,10 +9,11 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
+import MemoryManager from "./MemoryManager";
 
 const AlbumTopSec = () => {
 
-
+    const [show, setShow] = useState(false);
     const options = [
         { id: "all", name: "All", icon: LayoutGrid, route: "/home/my-couple/album?m=all" },
         { id: "photo", name: "Photos", icon: Image, route: "/home/my-couple/album?m=photos" },
@@ -49,9 +50,11 @@ const AlbumTopSec = () => {
                     Memories we've collected together, one little moment at a time.
                 </p>
                 <div>
-                    <Button type="button" text="+ Add a memory" backgroundColor="accent" textColor="white" />
+                    <Button onClick={() => setShow(true)} type="button" text="+ Add a memory" backgroundColor="accent" textColor="white" />
                 </div>
             </div>
+
+            <MemoryManager show={show} setShow={setShow} />
 
             <nav className="w-full p-2 flex gap-2">
                 {options.map((opt) => {

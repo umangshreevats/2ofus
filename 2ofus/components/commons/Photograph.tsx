@@ -1,6 +1,4 @@
 "use client";
-
-import Image from "next/image";
 import { useThemeSettings } from "@/app/theme-provider";
 import { useEffect, useState } from "react";
 
@@ -23,17 +21,31 @@ const Photograph = ({
 }) => {
     const { theme } = useThemeSettings();
     const [imageURL, setImageURL] = useState<string | null>(null);
+    const [dimensions, setDimensions] = useState<{ width: number, height: number } | null>(null);
 
     useEffect(() => {
         if (!photograph) {
             setImageURL(null);
+            setDimensions(null);
             return;
         }
 
         const url = URL.createObjectURL(photograph);
+        const img = new window.Image();
+
+        img.onload = () => {
+            setDimensions({
+                width: img.naturalWidth,
+                height: img.naturalHeight,
+            });
+        };
+
+        img.src = url;
         setImageURL(url);
 
-        return () => URL.revokeObjectURL(url);
+        return () => {
+            URL.revokeObjectURL(url);
+        };
     }, [photograph]);
 
     const isLight = theme === "light";
@@ -59,52 +71,17 @@ const Photograph = ({
             }}
         >
             {/* Photograph */}
-            <div
-                className="
-                    relative w-full h-full min-h-40
-                    overflow-hidden
-                    bg-neutral-100 dark:bg-neutral-900
-                "
-            >
+            <div className="w-full relative overflow-visible">
                 {imageURL ? (
-                    <>
-                        <Image
-                            src={imageURL}
-                            alt={alternate ?? "Photograph"}
-                            fill
-                            sizes="(max-width: 768px) 100vw, 400px"
-                            className="
-                                object-cover
-                                transition-transform duration-700
-                                group-hover:scale-105
-                            "
-                            unoptimized
-                        />
-
-                        <div className="
-                            absolute inset-0
-                            bg-black/0
-                            group-hover:bg-black/5
-                            transition-colors duration-300
-                        " />
-                    </>
+                    <img
+                        src={imageURL}
+                        alt={alternate ?? "Photograph"}
+                        className="block w-full h-auto object-contain"
+                    />
                 ) : (
-                    <div className="
-                        w-full h-full min-h-40
-                        flex flex-col items-center justify-center
-                        gap-3 text-neutral-400
-                    ">
-                        <div className="
-                            w-12 h-12 rounded-full
-                            border border-dashed border-current
-                            flex items-center justify-center
-                        ">
-                            <span className="text-2xl">♡</span>
-                        </div>
-
-                        <span className="text-xs font-medium tracking-wide">
-                            {alternate ?? "A memory waiting to happen"}
-                        </span>
+                    <div className="w-full min-h-40 flex flex-col items-center justify-center gap-3 text-neutral-400">
+                        <span className="text-2xl">♡</span>
+                        <span>{alternate ?? "A memory waiting to happen"}</span>
                     </div>
                 )}
             </div>

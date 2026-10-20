@@ -1,7 +1,8 @@
 import Button from "@/components/commons/Button";
 import Image from "next/image";
 import { romanticMemories } from "@/data/images";
-import Photograph from "@/components/commons/Photograph";
+import MemoryManager from "@/components/couple-profile/album/MemoryManager";
+
 
 interface PageProps {
     searchParams: Promise<{
@@ -39,21 +40,6 @@ export default async function AlbumPage({ searchParams }: PageProps) {
                         height={300}
                     />
                 </div>
-            </div>
-            <div className="child-box w-full p-2 flex flex-wrap gap-2">
-                <Photograph />
-                <Photograph />
-                <Photograph />
-                <Photograph />
-                <Photograph />
-                <Photograph />
-                <Photograph />
-                <Photograph />
-                <Photograph />
-                <Photograph />
-                <Photograph />
-                <Photograph />
-                <Photograph />
             </div>
         </div>
     </section>
