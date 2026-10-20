@@ -9,9 +9,9 @@ export default async function CoupleSetupPage ({ params }: { params: Promise<{ c
 
     const { coupleData } = await getCurrentUser();
 
-    if(coupleData.is_profile_completed) {
-        redirect("/home/my-couple");
-    }
+    // if(coupleData.is_profile_completed) {
+    //     redirect("/home/my-couple");
+    // }
     const { coupleId } = await params;
 
     if(!coupleId) {
