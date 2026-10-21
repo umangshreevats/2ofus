@@ -59,6 +59,7 @@ const Auth = ({ setOpen, signIn: si }: { signIn: boolean, setOpen: React.Dispatc
         }
 
         router.push(`/profile/@${profile.username}`);
+        router.refresh();
     }
 
 
@@ -98,6 +99,8 @@ const Auth = ({ setOpen, signIn: si }: { signIn: boolean, setOpen: React.Dispatc
             // Email confirmation is enabled.
             alert("Please check your email to verify your account.");
         }
+
+        router.refresh();
     }
 
 

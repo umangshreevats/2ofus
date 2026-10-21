@@ -23,6 +23,7 @@ const ProfileIcon = () => {
             return;
         }
         router.replace("/");
+        router.refresh();
     };
 
     const dropDownOptions = [

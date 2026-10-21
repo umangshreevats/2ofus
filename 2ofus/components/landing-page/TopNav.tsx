@@ -29,35 +29,90 @@ interface TopNavProps {
 
 
 // dynamic nav elements:
-const RightSideNavElements = ({ userData, coupleData }: { userData: any, coupleData: any }) => {
 
+const RightSideNavElements = ({
+    userData,
+    coupleData,
+}: {
+    userData: any;
+    coupleData: any;
+}) => {
     const [signIn, setSignIn] = useState(false);
     const [button, setButton] = useState(0);
-    const { theme, setTheme } = useThemeSettings();
-    if (!userData) {
-        return <>
-            <ul className="sm:gap-5 gap-2 flex">
-                <li><Button text={""} onClick={() => setTheme(theme === "light" ? "dark" : "light")} type="button" backgroundColor={`${theme === "light" ? "white" : "black"}`} textColor={`${theme === "light" ? "black" : "white"}`} icon={theme === "light" ? Moon : Sun} /></li>
-                <li><Button onClick={() => { setSignIn(true); setButton(1) }} type="button" text="sign-in" backgroundColor="background" textColor={`${theme === "light" ? "black" : "white"}`} /></li>
-                <li><Button onClick={() => { setSignIn(true); setButton(2) }} type="button" text="sign-up" /></li>
-            </ul>
-
-            <Popups open={signIn} setOpen={setSignIn}>
-                <Auth setOpen={setSignIn} signIn={button === 1} />
-            </Popups>
-        </>
-    }
-
     const [openNav, setOpenNav] = useState(false);
 
-    return <div className="gap-5 flex items-center">
-        <DropDown open={openNav} setOpen={setOpenNav} right={10} top={10} innerHTML={<Notifications />}>
-            <Bell />
-        </DropDown>
-        {!coupleData && <SearchBar />}
-        <ProfileIcon />
-    </div>
-}
+    const { theme, setTheme } = useThemeSettings();
+
+    if (!userData) {
+        return (
+            <>
+                <ul className="sm:gap-5 gap-2 flex">
+                    <li>
+                        <Button
+                            text=""
+                            onClick={() =>
+                                setTheme(
+                                    theme === "light" ? "dark" : "light"
+                                )
+                            }
+                            type="button"
+                            backgroundColor={theme === "light" ? "white" : "black"}
+                            textColor={theme === "light" ? "black" : "white"}
+                            icon={theme === "light" ? Moon : Sun}
+                        />
+                    </li>
+
+                    <li>
+                        <Button
+                            onClick={() => {
+                                setSignIn(true);
+                                setButton(1);
+                            }}
+                            type="button"
+                            text="sign-in"
+                            backgroundColor="background"
+                            textColor={theme === "light" ? "black" : "white"}
+                        />
+                    </li>
+
+                    <li>
+                        <Button
+                            onClick={() => {
+                                setSignIn(true);
+                                setButton(2);
+                            }}
+                            type="button"
+                            text="sign-up"
+                        />
+                    </li>
+                </ul>
+
+                <Popups open={signIn} setOpen={setSignIn}>
+                    <Auth setOpen={setSignIn} signIn={button === 1} />
+                </Popups>
+            </>
+        );
+    }
+
+    return (
+        <div className="gap-5 flex items-center">
+            <DropDown
+                open={openNav}
+                setOpen={setOpenNav}
+                right={10}
+                top={10}
+                innerHTML={<Notifications />}
+            >
+                <Bell />
+            </DropDown>
+
+            {!coupleData && <SearchBar />}
+
+            <ProfileIcon />
+        </div>
+    );
+};
+
 
 // Main nav bar for the page
 const TopNav: React.FC<TopNavProps> = ({ display, navLocations }) => {
