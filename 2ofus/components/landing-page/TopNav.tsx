@@ -12,8 +12,6 @@ import { headerFooterMain } from "@/data/routingBehaviors";
 import SearchBar from "../profile-page/nav-bar/SearchBar";
 import { useAuth } from "@/app/auth-provider";
 import ProfileIcon from "../profile-page/nav-bar/ProfileIcon";
-import { createClient } from "@/utils/supabase/client";
-import { useRouter } from "next/navigation";
 import DropDown from "../commons/DropDown";
 import Notifications from "../profile-page/nav-bar/Notifications";
 
@@ -33,10 +31,10 @@ interface TopNavProps {
 // dynamic nav elements:
 const RightSideNavElements = ({ userData, coupleData }: { userData: any, coupleData: any }) => {
 
+    const [signIn, setSignIn] = useState(false);
+    const [button, setButton] = useState(0);
+    const { theme, setTheme } = useThemeSettings();
     if (!userData) {
-        const [signIn, setSignIn] = useState(false);
-        const [button, setButton] = useState(0);
-        const { theme, setTheme } = useThemeSettings();
         return <>
             <ul className="sm:gap-5 gap-2 flex">
                 <li><Button text={""} onClick={() => setTheme(theme === "light" ? "dark" : "light")} type="button" backgroundColor={`${theme === "light" ? "white" : "black"}`} textColor={`${theme === "light" ? "black" : "white"}`} icon={theme === "light" ? Moon : Sun} /></li>
@@ -50,21 +48,7 @@ const RightSideNavElements = ({ userData, coupleData }: { userData: any, coupleD
         </>
     }
 
-    const supabase = createClient();
-
-    const router = useRouter();
-
     const [openNav, setOpenNav] = useState(false);
-    const handleSignOut = async () => {
-        const { error } = await supabase.auth.signOut();
-
-        if (error) {
-            console.error("Sign out failed:", error.message);
-            return;
-        }
-
-        router.replace("/");
-    };
 
     return <div className="gap-5 flex items-center">
         <DropDown open={openNav} setOpen={setOpenNav} right={10} top={10} innerHTML={<Notifications />}>

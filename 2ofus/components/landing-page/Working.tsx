@@ -30,16 +30,16 @@ const Functionality = ({ functionality, theme }: { theme: "light" | "dark", func
 
     return (
         <div className={`lg:w-[250px] w-full hover:scale-110 transition-all duration-300 ease-in-out lg:h-[190px] lg:absolute`}
-        style={{
-            left: `${functionality.left}px`,
-            top: `${functionality.top}px`
-        }}>
+            style={{
+                left: `${functionality.left}px`,
+                top: `${functionality.top}px`
+            }}>
             <div className={`w-full h-full p-5 text-center border-4 border-solid rounded-2xl
     ${theme === "light" ? "shadow-[4px_4px_0px_0px_rgba(0,0,0,1),_-2px_-2px_6px_0px_rgba(0,0,0,0.1)]" : "shadow-[4px_4px_0px_0px_rgba(255,255,255,1),_-2px_-2px_6px_0px_rgba(255,255,255,0.1)]"} 
     border ${theme === "light" ? "border-black" : "border-white"}`}
-    style={{
-        backgroundColor: `${theme === "light" ? "white" : "black"}`
-    }}>
+                style={{
+                    backgroundColor: `${theme === "light" ? "white" : "black"}`
+                }}>
                 <span className="text-secondary-text font-bold text-2xl">Step {functionality.step} </span>{functionality.text}
             </div>
         </div>);
@@ -58,8 +58,10 @@ const Working = () => {
 
             <div className="w-full h-full relative">
                 <Image src={theme === "light" ? workingLight : workingDark} alt="working-background image" className="hidden lg:block object-cover" />
-                {functionalities.map((f, _) => (
-                    <Functionality theme={theme} functionality={f} />
+                {functionalities.map((f, i) => (
+                    <div key={i}>
+                        <Functionality theme={theme} functionality={f} />
+                    </div>
                 ))}
             </div>
         </div>

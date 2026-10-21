@@ -46,7 +46,7 @@ const AlbumTopSec = () => {
                     Every moment tells a story.
                 </h1>
 
-                <p className="w-full text-sm font-light text-secondary-text">
+                <p className="w-full text-sm font-medium text-secondary-text">
                     Memories we've collected together, one little moment at a time.
                 </p>
                 <div>

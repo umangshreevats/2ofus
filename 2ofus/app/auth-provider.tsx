@@ -25,7 +25,7 @@ export function AuthProvider({
   const [auth] = useState(initialAuth);
 
   return (
-    <AuthContext.Provider value={auth}>
+    <AuthContext.Provider value={{ ...auth }}>
       {children}
     </AuthContext.Provider>
   );

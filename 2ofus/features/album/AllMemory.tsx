@@ -28,9 +28,9 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
             <div className="w-full">
                 <div className="w-full h-0 border-b-2 border-b-secondary-text" style={{ borderBottomStyle: "solid" }} />
                 <div className="w-full min-w-0 overflow-x-scroll flex flex-row gap-3" style={{ scrollbarWidth: "none" }}>
-                    {albumImages.map((image) => (<div className="relative">
+                    {albumImages.map((image) => (<div key={image.id} className="relative">
                         <div className="h-10 absolute left-10 border-l-2 border-l-secondary-text" style={{ borderBottomStyle: "solid" }} />
-                        <div key={image.id} className="mt-10">
+                        <div className="mt-10">
                             <Photograph date={image.memory_date} url={image.content} alternate={`Photograph-${image.id}`} name={image.title} />
                         </div>
                     </div>))}
@@ -50,9 +50,9 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
             <div className="w-full">
                 <div className="w-full h-0 border-b-2 border-b-secondary-text" style={{ borderBottomStyle: "solid" }} />
                 <div className="max-w-full overflow-x-scroll flex flex-row gap-3" style={{ scrollbarWidth: "none" }}>
-                    {albumNotes.map((note) => (<div className="relative">
+                    {albumNotes.map((note) => (<div key={note.id} className="relative">
                         <div className="h-10 absolute left-10 border-l-2 border-l-secondary-text" style={{ borderBottomStyle: "solid" }} />
-                        <div key={note.id} className="mt-10">
+                        <div className="mt-10">
                             <Note title={note.title} note={note.content} author={note.created_by} date={note.memory_date} />
                         </div>
                     </div>))}
