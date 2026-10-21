@@ -4,6 +4,7 @@ import Note from "@/components/commons/Note";
 import Photograph from "@/components/commons/Photograph";
 import Suggestion from "@/components/couple-profile/album/Suggestion";
 import Button from "@/components/commons/Button";
+import { useState } from "react";
 
 
 const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
@@ -14,10 +15,9 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
     }
 
 
-    const albumImages = albumData.filter(d => d.content_type === "image");
+    const [albumImages, setAlbumImages] = useState(albumData.filter(d => d.content_type === "image"));
 
-    const albumNotes = albumData.filter(d => d.content_type === "note");
-
+    const [albumNotes, setAlbumNotes] = useState(albumData.filter(d => d.content_type === "note"));
 
     return <section className="w-full flex flex-col gap-5">
 

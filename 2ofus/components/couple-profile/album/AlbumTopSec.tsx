@@ -56,7 +56,7 @@ const AlbumTopSec = () => {
 
             <MemoryManager show={show} setShow={setShow} />
 
-            <nav className="w-full p-2 flex gap-2">
+            <nav className="w-full p-2 flex gap-2 overflow-x-scroll" style={{ scrollbarWidth: "none" }}>
                 {options.map((opt) => {
                     const Icon = opt.icon;
 
