@@ -1,6 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import Suggestion from "@/components/couple-profile/album/Suggestion";
 import { getCurrentUser } from "@/lib/auth";
+import Note from "@/components/commons/Note";
 
 
 interface PageProps {
@@ -42,5 +43,6 @@ export default async function AlbumPage({ searchParams }: PageProps) {
 
     return <section className="w-full">
         {!albumData && <Suggestion />}
+       <Note />
     </section>
 }
