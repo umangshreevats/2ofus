@@ -10,7 +10,9 @@ const Photograph = ({
     fwscale = "px",
     fhscale = "px",
     name = "",
+    url = ""
 }: {
+    url?: string;
     photograph?: File | null;
     alternate?: string;
     fwidth?: "auto" | number;
@@ -21,32 +23,26 @@ const Photograph = ({
 }) => {
     const { theme } = useThemeSettings();
     const [imageURL, setImageURL] = useState<string | null>(null);
-    const [dimensions, setDimensions] = useState<{ width: number, height: number } | null>(null);
 
     useEffect(() => {
-        if (!photograph) {
+
+        if (!photograph && url.length === 0) {
             setImageURL(null);
-            setDimensions(null);
             return;
         }
 
-        const url = URL.createObjectURL(photograph);
-        const img = new window.Image();
+        if (!photograph) {
+            setImageURL(url);
+            return;
+        }
 
-        img.onload = () => {
-            setDimensions({
-                width: img.naturalWidth,
-                height: img.naturalHeight,
-            });
-        };
-
-        img.src = url;
-        setImageURL(url);
+        const createdUrl = URL.createObjectURL(photograph);
+        setImageURL(createdUrl);
 
         return () => {
-            URL.revokeObjectURL(url);
+            URL.revokeObjectURL(createdUrl);
         };
-    }, [photograph]);
+    }, [photograph, url]);
 
     const isLight = theme === "light";
 
@@ -77,6 +73,11 @@ const Photograph = ({
                         src={imageURL}
                         alt={alternate ?? "Photograph"}
                         className="block w-full h-auto object-contain"
+                        onLoad={() => console.log("Image loaded:", imageURL)}
+                        onError={(e) => {
+                            console.log("Failed URL:", e.currentTarget.src);
+                            console.log("Error:", e.currentTarget);
+                        }}
                     />
                 ) : (
                     <div className="w-full min-h-40 flex flex-col items-center justify-center gap-3 text-neutral-400">
