@@ -11,7 +11,13 @@ const Photograph = ({
     fhscale = "px",
     name = "",
     url = "",
-    date = "20XX/XX/XX"
+    date = "20XX/XX/XX",
+    maxHeight = "auto",
+    maxWidth = "auto",
+    mhscale = "px",
+    mwscale = "px",
+    onClick = () => {console.log("Photograph")},
+    cursor = "auto"
 }: {
     url?: string;
     photograph?: File | null;
@@ -20,8 +26,14 @@ const Photograph = ({
     fheight?: "auto" | number;
     fwscale?: "px" | "rem" | "%";
     fhscale?: "px" | "rem" | "%";
+    maxWidth?: "auto" | number;
+    maxHeight?: "auto" | number;
+    mwscale?: "px" | "rem" | "%";
+    mhscale?: "px" | "rem" | "%";
     name?: string;
     date?: string;
+    onClick?: (...args: any[]) => any | Promise<any>;
+    cursor?: string;
 }) => {
     const { theme } = useThemeSettings();
     const [imageURL, setImageURL] = useState<string | null>(null);
@@ -54,6 +66,7 @@ const Photograph = ({
 
     return (
         <div
+            onClick={onClick}
             className="
                 group relative flex flex-col
                 gap-3 p-3
@@ -63,6 +76,7 @@ const Photograph = ({
                 hover:shadow-xl
             "
             style={{
+                cursor: cursor,
                 width: fwidth === "auto" ? "auto" : `${fwidth}${fwscale}`,
                 height: fheight === "auto" ? "auto" : `${fheight}${fhscale}`,
                 backgroundColor: isLight ? "#ffffff" : "#202020",
@@ -80,8 +94,8 @@ const Photograph = ({
                         alt={alternate ?? "Photograph"}
                         className="block w-auto h-auto object-contain"
                         style={{
-                            maxWidth: "220px",
-                            maxHeight: "220px",
+                            maxWidth: `${maxWidth === "auto" ? maxWidth : maxWidth+mwscale}`,
+                            maxHeight: `${maxHeight === "auto" ? maxHeight : maxHeight+mhscale}`
                         }}
                         onLoad={(e) => {
                             const img = e.currentTarget;

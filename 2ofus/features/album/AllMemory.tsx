@@ -75,7 +75,7 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
                     {albumImages.map((image) => (<div key={image.id} className="relative">
                         <div className="h-10 absolute left-10 border-l-2 border-l-secondary-text" style={{ borderBottomStyle: "solid" }} />
                         <div className="mt-10">
-                            <Photograph date={image.memory_date} url={image.content} alternate={`Photograph-${image.id}`} name={image.title} />
+                            <Photograph cursor="pointer" maxHeight={220} maxWidth={220} date={image.memory_date} url={image.content} alternate={`Photograph-${image.id}`} name={image.title} />
                         </div>
                     </div>))}
                     {noMoreImages ? <div className="flex-grow-0 mt-20">Memory End!</div>

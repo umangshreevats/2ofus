@@ -24,7 +24,7 @@ const ImageMemory = ({ albumData, numberOfPages, numPage }: { albumData: unknown
         <div className="w-full p-5 flex gap-5 flex-wrap">
             {albumData.map((image) => (<div key={image.id} className="relative">
                 <div>
-                    <Photograph date={image.memory_date} url={image.content} alternate={`Photograph-${image.id}`} name={image.title} />
+                    <Photograph cursor="pointer" maxHeight={220} maxWidth={220} date={image.memory_date} url={image.content} alternate={`Photograph-${image.id}`} name={image.title} />
                 </div>
             </div>))}
         </div>
