@@ -10,7 +10,8 @@ const Photograph = ({
     fwscale = "px",
     fhscale = "px",
     name = "",
-    url = ""
+    url = "",
+    date = "20XX/XX/XX"
 }: {
     url?: string;
     photograph?: File | null;
@@ -20,6 +21,7 @@ const Photograph = ({
     fwscale?: "px" | "rem" | "%";
     fhscale?: "px" | "rem" | "%";
     name?: string;
+    date?: string;
 }) => {
     const { theme } = useThemeSettings();
     const [imageURL, setImageURL] = useState<string | null>(null);
@@ -98,14 +100,24 @@ const Photograph = ({
                     {name || "Untitled Memory"}
                 </p>
 
-                <span
-                    className="text-lg leading-none"
-                    style={{
-                        color: isLight ? "#e8a0a0" : "#d98c9c",
-                    }}
-                >
-                    ♡
-                </span>
+                <div className="flex gap-2 items-center">
+                    <span
+                        className="text-xs font-medium whitespace-nowrap pt-1"
+                        style={{
+                            color: isLight ? "#a39482" : "#b4a496"
+                        }}
+                    >
+                        {date}
+                    </span>
+                    <span
+                        className="text-lg leading-none"
+                        style={{
+                            color: isLight ? "#e8a0a0" : "#d98c9c",
+                        }}
+                    >
+                        ♡
+                    </span>
+                </div>
             </div>
         </div>
     );

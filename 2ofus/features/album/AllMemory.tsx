@@ -16,7 +16,6 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
 
     const albumImages = albumData.filter(d => d.content_type === "image");
 
-    console.log(albumImages);
     const albumNotes = albumData.filter(d => d.content_type === "note");
 
 
@@ -30,7 +29,7 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
             <div className="max-w-full overflow-x-scroll flex flex-row p-3 gap-3" style={{ scrollbarWidth: "none" }}>
                 {albumImages.map((image) => (
                     <div key={image.id}>
-                        <Photograph url={image.content} alternate={`Photograph-${image.id}`} name={image.title} />
+                        <Photograph date={image.memory_date} url={image.content} alternate={`Photograph-${image.id}`} name={image.title} />
                     </div>
                 ))}
             </div>
