@@ -5,11 +5,12 @@ import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface PaginationProps {
-    query: string;
+    query?: string;
     numPage: number;
     numberOfPages: number;
     numbers: number[];
     url: string;
+    q?: string[];
 }
 
 const Pagination = ({
@@ -17,7 +18,8 @@ const Pagination = ({
     numPage,
     numberOfPages,
     numbers,
-    url
+    url,
+    q = []
 }: PaginationProps) => {
 
     const currentPage = Number(numPage) || 0;
@@ -27,8 +29,12 @@ const Pagination = ({
 
         if (query) params.set("query", query);
 
-        params.set("page", String(page));
+        q.forEach((item) => {
+            const [key, value] = item.split("=");
+            params.set(key, value);
+        });
 
+        params.set("page", String(page));
         return `${url}?${params.toString()}`;
     };
 
@@ -37,13 +43,12 @@ const Pagination = ({
 
             {/* Previous */}
             <Link
-                href={getPageUrl(Math.max(1, currentPage))}
+                href={getPageUrl(Math.max(1, currentPage - 1))}
                 aria-disabled={currentPage === 1}
                 className={`flex h-10 w-10 items-center justify-center rounded-xl border transition-all duration-200
-                    ${
-                        currentPage === 1
-                            ? "pointer-events-none opacity-40"
-                            : "hover:bg-accent hover:text-white hover:border-accent"
+                    ${currentPage === 1
+                        ? "pointer-events-none opacity-40"
+                        : "hover:bg-accent hover:text-white hover:border-accent"
                     }`}
             >
                 <ChevronLeft size={18} />
@@ -56,10 +61,9 @@ const Pagination = ({
                     href={getPageUrl(num)}
                     aria-current={currentPage === num ? "page" : undefined}
                     className={`flex h-10 min-w-10 items-center justify-center rounded-xl px-3 font-medium transition-all duration-200
-                        ${
-                            currentPage === num
-                                ? "bg-accent text-white shadow-md shadow-accent/25"
-                                : "border border-transparent hover:border-accent/30 hover:bg-accent/10"
+                        ${currentPage === num
+                            ? "bg-accent text-white shadow-md shadow-accent/25"
+                            : "border border-transparent hover:border-accent/30 hover:bg-accent/10"
                         }`}
                 >
                     {num}
@@ -69,14 +73,13 @@ const Pagination = ({
             {/* Next */}
             <Link
                 href={getPageUrl(
-                    Math.min(numberOfPages, currentPage)
+                    Math.min(numberOfPages, currentPage + 1)
                 )}
                 aria-disabled={currentPage >= numberOfPages}
                 className={`flex h-10 w-10 items-center justify-center rounded-xl border transition-all duration-200
-                    ${
-                        currentPage >= numberOfPages
-                            ? "pointer-events-none opacity-40"
-                            : "hover:bg-accent hover:text-white hover:border-accent"
+                    ${currentPage >= numberOfPages
+                        ? "pointer-events-none opacity-40"
+                        : "hover:bg-accent hover:text-white hover:border-accent"
                     }`}
             >
                 <ChevronRight size={18} />

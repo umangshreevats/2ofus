@@ -34,7 +34,7 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
         }
         try {
 
-            const response = await fetch(`/api/couple/album/${coupleData.id}?limit=20&skip=${imgSkip}&m=${m}`);
+            const response = await fetch(`/api/couple/album/${coupleData.id}?limit=20&skip=${m === "image" ? imgSkip : noteSkip}&m=${m}`);
 
             const result = await response.json();
 

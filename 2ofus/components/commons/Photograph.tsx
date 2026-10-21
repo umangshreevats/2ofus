@@ -104,7 +104,7 @@ const Photograph = ({
             </div>
 
             {/* Caption */}
-            <div className="flex items-center flex-wrap justify-between gap-2 px-1 pb-1">
+            <div className="flex items-center flex-col justify-between gap-2 px-1 pb-1">
                 <p
                     className="text-sm font-semibold truncate"
                     style={{
@@ -114,7 +114,7 @@ const Photograph = ({
                     {name || "Untitled Memory"}
                 </p>
 
-                <div className="flex gap-2 items-center">
+                <div className="flex gap-2 items-center flex-wrap">
                     <span
                         className="text-xs font-medium whitespace-nowrap pt-1"
                         style={{
