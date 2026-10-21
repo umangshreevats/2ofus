@@ -25,6 +25,10 @@ const Photograph = ({
 }) => {
     const { theme } = useThemeSettings();
     const [imageURL, setImageURL] = useState<string | null>(null);
+    const [imageDimensions, setImageDimensions] = useState({
+        width: 0,
+        height: 0,
+    });
 
     useEffect(() => {
 
@@ -74,11 +78,21 @@ const Photograph = ({
                     <img
                         src={imageURL}
                         alt={alternate ?? "Photograph"}
-                        className="block w-full h-auto object-contain"
-                        onLoad={() => console.log("Image loaded:", imageURL)}
+                        className="block w-auto h-auto object-contain"
+                        style={{
+                            maxWidth: "220px",
+                            maxHeight: "220px",
+                        }}
+                        onLoad={(e) => {
+                            const img = e.currentTarget;
+
+                            setImageDimensions({
+                                width: img.naturalWidth,
+                                height: img.naturalHeight,
+                            });
+                        }}
                         onError={(e) => {
                             console.log("Failed URL:", e.currentTarget.src);
-                            console.log("Error:", e.currentTarget);
                         }}
                     />
                 ) : (
@@ -90,7 +104,7 @@ const Photograph = ({
             </div>
 
             {/* Caption */}
-            <div className="flex items-center justify-between gap-2 px-1 pb-1">
+            <div className="flex items-center flex-wrap justify-between gap-2 px-1 pb-1">
                 <p
                     className="text-sm font-semibold truncate"
                     style={{
