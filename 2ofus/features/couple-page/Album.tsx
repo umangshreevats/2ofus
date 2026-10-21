@@ -2,6 +2,7 @@
 
 import AllMemory from "../album/AllMemory";
 import ImageMemory from "../album/ImageMemory";
+import NoteMemory from "../album/NoteMemory";
 
 
 
@@ -11,6 +12,7 @@ const Album = ({ m, page, totalPages, albumData }: { m?: string, page: number, t
         <div className="child-box">
             {(!m || m === "all") && <AllMemory albumData={albumData} />}
             {(m === "image") && <ImageMemory numberOfPages={totalPages} numPage={page} albumData={albumData} />}
+            {(m === "note") && <NoteMemory numberOfPages={totalPages} numPage={page} albumData={albumData} />}
         </div>
     </div>
 }
