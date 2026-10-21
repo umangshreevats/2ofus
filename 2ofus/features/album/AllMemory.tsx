@@ -5,10 +5,12 @@ import Photograph from "@/components/commons/Photograph";
 import Suggestion from "@/components/couple-profile/album/Suggestion";
 import Button from "@/components/commons/Button";
 import { useState } from "react";
+import { useAuth } from "@/app/auth-provider";
 
 
 const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
 
+    const { coupleData } = useAuth();
     if (!albumData || !Array.isArray(albumData)) {
 
         return <Suggestion />;
@@ -16,8 +18,50 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
 
 
     const [albumImages, setAlbumImages] = useState(albumData.filter(d => d.content_type === "image"));
-
+    const [imgLoading, setImgLoading] = useState(false);
+    const [imgSkip, setImgSkip] = useState(albumImages.length);
+    const [noMoreImages, setNoMoreImages] = useState(false);
     const [albumNotes, setAlbumNotes] = useState(albumData.filter(d => d.content_type === "note"));
+    const [noteLoading, setNoteLoading] = useState(false);
+    const [noteSkip, setNoteSkip] = useState(albumNotes.length);
+    const [noMoreNotes, setNoMoreNotes] = useState(false);
+
+    const getMoreMemory = async (m: string) => {
+        if (m === "image") {
+            setImgLoading(true);
+        } else if (m === "note") {
+            setNoteLoading(true);
+        }
+        try {
+
+            const response = await fetch(`/api/couple/album/${coupleData.id}?limit=20&skip=${imgSkip}&m=${m}`);
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                alert("Something went wrong" + result.message);
+                return;
+            }
+
+            if (m === "image") {
+                setAlbumImages(prev => [...prev, ...result.memoryData]);
+                setImgSkip(result.skip);
+                setNoMoreImages(result.memoryData.length === 0);
+            } else if (m === "note") {
+                setAlbumNotes(prev => [...prev, ...result.memoryData]);
+                setNoteSkip(result.skip);
+                setNoMoreNotes(result.memoryData.length === 0);
+            }
+        } catch (err) {
+            alert("Something went wrong");
+        } finally {
+            if (m === "image") {
+                setImgLoading(false);
+            } else if (m === "note") {
+                setNoteLoading(false);
+            }
+        }
+    }
 
     return <section className="w-full flex flex-col gap-5">
 
@@ -34,9 +78,10 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
                             <Photograph date={image.memory_date} url={image.content} alternate={`Photograph-${image.id}`} name={image.title} />
                         </div>
                     </div>))}
-                    <div className="flex-grow-0 mt-20">
-                        <Button text="Load More" type="button" />
-                    </div>
+                    {noMoreImages ? <div className="flex-grow-0 mt-20">Memory End!</div>
+                        : <div className="flex-grow-0 mt-20">
+                            <Button onClick={async () => await getMoreMemory("image")} text={imgLoading ? "Loading..." : "Load More"} type="button" disabled={imgLoading} />
+                        </div>}
                 </div>
             </div>
         </section>
@@ -56,9 +101,10 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
                             <Note title={note.title} note={note.content} author={note.created_by} date={note.memory_date} />
                         </div>
                     </div>))}
-                    <div className="flex-grow-0 mt-20">
-                        <Button text="Load More" type="button" />
-                    </div>
+                    {noMoreNotes ? <div className="flex-grow-0 mt-20">Memory End!</div>
+                        : <div className="flex-grow-0 mt-20">
+                            <Button onClick={async () => await getMoreMemory("note")} text={noteLoading ? "Loading..." : "Load More"} type="button" disabled={noteLoading} />
+                        </div>}
                 </div>
             </div>
         </section>

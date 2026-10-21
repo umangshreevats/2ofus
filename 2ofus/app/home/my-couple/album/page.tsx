@@ -19,7 +19,7 @@ export default async function AlbumPage({ searchParams }: PageProps) {
 
     // Pagination: Request for the album items, based on page and the memory: m selected
     const currentPage = Math.max(1, Number(page) || 1);
-    const limit = 20;
+    const limit = 2;
     const from = (currentPage - 1) * limit;
     const to = from + limit - 1;
 

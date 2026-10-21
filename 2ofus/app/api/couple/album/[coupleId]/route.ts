@@ -4,6 +4,83 @@ import { getCurrentUser } from "@/lib/auth";
 import { uploadMemoryImage } from "@/lib/supabase/storage";
 
 
+// GET: /api/couple/album/:coupleId?limit=&skip=&m=
+export async function GET(request: NextRequest, { params }: { params: Promise<{ coupleId?: string }> }) {
+
+
+    try {
+        const supabase = await createClient();
+        const { user } = await getCurrentUser();
+
+        if (!user) {
+            return NextResponse.json(
+                { message: "Unauthorized" },
+                { status: 401 }
+            );
+        }
+
+        const { coupleId } = await params;
+
+        if (!coupleId) {
+            return NextResponse.json(
+                { message: "Bad Request: Couple Id is required" },
+                { status: 400 }
+            );
+        }
+        const searchParams = request.nextUrl.searchParams;
+
+        const limit = Number(searchParams.get("limit") ?? 20);
+        const skip = Number(searchParams.get("skip") ?? 0);
+        const m = searchParams.get("m") ?? "note";
+
+
+        const { data: memoryData, error: memoryDataError } = await supabase
+            .from("memory")
+            .select("*")
+            .eq("couple_id", coupleId)
+            .eq("content_type", m)
+            .order("created_at", { ascending: false })
+            .range(skip, skip + limit - 1);
+
+        if (memoryDataError) {
+            throw memoryDataError
+        }
+        let updatedMemoryData = null;
+        if (m === "image") {
+            updatedMemoryData = await Promise.all(
+                (memoryData ?? []).map(async (item) => {
+                    if (item.content_type !== "image") return item;
+
+                    const { data, error } = await supabase.storage
+                        .from("couple-memories")
+                        .createSignedUrl(item.content, 3600);
+
+                    if (error) {
+                        console.error("Signed URL error:", error.message);
+                        return item;
+                    }
+
+                    console.log("Generated URL:", data.signedUrl);
+
+                    return {
+                        ...item,
+                        content: data.signedUrl,
+                    };
+                })
+            );
+        }
+
+        return NextResponse.json(
+            { message: `Memory ${m} retrieved successfully!`, memoryData: updatedMemoryData ?? memoryData, nextSkip: skip + limit },
+            { status: 200 }
+        );
+    } catch (err) {
+        return NextResponse.json(
+            { message: "Internal Server Error" },
+            { status: 500 }
+        );
+    }
+}
 
 // POST: /api/couple/album/:coupleId
 export async function POST(request: NextRequest, { params }: { params: Promise<{ coupleId?: string }> }) {
