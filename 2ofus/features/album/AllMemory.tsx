@@ -6,6 +6,8 @@ import Suggestion from "@/components/couple-profile/album/Suggestion";
 import Button from "@/components/commons/Button";
 import { useState } from "react";
 import { useAuth } from "@/app/auth-provider";
+import Popups from "@/components/commons/Popups";
+import MemoryHolder from "@/components/couple-profile/album/MemoryHolder";
 
 
 const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
@@ -25,6 +27,9 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
     const [noteLoading, setNoteLoading] = useState(false);
     const [noteSkip, setNoteSkip] = useState(albumNotes.length);
     const [noMoreNotes, setNoMoreNotes] = useState(false);
+
+    const[choosenOne, setChoosenOne] = useState<any>(null);
+    const [show, setShow] = useState(false);
 
     const getMoreMemory = async (m: string) => {
         if (m === "image") {
@@ -63,6 +68,11 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
         }
     }
 
+    const handleChoosenOne = (memory: any) => {
+        setChoosenOne(memory);
+        setShow(true);
+    }
+
     return <section className="w-full flex flex-col gap-5">
 
         <section className="relative w-full flex flex-col gap-2">
@@ -75,7 +85,7 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
                     {albumImages.map((image) => (<div key={image.id} className="relative">
                         <div className="h-10 absolute left-10 border-l-2 border-l-secondary-text" style={{ borderBottomStyle: "solid" }} />
                         <div className="mt-10">
-                            <Photograph cursor="pointer" maxHeight={220} maxWidth={220} date={image.memory_date} url={image.content} alternate={`Photograph-${image.id}`} name={image.title} />
+                            <Photograph onClick={() => handleChoosenOne(image)} cursor="pointer" maxHeight={220} maxWidth={220} date={image.memory_date} url={image.content} alternate={`Photograph-${image.id}`} name={image.title} />
                         </div>
                     </div>))}
                     {noMoreImages ? <div className="flex-grow-0 mt-20">Memory End!</div>
@@ -98,7 +108,7 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
                     {albumNotes.map((note) => (<div key={note.id} className="relative">
                         <div className="h-10 absolute left-10 border-l-2 border-l-secondary-text" style={{ borderBottomStyle: "solid" }} />
                         <div className="mt-10">
-                            <Note title={note.title} note={note.content} author={note.created_by} date={note.memory_date} />
+                            <Note cursor="pointer" onClick={() => handleChoosenOne(note)} title={note.title} note={note.content} author={note.created_by} date={note.memory_date} />
                         </div>
                     </div>))}
                     {noMoreNotes ? <div className="flex-grow-0 mt-20">Memory End!</div>
@@ -108,6 +118,10 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
                 </div>
             </div>
         </section>
+
+        <Popups open={show} setOpen={setShow}>
+            <MemoryHolder memoryInfo={choosenOne} />
+        </Popups>
     </section>
 }
 

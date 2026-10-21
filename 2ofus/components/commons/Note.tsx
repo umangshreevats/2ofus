@@ -10,6 +10,8 @@ interface NoteCommon {
     note?: string;
     date?: string;
     author?: string;
+    onClick?: (...args: any[]) => Promise<any> | any;
+    cursor?: string;
 }
 
 type NoteProps = NoteCommon & CommonScales;
@@ -24,13 +26,16 @@ const Note: React.FC<NoteProps> = ({
     wscale = "px",
     hscale = "px",
     padding = 1.5,
-    pscale = "rem"
+    pscale = "rem",
+    cursor = "auto",
+    onClick = () => console.log("Note")
 }) => {
     const { theme } = useThemeSettings();
     const isLight = theme === "light";
 
     return (
         <article
+            onClick={onClick}
             className="
                 relative flex flex-col
                 min-h-64
@@ -42,6 +47,7 @@ const Note: React.FC<NoteProps> = ({
                 hover:shadow-xl
             "
             style={{
+                cursor: cursor,
                 ...commonComponentStyles({
                     width,
                     wscale,

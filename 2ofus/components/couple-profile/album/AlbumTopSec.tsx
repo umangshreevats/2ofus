@@ -55,7 +55,7 @@ const AlbumTopSec = () => {
                 </div>
             </div>
 
-            <Popups open={show} setOpen={setShow}>
+            <Popups open={show} setOpen={setShow} className="rounded-2xl">
                 <MemoryManager show={show} setShow={setShow} />
             </Popups>
 
