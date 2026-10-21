@@ -10,6 +10,7 @@ import {
 import { useState } from "react";
 import Link from "next/link";
 import MemoryManager from "./MemoryManager";
+import Popups from "@/components/commons/Popups";
 
 const AlbumTopSec = () => {
 
@@ -26,9 +27,9 @@ const AlbumTopSec = () => {
 
     return <div className="parent-box">
         <div className="child-box flex flex-col items-center p-5 gap-1 border-b-2 border-b-secondary-text"
-        style={{
-            borderBottomStyle: "dashed"
-        }}>
+            style={{
+                borderBottomStyle: "dashed"
+            }}>
             <h1 className="w-full p-1 text-primary-text font-bold text-3xl">
                 Our Little World
             </h1>
@@ -54,7 +55,9 @@ const AlbumTopSec = () => {
                 </div>
             </div>
 
-            <MemoryManager show={show} setShow={setShow} />
+            <Popups open={show} setOpen={setShow}>
+                <MemoryManager show={show} setShow={setShow} />
+            </Popups>
 
             <nav className="w-full p-2 flex gap-2 overflow-x-scroll" style={{ scrollbarWidth: "none" }}>
                 {options.map((opt) => {

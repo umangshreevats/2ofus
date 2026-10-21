@@ -46,7 +46,7 @@ const MemoryManager: React.FC<MemoryManagerProps> = ({
     const handleMemoryFormSubmit = async (e: any) => {
         e.preventDefault();
 
-        if(!memoryType) return;
+        if (!memoryType) return;
 
         setLoading(true);
         try {
@@ -56,23 +56,23 @@ const MemoryManager: React.FC<MemoryManagerProps> = ({
             formData.append("title", title);
             formData.append("content_type", memoryType);
 
-            if(memoryType=== "image") {
-                if(!image) {
+            if (memoryType === "image") {
+                if (!image) {
                     alert("Select Image");
                     return;
                 }
                 formData.append("content", image);
             }
 
-            if(memoryType=== "note") {
-                if(note.length === 0) {
+            if (memoryType === "note") {
+                if (note.length === 0) {
                     alert("Write something");
                     return;
                 }
                 formData.append("content", note);
             }
 
-            if(!memoryDate) {
+            if (!memoryDate) {
                 alert("Give a memory date");
                 return;
             }
@@ -87,8 +87,8 @@ const MemoryManager: React.FC<MemoryManagerProps> = ({
 
             const result = await response.json();
 
-            if(!response.ok) {
-                alert("Something went wrong! "+result.message);
+            if (!response.ok) {
+                alert("Something went wrong! " + result.message);
                 return;
             }
             setShow(false);
@@ -113,136 +113,124 @@ const MemoryManager: React.FC<MemoryManagerProps> = ({
         }
 
     }, [show]);
-    return (
-        <div
-            onClick={() => {
-                setShow(false);
-                setMemoryType(null);
-            }}
-            className="fixed inset-0 z-50 justify-center items-center bg-black/50"
-            style={{
-                display: show ? "flex" : "none"
-            }}
-        >
-            <div
-                onClick={(e) => e.stopPropagation()}
-                className="w-full max-w-[800px] max-h-[90vh] overflow-y-auto p-5 bg-background text-primary-text rounded-2xl" style={{ scrollbarWidth: "none" }}
-            >
-                {memoryType ? (
-                    <div className="w-full p-5">
-                        <div className="w-full flex gap-2 border-b">
-                            <button
-                                onClick={() => setMemoryType(null)}
+    return (<div
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-[800px] max-h-[90vh] overflow-y-auto p-5 bg-background text-primary-text rounded-2xl" style={{ scrollbarWidth: "none" }}
+    >
+        {memoryType ? (
+            <div className="w-full p-5">
+                <div className="w-full flex gap-2 border-b">
+                    <button
+                        onClick={() => setMemoryType(null)}
+                    >
+                        ← Back
+                    </button>
+
+                    <h3 className="text-2xl font-bold capitalize">
+                        Create {memoryType} memory
+                    </h3>
+                </div>
+
+                <div className="w-full p-5">
+                    <form onSubmit={handleMemoryFormSubmit} className="w-full flex flex-col gap-2">
+
+                        <label className="w-full font-medium text-primary-text">
+                            Enter a title:
+                        </label>
+                        <PlayfulInput text={title} placeholder="Enter a title" onChange={(e) => setTitle(e.target.value)} textAlign="start" />
+
+                        {memoryType === "note" && <><label className="w-full font-medium text-primary-text">
+                            Write a note:
+                        </label>
+                            <PlayfulInput text={note} textArea={true} placeholder="What's are you thinking?" height={300} onChange={(e) => setNote(e.target.value)} textAlign="start" /></>}
+
+
+                        {memoryType === "image" && <>
+                            <label className="w-full font-medium text-primary-text">
+                                Choose an image:
+                            </label>
+
+                            <Photograph
+                                photograph={image}
+                                fwidth={100}
+                                fwscale="%"
+                                alternate="Your photograph goes here"
+                            />
+
+                            <input
+                                className="hidden"
+                                type="file"
+                                id="bio"
+                                accept="image/*"
+                                onChange={(e) => {
+                                    const file = e.target.files?.[0] ?? null;
+                                    setImage(file);
+                                }}
+                            />
+
+                            <label
+                                htmlFor="bio"
+                                className="cursor-pointer text-center border border-dashed p-3 rounded-lg hover:opacity-70"
                             >
-                                ← Back
-                            </button>
+                                📸 Choose Photograph
+                            </label>
 
-                            <h3 className="text-2xl font-bold capitalize">
-                                Create {memoryType} memory
-                            </h3>
-                        </div>
+                            <Button type="button" className={`${!image && "hidden"}`} onClick={() => setImage(null)} text={"Remove Image"} backgroundColor="background" textColor="red" />
 
-                        <div className="w-full p-5">
-                            <form onSubmit={handleMemoryFormSubmit} className="w-full flex flex-col gap-2">
+                        </>}
 
-                                <label className="w-full font-medium text-primary-text">
-                                    Enter a title:
-                                </label>
-                                <PlayfulInput text={title} placeholder="Enter a title" onChange={(e) => setTitle(e.target.value)} textAlign="start" />
+                        <label className="w-full text-lg font-bold">The date for this memory: </label>
+                        <DatePicker
+                            placeholder="Pick the date for this memory"
+                            id="aniversary"
+                            value={memoryDate}
+                            onChange={(date: any) =>
+                                setMemoryDate(date)}
+                        />
 
-                                {memoryType === "note" && <><label className="w-full font-medium text-primary-text">
-                                    Write a note:
-                                </label>
-                                    <PlayfulInput text={note} textArea={true} placeholder="What's are you thinking?" height={300} onChange={(e) => setNote(e.target.value)} textAlign="start" /></>}
-
-
-                                {memoryType === "image" && <>
-                                    <label className="w-full font-medium text-primary-text">
-                                        Choose an image:
-                                    </label>
-
-                                    <Photograph
-                                        photograph={image}
-                                        fwidth={100}
-                                        fwscale="%"
-                                        alternate="Your photograph goes here"
-                                    />
-
-                                    <input
-                                        className="hidden"
-                                        type="file"
-                                        id="bio"
-                                        accept="image/*"
-                                        onChange={(e) => {
-                                            const file = e.target.files?.[0] ?? null;
-                                            setImage(file);
-                                        }}
-                                    />
-
-                                    <label
-                                        htmlFor="bio"
-                                        className="cursor-pointer text-center border border-dashed p-3 rounded-lg hover:opacity-70"
-                                    >
-                                        📸 Choose Photograph
-                                    </label>
-
-                                    <Button type="button" className={`${!image && "hidden"}`} onClick={() => setImage(null)} text={"Remove Image"} backgroundColor="background" textColor="red" />
-
-                                </>}
-
-                                <label className="w-full text-lg font-bold">The date for this memory: </label>
-                                <DatePicker
-                                    placeholder="Pick the date for this memory"
-                                    id="aniversary"
-                                    value={memoryDate}
-                                    onChange={(date: any) =>
-                                        setMemoryDate(date)}
+                        <label className="w-full text-lg font-bold">How much is this memory close to your heart?: </label>
+                        <div className="flex flex-wrap gap-2">
+                            {[1, 2, 3, 4, 5].map((value) => (
+                                <Heart
+                                    key={value}
+                                    onClick={() => setPriority(value)}
+                                    className={`cursor-pointer ${value <= priority ? "fill-red-500 text-red-500" : "text-gray-400"
+                                        }`}
                                 />
-
-                                <label className="w-full text-lg font-bold">How much is this memory close to your heart?: </label>
-                                <div className="flex flex-wrap gap-2">
-                                    {[1, 2, 3, 4, 5].map((value) => (
-                                        <Heart
-                                            key={value}
-                                            onClick={() => setPriority(value)}
-                                            className={`cursor-pointer ${value <= priority ? "fill-red-500 text-red-500" : "text-gray-400"
-                                                }`}
-                                        />
-                                    ))}
-                                </div>
-
-                                <Button text={loading ? "Saving..." : "Save Memory"} disabled={loading} />
-                            </form>
+                            ))}
                         </div>
 
-                    </div>
-                ) : (
-                    <div className="w-full">
-                        <h3 className="text-2xl font-bold mb-5">
-                            Choose a memory type:
-                        </h3>
+                        <Button text={loading ? "Saving..." : "Save Memory"} disabled={loading} />
+                    </form>
+                </div>
 
-                        <div className="w-full flex gap-5 justify-center items-center">
-                            <button
-                                onClick={() => setMemoryType("image")}
-                                className="border rounded-xl flex flex-col p-10 cursor-pointer justify-center items-center"
-                            >
-                                <Image />
-                                Image
-                            </button>
-
-                            <button
-                                onClick={() => setMemoryType("note")}
-                                className="border rounded-xl flex flex-col p-10 cursor-pointer justify-center items-center"
-                            >
-                                <NotebookPen />
-                                Note
-                            </button>
-                        </div>
-                    </div>
-                )}
             </div>
-        </div>
+        ) : (
+            <div className="w-full">
+                <h3 className="text-2xl font-bold mb-5">
+                    Choose a memory type:
+                </h3>
+
+                <div className="w-full flex gap-5 justify-center items-center">
+                    <button
+                        onClick={() => setMemoryType("image")}
+                        className="border rounded-xl flex flex-col p-10 cursor-pointer justify-center items-center"
+                    >
+                        <Image />
+                        Image
+                    </button>
+
+                    <button
+                        onClick={() => setMemoryType("note")}
+                        className="border rounded-xl flex flex-col p-10 cursor-pointer justify-center items-center"
+                    >
+                        <NotebookPen />
+                        Note
+                    </button>
+                </div>
+            </div>
+        )}
+    </div>
     );
 };
 
