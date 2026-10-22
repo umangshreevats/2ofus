@@ -1,7 +1,1 @@
-ALTER TABLE public.memory
-ALTER COLUMN title TYPE JSONB
-USING title::JSONB;
 
-ALTER TABLE public.memory
-ALTER COLUMN content TYPE JSONB
-USING content::JSONB;
