@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 import { getCurrentUser } from "@/lib/auth";
 import { uploadMemoryImage } from "@/lib/supabase/storage";
+import { decrypt, encrypt } from "@/lib/encryption";
 
 
 // GET: /api/couple/album/:coupleId?limit=&skip=&m=
@@ -53,7 +54,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
                     const { data, error } = await supabase.storage
                         .from("couple-memories")
-                        .createSignedUrl(item.content, 3600);
+                        .createSignedUrl(item.media_id, 3600);
 
                     if (error) {
                         console.error("Signed URL error:", error.message);
@@ -64,14 +65,38 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
                     return {
                         ...item,
-                        content: data.signedUrl,
+                        media_id: data.signedUrl,
                     };
                 })
             );
+        } else {
+            updatedMemoryData =
+                (memoryData ?? []).map((item) => {
+
+                    const decryptedData = decrypt(item.content ?? "");
+                    return {
+                        ...item,
+                        content: decryptedData
+                    }
+                });
         }
 
+        updatedMemoryData =
+            (memoryData ?? []).map((item) => {
+
+                const decryptedData = decrypt(item.title);
+                return {
+                    ...item,
+                    content: decryptedData
+                }
+            });
+
         return NextResponse.json(
-            { message: `Memory ${m} retrieved successfully!`, memoryData: updatedMemoryData ?? memoryData, nextSkip: skip + limit },
+            {
+                message: `Memory ${m} retrieved successfully!`,
+                memoryData: updatedMemoryData ?? memoryData,
+                nextSkip: skip + limit
+            },
             { status: 200 }
         );
     } catch (err) {
@@ -106,7 +131,16 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         }
 
         const formData = await request.formData();
-        const title = formData.get("title");
+        const providedTitle = (formData.get("title") as string) ?? "";
+
+        if (providedTitle.length === 0) {
+            return NextResponse.json(
+                { message: "Title of the memory is required" },
+                { status: 400 }
+            );
+        }
+
+        const title = encrypt(providedTitle);
         const content_type = formData.get("content_type");
         const memory_date = formData.get("memory_date");
         const priority = Number(formData.get("priority"));
@@ -126,8 +160,15 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
             );
         }
 
-        let content: string;
+        if (!allowedContent.includes(content_type)) {
+            return NextResponse.json(
+                { message: "This type of memory is not saved in the current version!" },
+                { status: 400 }
+            )
+        }
 
+        let content = null;
+        let media_id = null;
         if (content_type === "image") {
             const image = formData.get("content");
 
@@ -144,9 +185,11 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
                 coupleId
             );
 
-            content = path;
+            media_id = path;
         } else {
-            content = (formData.get("content") as string) ?? "";
+            const writtenText = (formData.get("content") as string) ?? "";
+
+            content = encrypt(writtenText);
         }
         const { data: memory, error: memoryCreationError } = await supabase
             .from("memory")
@@ -155,6 +198,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
                 created_by: userData.username,
                 title: title ?? null,
                 content,
+                media_id,
                 content_type,
                 memory_date,
                 priority

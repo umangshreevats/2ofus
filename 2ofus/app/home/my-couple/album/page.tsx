@@ -2,6 +2,7 @@ import { createClient } from "@/utils/supabase/server";
 import Suggestion from "@/components/couple-profile/album/Suggestion";
 import { getCurrentUser } from "@/lib/auth";
 import Album from "@/features/couple-page/Album";
+import { decrypt } from "@/lib/encryption";
 
 
 interface PageProps {
@@ -43,11 +44,19 @@ export default async function AlbumPage({ searchParams }: PageProps) {
     // Getting the url of the images, that are stored privately in the bucket
     const updatedAlbumData = await Promise.all(
         (albumData ?? []).map(async (item) => {
-            if (item.content_type !== "image") return item;
-
+            if (item.content_type !== "image") {
+                const decryptedTitle = decrypt(item.title);
+                const decryptedContent = decrypt(item.content ?? "");
+                return {
+                    ...item,
+                    title: decryptedTitle,
+                    content: decryptedContent
+                };
+            }
+            const decryptedTitleI = decrypt(item.title);
             const { data, error } = await supabase.storage
                 .from("couple-memories")
-                .createSignedUrl(item.content, 3600);
+                .createSignedUrl(item.media_id, 3600);
 
             if (error) {
                 console.error("Signed URL error:", error.message);
@@ -58,7 +67,8 @@ export default async function AlbumPage({ searchParams }: PageProps) {
 
             return {
                 ...item,
-                content: data.signedUrl,
+                title: decryptedTitleI,
+                media_id: data.signedUrl,
             };
         })
     );
