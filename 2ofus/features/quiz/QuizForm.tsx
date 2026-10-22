@@ -2,8 +2,9 @@
 import Button from "@/components/commons/Button";
 import PlayfulInput from "@/components/commons/PlayfulInput";
 import QuizQuestion from "@/components/couple-profile/quiz/QuizQuestion";
+import { X } from "lucide-react";
 import { useState } from "react";
-
+import { useRouter } from "next/navigation";
 
 export type Question = {
     question: string,
@@ -14,6 +15,7 @@ export type Question = {
 }
 const QuizForm = () => {
 
+    const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [title, setTitle] = useState("");
 
@@ -26,6 +28,32 @@ const QuizForm = () => {
             writtenAnswer: ""
         }
     ]);
+
+    // Adding and deleting the questions in form
+    // Adding
+    const addQuestions = () => {
+
+        if (questions.length >= 10) {
+            alert("Cannot add more questions");
+            return;
+        }
+        const q: Question = {
+            question: "",
+            type: "short-answer",
+            correctOptions: undefined,
+            options: [],
+            writtenAnswer: ""
+        };
+
+        setQuestions(prev => [...prev, q]);
+    };
+
+    // Removing
+    const removeQuestion = (qNo: number) => {
+        setQuestions(prev =>
+            prev.filter((_, index) => index !== qNo - 1)
+        );
+    };
 
     return <div className="parent-box">
         <div className="child-box">
@@ -53,17 +81,27 @@ const QuizForm = () => {
                 <label className="w-full text-lg font-bold">{"Questions(max: 10): "}</label>
 
                 <div className="flex-grow-0">
-                    <Button type="button" text="+ add" />
+                    <Button type="button" text="+ add" onClick={addQuestions} />
                 </div>
 
-                {questions.map((question, i) => (
-                    <div key={i}>
+                {questions.map((question, i) => {
+
+                    if (i === 0) {
+                        return <div key={i}>
+                            <QuizQuestion question={question} setQuestions={setQuestions} qNo={i + 1} />
+                        </div>
+                    }
+
+                    return <div key={i} className="w-full flex gap-2 items-center">
                         <QuizQuestion question={question} setQuestions={setQuestions} qNo={i + 1} />
+                        <button onClick={() => removeQuestion(i)} className="cursor-pointer" type="button">
+                            <X color="red" />
+                        </button>
                     </div>
-                ))}
+                })}
 
                 <Button text={loading ? "Creating..." : "Create Quiz"} />
-                <Button type="button" text="cancel" textColor="red" backgroundColor="background" />
+                <Button onClick={ () => router.push("/home/my-couple/know-me") } type="button" text="cancel" textColor="red" backgroundColor="background" />
             </form>
         </div>
     </div>

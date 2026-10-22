@@ -4,6 +4,8 @@ import DropDown from "@/components/commons/DropDown";
 import type { Question } from "@/features/quiz/QuizForm";
 import { SetStateAction, useState, ChangeEvent, useEffect } from "react";
 import PlayfulInput from "@/components/commons/PlayfulInput";
+import { useThemeSettings } from "@/app/theme-provider";
+
 
 const QuizQuestion = ({ question, setQuestions, qNo }: {
     question: Question,
@@ -11,7 +13,11 @@ const QuizQuestion = ({ question, setQuestions, qNo }: {
     qNo: number
 }) => {
 
-
+    const { theme } = useThemeSettings();
+    const [isHovered, setIsHovered] = useState(false);
+    const shadowColor = theme === "light"
+        ? "#222222"
+        : "#ffffff";
     const [show, setShow] = useState(false);
     const options = [
         {
@@ -124,7 +130,22 @@ const QuizQuestion = ({ question, setQuestions, qNo }: {
         });
     };
 
-    return <div className="w-full p-5 bg-accent text-white flex flex-col gap-5">
+    return <div
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        className="w-full p-5 bg-accent text-white flex flex-col gap-5"
+        style={{
+            transform: isHovered
+                ? "translate(8px, -8px)"
+                : "translate(0px, 0px)",
+
+            boxShadow: isHovered
+                ? `-12px 12px 0px ${shadowColor}`
+                : `-5px 5px 0px ${shadowColor}`,
+
+            transition: "all 250ms ease-in-out",
+        }}
+    >
         <div className="w-full flex justify-between">
             <h3 className="text-lg font-bold">
                 Question {qNo}:
