@@ -30,11 +30,11 @@ const AlbumTopSec = () => {
             style={{
                 borderBottomStyle: "dashed"
             }}>
-            <h1 className="w-full p-1 text-primary-text font-bold text-3xl">
+            <h1 className="home-headings">
                 Our Little World
             </h1>
 
-            <p className="font-medium text-md text-secondary-text w-full">
+            <p className="home-paragraphs">
                 A collection of everything that matters
             </p>
 
