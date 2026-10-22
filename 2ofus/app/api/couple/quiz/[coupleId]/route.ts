@@ -5,6 +5,20 @@ import { encrypt, decrypt } from "@/lib/encryption";
 
 
 // POST: /api/couple/quiz/:coupleId
+/*
+Quiz:
+id: UUID,
+couple_id: UUID REF: couples,
+conductor_id: UUID REF: users,
+conductor: TEXT REF: users(username),
+title: TEXT NOT NULL,
+questions: INTO MAX 10,
+status: "created" | "attempted",
+created_at: TIMESTAMPTZ,
+updated_at: TIMESTAMPTZ,
+overall_score: NUMBER 1 - 100
+*/
+
 export async function POST(request: NextRequest, { params }: { params: Promise<{ coupleId?: string }> }) {
 
 
