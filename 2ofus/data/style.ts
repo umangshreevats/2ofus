@@ -15,21 +15,42 @@ export const commonComponentStyles = ({ width = "auto", wscale = "px", height = 
 
 
 
-export const backgroundTextStyles = (theme: "light" | "dark", blackAndWhite = false, properties = { backgroundColor: "", textColor: "", borderColor: "" }) => {
-
-
+export const backgroundTextStyles = (
+    theme: "light" | "dark",
+    blackAndWhite = false,
+    properties = {
+        backgroundColor: "",
+        textColor: "",
+        borderColor: ""
+    }
+) => {
     if (blackAndWhite) {
         return {
-            backgroundColor: properties.backgroundColor.length > 0 ? properties.backgroundColor : theme === "light" ? "white" : "black",
-            color: properties.textColor.length > 0 ? properties.textColor : theme === "light" ? "black" : "white",
-            borderColor: properties.borderColor.length > 0 ? properties.borderColor : theme === "light" ? "black" : "white"
-        }
+            backgroundColor: properties.backgroundColor
+                ? `var(--${properties.backgroundColor}, ${properties.backgroundColor})`
+                : theme === "light" ? "white" : "black",
+
+            color: properties.textColor
+                ? `var(--${properties.textColor}, ${properties.textColor})`
+                : theme === "light" ? "black" : "white",
+
+            borderColor: properties.borderColor
+                ? `var(--${properties.borderColor}, ${properties.borderColor})`
+                : theme === "light" ? "black" : "white"
+        };
     }
 
     return {
-        backgroundColor: properties.backgroundColor.length === 0 ? "var(--background)" : properties.backgroundColor,
-        color: properties.textColor.length === 0 ? "var(--primary-text)" : properties.textColor,
-        borderColor: properties.borderColor.length === 0 ? "var(--accent)" : properties.borderColor
-    }
-}
+        backgroundColor: properties.backgroundColor
+            ? `var(--${properties.backgroundColor}, var(--background))`
+            : "var(--background)",
 
+        color: properties.textColor
+            ? `var(--${properties.textColor}, var(--primary-text))`
+            : "var(--primary-text)",
+
+        borderColor: properties.borderColor
+            ? `var(--${properties.borderColor}, var(--accent))`
+            : "var(--accent)"
+    };
+};
