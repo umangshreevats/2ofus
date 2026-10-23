@@ -52,6 +52,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
                 (memoryData ?? []).map(async (item) => {
                     if (item.content_type !== "image") return item;
 
+                    const decryptedTitle = decrypt(item.title);
                     const { data, error } = await supabase.storage
                         .from("couple-memories")
                         .createSignedUrl(item.media_id, 3600);
@@ -65,6 +66,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
                     return {
                         ...item,
+                        title: decryptedTitle,
                         media_id: data.signedUrl,
                     };
                 })
@@ -72,24 +74,15 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         } else {
             updatedMemoryData =
                 (memoryData ?? []).map((item) => {
-
+                    const decryptedTitle = decrypt(item.title);
                     const decryptedData = decrypt(item.content ?? "");
                     return {
                         ...item,
+                        title: decryptedTitle,
                         content: decryptedData
                     }
                 });
         }
-
-        updatedMemoryData =
-            (memoryData ?? []).map((item) => {
-
-                const decryptedData = decrypt(item.title);
-                return {
-                    ...item,
-                    content: decryptedData
-                }
-            });
 
         return NextResponse.json(
             {
