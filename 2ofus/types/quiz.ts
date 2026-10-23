@@ -15,13 +15,13 @@ export interface QuizInfoProps {
 export interface QuizQuestions {
     id: string;
     question: string;
-    correct_options: string[];
-    answer_options: string[];
-    answered_options: string[];
-    written_answer: string;
+    correct_options: string[] | null;
+    answer_options: string[] | null;
+    answered_options: string[] | null;
+    written_answer: string | null;
     score: number;
-    given_answer?: string;
+    given_answer: string | null;
     quiz_id: string;
     question_number: number;
-    question_type: number;
+    question_type: "multi-choice" | "multi-select" | "short-answer";
 }

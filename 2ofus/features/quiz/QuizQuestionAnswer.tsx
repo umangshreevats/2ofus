@@ -1,4 +1,5 @@
 "use client";
+import DisplayQuestion from "@/components/couple-profile/quiz/DisplayQuestion";
 import QuestionNav from "@/components/couple-profile/quiz/QuestionNav";
 import type { QuizInfoProps, QuizQuestions } from "@/types/quiz";
 import { useState } from "react";
@@ -9,10 +10,13 @@ interface QuizQuestionAnswerProps {
     quizQuestions: QuizQuestions[];
 }
 
-const QuizQuestionAnswer: React.FC<QuizQuestionAnswerProps> = ({ quizInfo }) => {
+const QuizQuestionAnswer: React.FC<QuizQuestionAnswerProps> = ({ quizInfo, quizQuestions }) => {
 
 
     const [currentQ, setCurrentQ] = useState(1);
+    const currentQuestion = quizQuestions.find(
+        (question) => question.question_number === currentQ
+    );
 
     return <div className="parent-box">
         <div className="child-box p-10">
@@ -26,7 +30,7 @@ const QuizQuestionAnswer: React.FC<QuizQuestionAnswerProps> = ({ quizInfo }) => 
                     Attempt all the questions to be a star in your soulmate's eyes
                 </p>
             </div>
-
+            {currentQuestion && <DisplayQuestion quizQuestion={currentQuestion} />}
             <QuestionNav questions={quizInfo.questions} currentQ={currentQ} setCurrentQ={setCurrentQ} />
         </div>
     </div>
