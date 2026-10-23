@@ -68,18 +68,18 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
         // Creating the quiz, default status: created 
         const { data: quizData, error: quizError } = await supabase
-        .from("quiz")
-        .insert({
-            title: encryptedTitle,
-            couple_id: coupleId,
-            conductor: userData.username,
-            conductor_id: user.id,
-            questions: questions.length,
-            overall_score: 0,
-            status: "created"
-        }).select().single();
+            .from("quiz")
+            .insert({
+                title: encryptedTitle,
+                couple_id: coupleId,
+                conductor: userData.username,
+                conductor_id: user.id,
+                questions: questions.length,
+                overall_score: 0,
+                status: "created"
+            }).select().single();
 
-        if(quizError) {
+        if (quizError) {
             return NextResponse.json(
                 { message: "Something went wrong while creating quiz" },
                 { status: 500 }
@@ -158,45 +158,46 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
                         );
                     }
                 }
-
-                // Encrypting all the answers and options
-                const encryptedQuestion = encrypt(question.question);
-                const encryptedWrittenAnswer = encrypt(question.writtenAnswer ?? "");
-
-                const encryptedOptions = question.options
-                    ? encrypt(JSON.stringify(question.options))
-                    : null;
-
-                const encryptedCorrectOptions = question.correctOptions
-                    ? encrypt(JSON.stringify(question.correctOptions))
-                    : null;
-
-                // Saving the question along with number
-                const { error: questionStoringError } = await supabase
-                    .from("quiz_questions")
-                    .insert({
-                        quiz_id: quizData.id,
-                        question_number: index++,
-                        question: encryptedQuestion,
-                        question_type: question.type,
-                        answer_options: encryptedOptions,
-                        correct_options: encryptedCorrectOptions,
-                        written_answer: encryptedWrittenAnswer
-                    });
-
-                if (questionStoringError) {
-                    return NextResponse.json(
-                        { message: "Failed to store quiz question." },
-                        { status: 500 }
-                    );
-                }
             }
 
-            return NextResponse.json(
-                { message: "Quiz created successfully", quizData },
-                { status: 201 }
-            );
+            // Encrypting all the answers and options
+            const encryptedQuestion = encrypt(question.question);
+            const encryptedWrittenAnswer = encrypt(question.writtenAnswer ?? "");
+
+            const encryptedOptions = question.options
+                ? encrypt(JSON.stringify(question.options))
+                : null;
+
+            const encryptedCorrectOptions = question.correctOptions
+                ? encrypt(JSON.stringify(question.correctOptions))
+                : null;
+
+            // Saving the question along with number
+            const { error: questionStoringError } = await supabase
+                .from("quiz_questions")
+                .insert({
+                    quiz_id: quizData.id,
+                    question_number: index++,
+                    question: encryptedQuestion,
+                    question_type: question.type,
+                    answer_options: encryptedOptions,
+                    correct_options: encryptedCorrectOptions,
+                    written_answer: encryptedWrittenAnswer
+                });
+
+            if (questionStoringError) {
+                return NextResponse.json(
+                    { message: "Failed to store quiz question." },
+                    { status: 500 }
+                );
+            }
         }
+
+        return NextResponse.json(
+            { message: "Quiz created successfully", quizData },
+            { status: 201 }
+        );
+
 
     } catch (err) {
 
