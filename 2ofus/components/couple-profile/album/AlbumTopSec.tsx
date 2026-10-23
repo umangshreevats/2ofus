@@ -38,7 +38,7 @@ const AlbumTopSec = () => {
                 A collection of everything that matters
             </p>
 
-            <div className="w-full flex flex-col gap-2 p-5 rounded-sm bg-background brightness-150">
+            <div className="w-full flex flex-col p-5 gap-2 rounded-sm bg-background brightness-150">
                 <h2 className="w-full text-2xl font-thin text-primary-text">
                     OUR SHARED COLLECTION
                 </h2>

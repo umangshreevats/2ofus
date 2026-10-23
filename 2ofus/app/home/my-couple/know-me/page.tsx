@@ -13,7 +13,7 @@ export default async function QuizPage() {
         .from("quiz")
         .select("*")
         .eq("couple_id", coupleData.id)
-        .limit(2);
+        .limit(4);
 
     if (quizesError || !quizes) {
         throw quizesError;
