@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useAuth } from "@/app/auth-provider";
 import Popups from "@/components/commons/Popups";
 import MemoryHolder from "@/components/couple-profile/album/MemoryHolder";
+import { Plus } from "lucide-react";
 
 
 const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
@@ -88,9 +89,9 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
                             <Photograph onClick={() => handleChoosenOne(image)} cursor="pointer" maxHeight={220} maxWidth={220} date={image.memory_date} url={image.media_id} alternate={`Photograph-${image.id}`} name={image.title} />
                         </div>
                     </div>))}
-                    {noMoreImages ? <div className="flex-grow-0 mt-20">Memory End!</div>
+                    {noMoreImages ? <div className="flex-grow-0 mt-20 font-light text-sm">Memory End!</div>
                         : <div className="flex-grow-0 mt-20">
-                            <Button onClick={async () => await getMoreMemory("image")} text={imgLoading ? "Loading..." : "Load More"} type="button" disabled={imgLoading} />
+                            <Button onClick={async () => await getMoreMemory("image")} className={imgLoading ? "animate-spin" : ""} icon={Plus} text="" type="button" disabled={imgLoading} />
                         </div>}
                 </div>
             </div>
@@ -111,9 +112,9 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
                             <Note cursor="pointer" onClick={() => handleChoosenOne(note)} title={note.title} note={note.content} author={note.created_by} date={note.memory_date} />
                         </div>
                     </div>))}
-                    {noMoreNotes ? <div className="flex-grow-0 mt-20">Memory End!</div>
+                    {noMoreNotes ? <div className="flex-grow-0 mt-20 font-light text-sm">Memory End!</div>
                         : <div className="flex-grow-0 mt-20">
-                            <Button onClick={async () => await getMoreMemory("note")} text={noteLoading ? "Loading..." : "Load More"} type="button" disabled={noteLoading} />
+                            <Button onClick={async () => await getMoreMemory("note")} className={noteLoading ? "animate-spin" : ""} icon={Plus} text="" type="button" disabled={noteLoading} />
                         </div>}
                 </div>
             </div>
