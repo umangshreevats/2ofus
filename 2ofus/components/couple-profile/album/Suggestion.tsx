@@ -5,6 +5,7 @@ import { romanticMemories } from "@/data/images";
 import Button from "@/components/commons/Button";
 import { useState } from "react";
 import MemoryManager from "./MemoryManager";
+import Popups from "@/components/commons/Popups";
 
 const Suggestion = () => {
 
@@ -36,7 +37,9 @@ const Suggestion = () => {
             </div>
         </div>
 
-        <MemoryManager show={show} setShow={setShow} />
+        <Popups open={show} setOpen={setShow}>
+            <MemoryManager show={show} setShow={setShow} />
+        </Popups>
     </div>
 }
 
