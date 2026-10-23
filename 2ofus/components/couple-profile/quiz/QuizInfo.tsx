@@ -4,19 +4,8 @@
 import { useAuth } from "@/app/auth-provider";
 import PlayfulButton from "@/components/commons/PlayfulButton";
 import { useRouter } from "next/navigation";
+import type { QuizInfoProps } from "@/types/quiz";
 
-export interface QuizInfoProps {
-    id: string;
-    couple_id: string;
-    questions: number;
-    conductor_id: string;
-    conductor: string;
-    title: string;
-    overall_score: number;
-    status: "created" | "attempted";
-    created_at: string;
-    updated_at: string;
-}
 
 interface QuizInfoComponentProps {
     quizInfo: QuizInfoProps;

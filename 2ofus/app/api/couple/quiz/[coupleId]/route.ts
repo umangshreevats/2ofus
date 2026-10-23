@@ -266,7 +266,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
             // Encrypting all the answers and options
             const encryptedQuestion = encrypt(question.question);
-            const encryptedWrittenAnswer = encrypt(question.writtenAnswer ?? "");
+            const encryptedWrittenAnswer = question.writtenAnswer && question.writtenAnswer.length > 0 ? 
+            encrypt(question.writtenAnswer) : null;
 
             const encryptedOptions = question.options
                 ? encrypt(JSON.stringify(question.options))

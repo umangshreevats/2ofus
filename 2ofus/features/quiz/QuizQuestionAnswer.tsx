@@ -1,10 +1,12 @@
 "use client";
 import QuestionNav from "@/components/couple-profile/quiz/QuestionNav";
-import type { QuizInfoProps } from "@/components/couple-profile/quiz/QuizInfo";
+import type { QuizInfoProps, QuizQuestions } from "@/types/quiz";
 import { useState } from "react";
+
 
 interface QuizQuestionAnswerProps {
     quizInfo: QuizInfoProps;
+    quizQuestions: QuizQuestions[];
 }
 
 const QuizQuestionAnswer: React.FC<QuizQuestionAnswerProps> = ({ quizInfo }) => {

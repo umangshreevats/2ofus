@@ -1,6 +1,7 @@
 "use client";
 import { useAuth } from "@/app/auth-provider";
-import QuizInfo, { QuizInfoProps } from "@/components/couple-profile/quiz/QuizInfo";
+import QuizInfo from "@/components/couple-profile/quiz/QuizInfo";
+import type { QuizInfoProps } from "@/types/quiz";
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import Button from "@/components/commons/Button";

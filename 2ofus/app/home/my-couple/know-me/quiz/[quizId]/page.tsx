@@ -15,6 +15,8 @@ export default async function QuizSolvePage({ params }: { params: Promise<{ quiz
 
     const supabase = await createClient();
 
+
+    // Quiz Information fetching
     const { data: quizInfo, error: quizInfoError } = await supabase
     .from("quiz")
     .select("*")
@@ -27,7 +29,46 @@ export default async function QuizSolvePage({ params }: { params: Promise<{ quiz
 
     quizInfo.title = decryptedTitle;
 
+
+    // Quiz Questions and Answers information fetching
+    const { data: quizQuestions, error: quizQuestionsError } = await supabase
+    .from("quiz_questions")
+    .select("*")
+    .eq("quiz_id", quizId);
+
+    if(quizQuestionsError || !quizQuestions) throw quizQuestionsError;
+
+
+    const updatedQuizQuestions = quizQuestions.map((quizQuestion) => {
+
+        //decrypting the quiz questions
+        const decryptedQuestion = decrypt(quizQuestion.question);
+        let decryptedWrittenAnswer = null;
+        let decryptedAnswerOptions = null;
+        let decryptedCorrectOptions = null;
+        if(quizQuestion.written_answer) {
+            decryptedWrittenAnswer = decrypt(quizQuestion.written_answer);
+        }
+
+        if(quizQuestion.answer_options) {
+            decryptedAnswerOptions = decrypt(quizQuestion.answer_options);
+        }
+
+        if(quizQuestion.correct_options) {
+            decryptedCorrectOptions = decrypt(quizQuestion.correct_options);
+        }
+
+        return {
+            ...quizQuestion,
+            question: decryptedQuestion,
+            written_answer: decryptedWrittenAnswer,
+            answer_options: decryptedAnswerOptions ? JSON.parse(decryptedAnswerOptions) : null,
+            correct_options: decryptedCorrectOptions ? JSON.parse(decryptedCorrectOptions) : null,
+        }
+    });
+
+
     return <section>
-        <QuizQuestionAnswer quizInfo={quizInfo} />
+        <QuizQuestionAnswer quizInfo={quizInfo} quizQuestions={updatedQuizQuestions} />
     </section>
 }
