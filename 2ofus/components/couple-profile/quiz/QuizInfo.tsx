@@ -25,7 +25,7 @@ const QuizInfo = ({ quizInfo }: { quizInfo: QuizInfoProps }) => {
                 {quizInfo.title}
             </h3>
 
-            <span className="text-md">~created by{quizInfo.conductor}</span>
+            <span className="text-md">~created by {quizInfo.conductor}</span>
         </div>
     </div>
 }
