@@ -1,3 +1,6 @@
+import { createClient } from "@/utils/supabase/server";
+import QuizQuestionAnswer from "@/features/quiz/QuizQuestionAnswer";
+import { decrypt } from "@/lib/encryption";
 
 
 export default async function QuizSolvePage({ params }: { params: Promise<{ quizId?: string }>}) {
@@ -10,7 +13,21 @@ export default async function QuizSolvePage({ params }: { params: Promise<{ quiz
         return null;
     }
 
+    const supabase = await createClient();
+
+    const { data: quizInfo, error: quizInfoError } = await supabase
+    .from("quiz")
+    .select("*")
+    .eq("id", quizId)
+    .single();
+
+    if(quizInfoError || !quizInfo) throw quizInfoError;
+
+    const decryptedTitle = decrypt(quizInfo.title);
+
+    quizInfo.title = decryptedTitle;
+
     return <section>
-        This is quiz solve page
+        <QuizQuestionAnswer quizInfo={quizInfo} />
     </section>
 }
