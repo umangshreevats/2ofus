@@ -4,26 +4,95 @@ import QuizInfo, { QuizInfoProps } from "@/components/couple-profile/quiz/QuizIn
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import Button from "@/components/commons/Button";
+import { useRouter } from "next/navigation";
+
 
 const QuizfeaturePage = ({ quizes }: { quizes: QuizInfoProps[] }) => {
 
-    const { user } = useAuth();
+    const { user, coupleData } = useAuth();
+    const router = useRouter();
     const [pendingQuiz, setPendingQuiz] = useState(quizes.filter(quiz => quiz.conductor_id !== user.id && quiz.status === "created"));
     const [attemptedQuiz, setAttemptedQuiz] = useState(quizes.filter(quiz => quiz.conductor_id !== user.id && quiz.status === "attempted"));
     const [userQuiz, setUserQuiz] = useState(quizes.filter(quiz => quiz.conductor_id === user.id));
 
     // loaders, skip states, and no mores for the different quiz add more buttons
-    const[pendingLoading, setPendingLoading] = useState(false);
+    const [pendingLoading, setPendingLoading] = useState(false);
     const [pendingSkip, setPendingSkip] = useState(pendingQuiz.length);
     const [pendingNoMore, setPendingNoMore] = useState(false);
 
-    const[attemptedLoading, setAttemptedLoading] = useState(false);
-    const [attemptedSkip, setAttemptedSkip] = useState(pendingQuiz.length);
+    const [attemptedLoading, setAttemptedLoading] = useState(false);
+    const [attemptedSkip, setAttemptedSkip] = useState(attemptedQuiz.length);
     const [attemptedNoMore, setAttemptedNoMore] = useState(false);
 
-    const[userLoading, setUserLoading] = useState(false);
-    const [userSkip, setUserSkip] = useState(pendingQuiz.length);
+    const [userLoading, setUserLoading] = useState(false);
+    const [userSkip, setUserSkip] = useState(userQuiz.length);
     const [userNoMore, setUserNoMore] = useState(false);
+
+
+    // function to fetch more quizes
+
+    const getMoreQuizes = async (category: "user" | "pending" | "attempted") => {
+
+        let skip = 0;
+        if (category === "pending") {
+            setPendingLoading(true);
+            skip = pendingSkip;
+        } else if (category === "attempted") {
+            setAttemptedLoading(true);
+            skip = attemptedSkip;
+        } else if (category === "user") {
+            setUserLoading(true);
+            skip = userSkip;
+        } else {
+            alert("Such category quizes cannot be retrieved");
+            return;
+        }
+
+        try {
+
+            const response = await fetch(`/api/couple/quiz/${coupleData.id}?category=${category}&limit=${10}&skip=${skip}`);
+
+            const result = await response.json();
+
+            if (!response.ok) {
+
+                alert("Request failed" + result.message);
+                return;
+            }
+
+            if (category === "pending") {
+                setPendingQuiz(prev => [...prev, ...result.quizesInfo ]);
+                if(result.quizesInfo.length === 0) {
+                    setPendingNoMore(true);
+                }
+                setPendingSkip(result.nextSkip);
+            } else if (category === "attempted") {
+                setAttemptedQuiz(prev => [...prev, ...result.quizesInfo ]);
+                if(result.quizesInfo.length === 0) {
+                    setAttemptedNoMore(true);
+                }
+                setAttemptedSkip(result.nextSkip);
+            } else if (category === "user") {
+                setUserQuiz(prev => [...prev, ...result.quizesInfo ]);
+                if(result.quizesInfo.length === 0) {
+                    setUserNoMore(true);
+                }
+                setUserSkip(result.nextSkip);
+            }
+        } catch(err) {
+
+            console.error(err);
+            alert("Somethign went wrong");
+        } finally {
+            if (category === "pending") {
+            setPendingLoading(false);
+        } else if (category === "attempted") {
+            setAttemptedLoading(false);
+        } else if (category === "user") {
+            setUserLoading(false);
+        }
+        }
+    }
 
     return <div className="parent-box">
         <div className="child-box flex flex-col gap-5 p-5 items-center" style={{ borderBottomStyle: "dashed" }}>
@@ -49,9 +118,15 @@ const QuizfeaturePage = ({ quizes }: { quizes: QuizInfoProps[] }) => {
                         ))}
 
                         {pendingNoMore ? <div className="flex-grow-0 font-light text-sm">Quiz End!</div>
-                        : <div className="flex-grow-0 mt-20">
-                            <Button className={pendingLoading ? "animate-spin" : ""} icon={Plus} text="" type="button" disabled={pendingLoading} />
-                        </div>}
+                            : <div className="flex-grow-0 mt-20">
+                                <Button 
+                                className={pendingLoading ? "animate-spin" : ""} 
+                                icon={Plus} 
+                                text="" 
+                                type="button"
+                                onClick={async() => await getMoreQuizes("pending")} 
+                                disabled={pendingLoading} />
+                            </div>}
                     </div>}
                 </div>
 
@@ -69,9 +144,15 @@ const QuizfeaturePage = ({ quizes }: { quizes: QuizInfoProps[] }) => {
                             </div>
                         ))}
                         {attemptedNoMore ? <div className="flex-grow-0 font-light text-sm">Quiz End!</div>
-                        : <div className="flex-grow-0 mt-20">
-                            <Button className={attemptedLoading ? "animate-spin" : ""} icon={Plus} text="" type="button" disabled={attemptedLoading} />
-                        </div>}
+                            : <div className="flex-grow-0 mt-20">
+                                <Button 
+                                className={attemptedLoading ? "animate-spin" : ""} 
+                                icon={Plus} 
+                                text="" 
+                                type="button" 
+                                onClick={async() => await getMoreQuizes("attempted")}
+                                disabled={attemptedLoading} />
+                            </div>}
                     </div>}
                 </div>
 
@@ -80,18 +161,25 @@ const QuizfeaturePage = ({ quizes }: { quizes: QuizInfoProps[] }) => {
                         Your partner quizes
                     </h4>
 
-                    {userQuiz.length === 0 ? <div className="w-full h-40 p-10 flex justify-center items-center rounded-md border border-dashed border-primary-text">
-                        Give your partner some challenging questions, to find how much love is for you
-                        </div> : <div className="w-full flex gap-5 overflow-x-scroll" style={{ scrollbarWidth: "none" }}>
+                    {userQuiz.length === 0 ? <div className="w-full h-40 p-10 flex flex-col justify-center items-center rounded-md border border-dashed border-primary-text">
+                        <span>Give your partner some challenging questions, to find how much love is for you</span>
+                        <Button text="Create Quizes" onClick={() => router.push("/home/my-couple/know-me/create-quiz")} type="button" />
+                    </div> : <div className="w-full flex gap-5 overflow-x-scroll" style={{ scrollbarWidth: "none" }}>
                         {userQuiz.map((quiz) => (
                             <div key={quiz.id}>
                                 <QuizInfo quizInfo={quiz} />
                             </div>
                         ))}
                         {userNoMore ? <div className="flex-grow-0 font-light text-sm">Quiz End!</div>
-                        : <div className="flex-grow-0 mt-20">
-                            <Button className={userLoading ? "animate-spin" : ""} icon={Plus} text="" type="button" disabled={userLoading} />
-                        </div>}
+                            : <div className="flex-grow-0 mt-20">
+                                <Button 
+                                className={userLoading ? "animate-spin" : ""} 
+                                icon={Plus} 
+                                text="" 
+                                type="button"
+                                onClick={async() => await getMoreQuizes("user")} 
+                                disabled={userLoading} />
+                            </div>}
                     </div>}
                 </div>
             </div>

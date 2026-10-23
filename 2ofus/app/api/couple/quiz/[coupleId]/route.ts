@@ -4,6 +4,110 @@ import { createClient } from "@/utils/supabase/server";
 import { encrypt, decrypt } from "@/lib/encryption";
 
 
+
+// GET: /api/couple/quiz/:coupleId?category=&limit=&skip=
+
+export async function GET(request: NextRequest, { params }: { params: Promise<{ coupleId?: string }> }) {
+
+
+    try {
+
+        const { user } = await getCurrentUser();
+
+        if (!user) {
+            return NextResponse.json(
+                { message: "Unauthorized" },
+                { status: 401 }
+            );
+        }
+
+        const { coupleId } = await params;
+
+        if (!coupleId) {
+            return NextResponse.json(
+                { message: "Bad Request: Couple Id is required" },
+                { status: 400 }
+            );
+        }
+
+        const supabase = await createClient();
+
+        const searchParams = request.nextUrl.searchParams;
+
+        const limit = (Number(searchParams.get("limit"))) ?? 10;
+        const skip = (Number(searchParams.get("skip"))) ?? 0;
+        const category = searchParams.get("category");
+
+        let query = supabase
+            .from("quiz")
+            .select("*")
+            .eq("couple_id", coupleId)
+            .range(skip, skip + limit - 1);
+
+        switch (category) {
+
+            case "pending":
+                query = query
+                    .neq("conductor_id", user.id)
+                    .eq("status", "created");
+                break;
+
+            case "attempted":
+                query = query
+                    .neq("conductor_id", user.id)
+                    .eq("status", "attempted");
+
+                break;
+
+            case "user":
+                query = query
+                    .eq("conductor_id", user.id);
+                break;
+
+            default:
+                break;
+        }
+
+        const { data: quizesInfo, error: quizesInfoError } = await query;
+
+
+
+        if (quizesInfoError || !quizesInfo) {
+            console.error(quizesInfoError);
+            return NextResponse.json(
+                { message: "Internal Server Error: Failed to retrieve quizes" },
+                { status: 500 }
+            );
+        }
+
+
+        const updatedQuizes = await Promise.all(
+            (quizesInfo ?? []).map(async (quiz) => {
+
+                const decryptedTitle = decrypt(quiz.title);
+
+                return {
+                    ...quiz,
+                    title: decryptedTitle
+                }
+            })
+        );
+
+        return NextResponse.json(
+            { message: "Pending Quizes retrieved", quizesInfo: updatedQuizes, nextSkip: limit + skip },
+            { status: 200 }
+        );
+    } catch (err) {
+
+        console.error(err);
+        return NextResponse.json(
+            { message: "Internal Server Error" },
+            { status: 500 }
+        );
+    }
+}
+
+
 // POST: /api/couple/quiz/:coupleId
 /*
 Quiz:
