@@ -3,6 +3,7 @@
 
 import { useAuth } from "@/app/auth-provider";
 import PlayfulButton from "@/components/commons/PlayfulButton";
+import { useRouter } from "next/navigation";
 
 export interface QuizInfoProps {
     id: string;
@@ -19,20 +20,14 @@ export interface QuizInfoProps {
 
 interface QuizInfoComponentProps {
     quizInfo: QuizInfoProps;
-    onStartQuiz?: (quizId: string) => void;
-    onViewScore?: (quizId: string) => void;
-    onViewQuiz?: (quizId: string) => void;
 }
 
 const QuizInfo = ({
-    quizInfo,
-    onStartQuiz,
-    onViewScore,
-    onViewQuiz
+    quizInfo
 }: QuizInfoComponentProps) => {
 
     const { user } = useAuth();
-
+    const router = useRouter();
     const isConductor = quizInfo.conductor_id === user.id;
     const isAttempted = quizInfo.status === "attempted";
 
@@ -51,13 +46,26 @@ const QuizInfo = ({
             ? "View score"
             : "Start quiz";
 
+
+    const onStartQuiz = () => {
+        router.push(`/home/my-couple/know-me/quiz/${quizInfo.id}`);
+    }
+
+    const onViewQuiz = () => {
+        router.push(`/home/my-couple/know-me/quiz/view/${quizInfo.id}`);
+    }
+
+    const onViewScore = () => {
+        router.push(`/home/my-couple/know-me/quiz/view/${quizInfo.id}`);
+    }
+
     const handleAction = () => {
         if (isConductor) {
-            onViewQuiz?.(quizInfo.id);
+            onViewQuiz();
         } else if (isAttempted) {
-            onViewScore?.(quizInfo.id);
+            onViewScore();
         } else {
-            onStartQuiz?.(quizInfo.id);
+            onStartQuiz();
         }
     };
 

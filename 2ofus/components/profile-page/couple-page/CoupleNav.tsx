@@ -3,9 +3,22 @@
 import { Brain, MessagesSquare, Gamepad2, Library, Home } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { headerFooterMain } from "@/data/routingBehaviors";
+
+
 const CoupleNav = () => {
 
     const pathname = usePathname();
+
+    const matchedRoute = Object.entries(headerFooterMain)
+        .sort(([a], [b]) => b.length - a.length)
+        .find(([route]) =>
+            route === "/"
+                ? pathname === "/"
+                : pathname === route || pathname.startsWith(`${route}/`)
+        );
+
+    const show = matchedRoute?.[1].show ?? true;
 
     const coupleNavItems = [
         { name: "Home", icon: Home, href: "/home/my-couple" },
@@ -25,7 +38,7 @@ const CoupleNav = () => {
 
     return (
         <div
-            className="sticky top-0 z-40 bg-background parent-box border-b-5 border-b-solid border-b-primary-text overflow-x-auto"
+            className={show ? `sticky top-0 z-40 bg-background parent-box border-b-5 border-b-solid border-b-primary-text overflow-x-auto` : "hidden"}
             style={{ scrollbarWidth: "none" }}
         >
             <div className="child-box flex flex-col p-5">

@@ -30,7 +30,6 @@ const QuizfeaturePage = ({ quizes }: { quizes: QuizInfoProps[] }) => {
 
 
     // function to fetch more quizes
-
     const getMoreQuizes = async (category: "user" | "pending" | "attempted") => {
 
         let skip = 0;
@@ -61,45 +60,52 @@ const QuizfeaturePage = ({ quizes }: { quizes: QuizInfoProps[] }) => {
             }
 
             if (category === "pending") {
-                setPendingQuiz(prev => [...prev, ...result.quizesInfo ]);
-                if(result.quizesInfo.length === 0) {
+                setPendingQuiz(prev => [...prev, ...result.quizesInfo]);
+                if (result.quizesInfo.length === 0) {
                     setPendingNoMore(true);
                 }
                 setPendingSkip(result.nextSkip);
             } else if (category === "attempted") {
-                setAttemptedQuiz(prev => [...prev, ...result.quizesInfo ]);
-                if(result.quizesInfo.length === 0) {
+                setAttemptedQuiz(prev => [...prev, ...result.quizesInfo]);
+                if (result.quizesInfo.length === 0) {
                     setAttemptedNoMore(true);
                 }
                 setAttemptedSkip(result.nextSkip);
             } else if (category === "user") {
-                setUserQuiz(prev => [...prev, ...result.quizesInfo ]);
-                if(result.quizesInfo.length === 0) {
+                setUserQuiz(prev => [...prev, ...result.quizesInfo]);
+                if (result.quizesInfo.length === 0) {
                     setUserNoMore(true);
                 }
                 setUserSkip(result.nextSkip);
             }
-        } catch(err) {
+        } catch (err) {
 
             console.error(err);
             alert("Somethign went wrong");
         } finally {
             if (category === "pending") {
-            setPendingLoading(false);
-        } else if (category === "attempted") {
-            setAttemptedLoading(false);
-        } else if (category === "user") {
-            setUserLoading(false);
-        }
+                setPendingLoading(false);
+            } else if (category === "attempted") {
+                setAttemptedLoading(false);
+            } else if (category === "user") {
+                setUserLoading(false);
+            }
         }
     }
 
     return <div className="parent-box">
         <div className="child-box flex flex-col gap-5 p-5 items-center" style={{ borderBottomStyle: "dashed" }}>
 
-            <div className="w-full gap-5 flex flex-col border-b-2 border-b-primary-text" style={{ borderBottomStyle: "dashed" }}>
-                <h1 className="home-headings">Testing your partner knowledge</h1>
-                <p className="home-paragraphs">Tests written by you and your partners for each other get to know each other</p>
+            <div className="w-full flex border-dashed border-b-2 border-b-primary-text">
+                <div className="w-[70%] gap-5 inline-block">
+                    <h1 className="home-headings">Testing your partner knowledge</h1>
+                    <p className="home-paragraphs">Tests written by you and your partners for each other get to know each other</p>
+                </div>
+
+                <div className="flex-1 flex flex-col gap-1 justify-center items-center p-5">
+                    <span>Create Quiz for your partner: </span>
+                    <Button text="Create Quiz" onClick={() => router.push("/home/my-couple/know-me/create-quiz")} type="button" />
+                </div>
             </div>
 
             <div className="w-full flex gap-5 flex-col">
@@ -119,13 +125,13 @@ const QuizfeaturePage = ({ quizes }: { quizes: QuizInfoProps[] }) => {
 
                         {pendingNoMore ? <div className="flex-grow-0 font-light text-sm">Quiz End!</div>
                             : <div className="flex-grow-0 mt-20">
-                                <Button 
-                                className={pendingLoading ? "animate-spin" : ""} 
-                                icon={Plus} 
-                                text="" 
-                                type="button"
-                                onClick={async() => await getMoreQuizes("pending")} 
-                                disabled={pendingLoading} />
+                                <Button
+                                    className={pendingLoading ? "animate-spin" : ""}
+                                    icon={Plus}
+                                    text=""
+                                    type="button"
+                                    onClick={async () => await getMoreQuizes("pending")}
+                                    disabled={pendingLoading} />
                             </div>}
                     </div>}
                 </div>
@@ -145,13 +151,13 @@ const QuizfeaturePage = ({ quizes }: { quizes: QuizInfoProps[] }) => {
                         ))}
                         {attemptedNoMore ? <div className="flex-grow-0 font-light text-sm">Quiz End!</div>
                             : <div className="flex-grow-0 mt-20">
-                                <Button 
-                                className={attemptedLoading ? "animate-spin" : ""} 
-                                icon={Plus} 
-                                text="" 
-                                type="button" 
-                                onClick={async() => await getMoreQuizes("attempted")}
-                                disabled={attemptedLoading} />
+                                <Button
+                                    className={attemptedLoading ? "animate-spin" : ""}
+                                    icon={Plus}
+                                    text=""
+                                    type="button"
+                                    onClick={async () => await getMoreQuizes("attempted")}
+                                    disabled={attemptedLoading} />
                             </div>}
                     </div>}
                 </div>
@@ -172,13 +178,13 @@ const QuizfeaturePage = ({ quizes }: { quizes: QuizInfoProps[] }) => {
                         ))}
                         {userNoMore ? <div className="flex-grow-0 font-light text-sm">Quiz End!</div>
                             : <div className="flex-grow-0 mt-20">
-                                <Button 
-                                className={userLoading ? "animate-spin" : ""} 
-                                icon={Plus} 
-                                text="" 
-                                type="button"
-                                onClick={async() => await getMoreQuizes("user")} 
-                                disabled={userLoading} />
+                                <Button
+                                    className={userLoading ? "animate-spin" : ""}
+                                    icon={Plus}
+                                    text=""
+                                    type="button"
+                                    onClick={async () => await getMoreQuizes("user")}
+                                    disabled={userLoading} />
                             </div>}
                     </div>}
                 </div>
