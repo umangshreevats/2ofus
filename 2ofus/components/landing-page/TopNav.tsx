@@ -14,6 +14,7 @@ import { useAuth } from "@/app/auth-provider";
 import ProfileIcon from "../profile-page/nav-bar/ProfileIcon";
 import DropDown from "../commons/DropDown";
 import Notifications from "../profile-page/nav-bar/Notifications";
+import CoupleNav from "../profile-page/couple-page/CoupleNav";
 
 
 type NavLocations = {
@@ -134,18 +135,12 @@ const TopNav: React.FC<TopNavProps> = ({ display, navLocations }) => {
         <div className="child-box">
             <nav className={`flex px-3 py-1 h-20 justify-between items-center gap-5 sm:gap-20 ${display ? "flex" : "hidden"}`}>
                 <Link href="/">
-                    <h1 className="text-3xl text-primary-text font-bold">
+                    <h1 className="text-3xl text-primary-text font-bold font-rubik">
                         {appName}
                     </h1>
                 </Link>
 
-                {!userData && <ul className="hidden sm:flex gap-10 items-center">
-                    {navLocations.map((nl: NavLocations, index: number) => (
-                        <li key={index} className="text-primary-text font-medium"><Link href={nl.path}>
-                            {nl.icon ?? ""} <span>{nl.name}</span>
-                        </Link></li>
-                    ))}
-                </ul>}
+                {coupleData && <CoupleNav />}
 
 
                 <RightSideNavElements userData={userData} coupleData={coupleData} />

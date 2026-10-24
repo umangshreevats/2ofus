@@ -123,6 +123,11 @@
     --color-accent: var(--accent);
 }
 
+@theme {
+  --font-rubik: var(--rubik);
+  --font-comfortaa: var(--comfortaa);
+}
+
 body {
     background-color: var(--background);
     color: var(--primary-text);
@@ -149,28 +154,6 @@ body {
     border-radius: 100%;
     cursor: pointer;
     transition: background-color 0.2s ease;
-}
-
-/* Homepage headings */
-.home-headings {
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-  padding: 1rem;
-  color: var(--primary-text);
-  font-weight: 700;
-  font-size: 3rem;
-  line-height: 1rem;
-}
-
-/* Homepage paragraphs */
-.home-paragraphs {
-  font-weight: 500;
-  font-size: 1rem;
-  line-height: 1.5rem;
-  color: var(--secondary-text);
-  width: 100%;
-  padding: 1rem;
 }
 
 

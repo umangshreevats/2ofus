@@ -3,22 +3,11 @@
 import { Brain, MessagesSquare, Gamepad2, Library, Home } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { headerFooterMain } from "@/data/routingBehaviors";
 
 
 const CoupleNav = () => {
 
     const pathname = usePathname();
-
-    const matchedRoute = Object.entries(headerFooterMain)
-        .sort(([a], [b]) => b.length - a.length)
-        .find(([route]) =>
-            route === "/"
-                ? pathname === "/"
-                : pathname === route || pathname.startsWith(`${route}/`)
-        );
-
-    const show = matchedRoute?.[1].show ?? true;
 
     const coupleNavItems = [
         { name: "Home", icon: Home, href: "/home/my-couple" },
@@ -27,6 +16,7 @@ const CoupleNav = () => {
         { name: "Fun", icon: Gamepad2, href: "/home/my-couple/fun" },
         { name: "Your Album", icon: Library, href: "/home/my-couple/album" },
     ];
+
 
     const isActive = (href: string) => {
         if (href === "/home/my-couple") {
@@ -38,10 +28,10 @@ const CoupleNav = () => {
 
     return (
         <div
-            className={show ? `sticky top-0 z-40 bg-background parent-box border-b-5 border-b-solid border-b-primary-text overflow-x-auto` : "hidden"}
+            className="bg-background overflow-x-auto font-comforta"
             style={{ scrollbarWidth: "none" }}
         >
-            <div className="child-box flex flex-col p-5">
+            <div className="flex flex-col p-5">
                 <nav className="w-full">
                     <ul className="flex w-full items-center justify-evenly gap-5">
                         {coupleNavItems.map((item) => {
@@ -60,13 +50,13 @@ const CoupleNav = () => {
                                                 : "var(--primary-text)",
                                         }}
                                         className="
-                                            w-24 h-20
+                                            w-24 h-15
                                             flex flex-col
                                             items-center justify-center
                                             rounded-full
                                             font-bold
                                             gap-1
-                                            p-2
+                                            p-5
                                             text-center
                                             hover:text-white
                                             hover:bg-accent

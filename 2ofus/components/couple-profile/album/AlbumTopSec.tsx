@@ -11,6 +11,7 @@ import { useState } from "react";
 import Link from "next/link";
 import MemoryManager from "./MemoryManager";
 import Popups from "@/components/commons/Popups";
+import Headings from "@/components/commons/Headings";
 
 const AlbumTopSec = () => {
 
@@ -30,13 +31,7 @@ const AlbumTopSec = () => {
             style={{
                 borderBottomStyle: "dashed"
             }}>
-            <h1 className="home-headings">
-                Our Little World
-            </h1>
-
-            <p className="home-paragraphs">
-                A collection of everything that matters
-            </p>
+            <Headings heading="Our Little World" paragraph="A collection of everything that matters" />
 
             <div className="w-full flex flex-col p-5 gap-2 rounded-sm bg-background brightness-150">
                 <h2 className="w-full text-2xl font-thin text-primary-text">
