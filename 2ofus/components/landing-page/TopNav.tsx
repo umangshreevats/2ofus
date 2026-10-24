@@ -6,7 +6,7 @@ import Popups from "@/components/commons/Popups";
 import Auth from "@/components/auth/Auth";
 import { useThemeSettings } from "@/app/theme-provider";
 import { useState } from "react";
-import { Bell, Moon, Sun } from "lucide-react";
+import { Bell, Menu, Moon, Sun } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { headerFooterMain } from "@/data/routingBehaviors";
 import SearchBar from "../profile-page/nav-bar/SearchBar";
@@ -94,7 +94,8 @@ const RightSideNavElements = ({
             </>
         );
     }
-
+    
+    const [showNavs, setShowNavs] = useState(false);
     return (
         <div className="gap-5 flex items-center">
             <DropDown
@@ -110,6 +111,17 @@ const RightSideNavElements = ({
             {!coupleData && <SearchBar />}
 
             <ProfileIcon />
+
+            <button type="button" className="sm:hidden" onClick={() => setShowNavs(true)}>
+                <Menu />
+            </button>
+
+            <Popups 
+            open={showNavs} 
+            setOpen={setShowNavs}
+            justify="end">
+                <CoupleNav openNav={showNavs} setOpenNav={setShowNavs} />
+            </Popups>
         </div>
     );
 };
@@ -140,7 +152,7 @@ const TopNav: React.FC<TopNavProps> = ({ display, navLocations }) => {
                     </h1>
                 </Link>
 
-                {coupleData && <CoupleNav />}
+                {coupleData && <div className="hidden sm:block"><CoupleNav /></div>}
 
 
                 <RightSideNavElements userData={userData} coupleData={coupleData} />

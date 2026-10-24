@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import Button from "@/components/commons/Button";
 import { useRouter } from "next/navigation";
+import Headings from "@/components/commons/Headings";
 
 
 const QuizfeaturePage = ({ quizes }: { quizes: QuizInfoProps[] }) => {
@@ -98,10 +99,11 @@ const QuizfeaturePage = ({ quizes }: { quizes: QuizInfoProps[] }) => {
         <div className="child-box flex flex-col gap-5 p-5 items-center" style={{ borderBottomStyle: "dashed" }}>
 
             <div className="w-full flex border-dashed border-b-2 border-b-primary-text">
-                <div className="w-[70%] gap-5 inline-block">
-                    <h1 className="home-headings">Testing your partner knowledge</h1>
-                    <p className="home-paragraphs">Tests written by you and your partners for each other get to know each other</p>
-                </div>
+
+                <Headings 
+                className="w-[70%]"
+                heading="Testing your partner knowledge"
+                paragraph="Tests written by you and your partners for each other get to know each other" />
 
                 <div className="flex-1 flex flex-col gap-1 justify-center items-center p-5">
                     <span>Create Quiz for your partner: </span>
