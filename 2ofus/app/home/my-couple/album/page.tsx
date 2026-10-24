@@ -75,7 +75,7 @@ export default async function AlbumPage({ searchParams }: PageProps) {
 
     const totalPages = Math.ceil((count ?? 0) / limit);
 
-    return <section className="w-full">
+    return <section className="w-full p-10">
         {(updatedAlbumData && updatedAlbumData.length > 0) ?
             <Album m={m} page={currentPage} totalPages={totalPages} albumData={updatedAlbumData} /> :
             <Suggestion />}

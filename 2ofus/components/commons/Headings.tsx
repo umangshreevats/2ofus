@@ -11,7 +11,7 @@ const Headings = ({
     className?: string;
 }) => {
     return (
-        <div className={`px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-7 flex flex-col gap-2 ${className} ${!className.includes("w-") && "w-full"}`}>
+        <div className={`px-4 py-5 flex flex-col gap-2 ${className} ${!className.split(" ").some(cls => cls.startsWith("w-")) ? "w-full" : ""}`}>
 
             {/* Heading */}
             <h1 className="
@@ -36,8 +36,8 @@ const Headings = ({
             {paragraph && (
                 <p className="
                     font-comfortaa
-                    text-xs sm:text-sm lg:text-base
                     font-normal
+                    text-xs sm:text-sm lg:text-base
                     leading-relaxed
                     tracking-wide
                     text-primary-text/70

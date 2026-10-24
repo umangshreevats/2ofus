@@ -77,8 +77,8 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
     return <section className="w-full flex flex-col gap-5">
 
         <section className="relative w-full flex flex-col gap-2">
-            <h4 className="text-lg font-bold">
-                Images
+            <h4 className="text-2xl font-bold font-comfortaa">
+                Photos
             </h4>
             <div className="w-full">
                 <div className="w-full h-0 border-b-2 border-b-secondary-text" style={{ borderBottomStyle: "solid" }} />
@@ -98,8 +98,8 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
         </section>
 
 
-        <section className="relative w-full flex flex-col gap-5">
-            <h4 className="text-lg font-bold">
+        <section className="relative w-full flex flex-col gap-2">
+            <h4 className="text-2xl font-bold font-comfortaa">
                 Notes
             </h4>
 

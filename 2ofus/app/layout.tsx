@@ -16,17 +16,17 @@ export const metadata: Metadata = {
 };
 
 const rubik = Rubik({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--rubik",
-  display: "swap",
+    subsets: ["latin"],
+    weight: ["400", "500", "600", "700"],
+    variable: "--rubik",
+    display: "swap",
 });
 
 const comfortaa = Comfortaa({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--comfortaa",
-  display: "swap",
+    subsets: ["latin"],
+    weight: ["400", "500", "600", "700"],
+    variable: "--comfortaa",
+    display: "swap",
 });
 
 export default async function RootLayout({
@@ -35,8 +35,8 @@ export default async function RootLayout({
     const auth = await getCurrentUser();
 
     return (
-        <html lang="en" data-palette="ember" data-theme="light">
-            <body className={`${rubik.variable} ${comfortaa.variable}`}>
+        <html className={`${rubik.variable} ${comfortaa.variable}`} lang="en" data-palette="ember" data-theme="light">
+            <body className="font-rubik">
                 <AuthProvider initialAuth={auth}>
                     <ThemeProvider>
                         <header>

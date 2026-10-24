@@ -27,7 +27,7 @@ const AlbumTopSec = () => {
 
 
     return <div className="parent-box">
-        <div className="child-box flex flex-col items-center p-5 gap-1 border-b-2 border-b-secondary-text"
+        <div className="child-box flex flex-col items-center gap-1 border-b-2 border-b-secondary-text"
             style={{
                 borderBottomStyle: "dashed"
             }}>
@@ -59,7 +59,7 @@ const AlbumTopSec = () => {
                     const Icon = opt.icon;
 
                     return <div key={opt.id}>
-                        <Link href={opt.route} className={`p-2 flex cursor-pointer ${selected && selected === opt.id ? "bg-black" : "bg-accent"} 
+                        <Link href={opt.route} className={`p-2 flex cursor-pointer text-white ${selected && selected === opt.id ? "bg-black" : "bg-accent"} 
                         rounded-full gap-2`} onClick={() => setSelected(opt.id)}>
                             {Icon && <Icon />} {opt.name}
                         </Link>
