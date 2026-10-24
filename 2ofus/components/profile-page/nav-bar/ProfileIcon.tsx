@@ -13,6 +13,8 @@ const ProfileIcon = () => {
     const supabase = createClient();
     const router = useRouter();
     const [open, setOpen] = useState(false);
+    const [paletteOpen, setPaletteOpen] = useState(false);
+    const [themeOpen, setThemeOpen] = useState(false);
     const { userData } = useAuth();
 
     const handleSignOut = async () => {
@@ -26,8 +28,25 @@ const ProfileIcon = () => {
         router.refresh();
     };
 
+
+    const themeDropDownOptions = [
+        { id: "light", name: "Light" },
+        { id: "dark", name: "Dark" }
+    ];
     const dropDownOptions = [
         { id: "view-profile", name: "View Profile", icon: User, href: "/home/profile" },
+        {
+            id: "theme",
+            name: "Change Theme",
+            onClick: () => setThemeOpen(true),
+            ddInfo: {
+                open: themeOpen,
+                setOpen: setThemeOpen,
+                ddOptions: themeDropDownOptions,
+                right: 0,
+                top: 0,
+            }, close: false
+        },
         { id: "settings", name: "Settings", icon: Settings, href: "/home/settings" },
         { id: "logout", name: "Logout", danger: true, icon: LogOut, onClick: handleSignOut }
     ];

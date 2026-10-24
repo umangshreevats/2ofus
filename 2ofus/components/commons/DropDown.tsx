@@ -30,6 +30,9 @@ const DropDown = ({
     innerHTML?: React.ReactNode;
 }) => {
 
+    if (open == null && setOpen == null) {
+        return <>{children}</>;
+    }
     const [leftPos, setLeftPos] = useState<number>(0);
     const [topPos, setTopPos] = useState<number>(0);
     const [rightPos, setRightPos] = useState<number>(0);
@@ -37,10 +40,12 @@ const DropDown = ({
     const iconRef = useRef<HTMLDivElement | null>(null);
     const parentRef = useRef<HTMLDivElement | null>(null);
 
-    const closeDropDown = () => setOpen(false);
-    const handleClick = async (callback?: () => Promise<void>) => {
+    const closeDropDown = () => setOpen?.(false);
+    const handleClick = async (callback?: () => Promise<void>, close?: undefined | boolean) => {
         await callback?.();
-        closeDropDown();
+        if (close === undefined || close === true) {
+            closeDropDown();
+        }
     };
     useEffect(() => {
         const setDropDownPos = () => {
@@ -62,45 +67,57 @@ const DropDown = ({
         setDropDownPos();
     }, [])
 
-    return <div ref={parentRef} className="relative"
-        style={{
-            width: `${width === "auto" ? width : width+wScale}`,
-            display: "flex",
-            justifyContent: iconPos,
-            alignItems: "center"
-        }}>
-        <div ref={iconRef} onClick={() => setOpen(prev => !prev)} className="w-full cursor-pointer">
-            {children}
-        </div>
-
-        {innerHTML ? <div className={`absolute ${open ? "flex" : "hidden"} min-w-full rounded-sm z-[999] shadow-[0px_0px_6px_var(--accent)]`}
+    return (
+        <div
+            ref={parentRef}
+            className="relative"
             style={{
-                left: (left && left > 0) ? `${leftPos}px` : "",
-                top: (top && top > 0) ? `${topPos}px` : "",
-                right: (right && right > 0) ? `${rightPos}px` : "",
-                bottom: (bottom && bottom > 0) ? `${bottomPos}px` : ""
-            }}>{innerHTML}
-        </div> : <ul
-            className={`absolute ${open ? "flex" : "hidden"} z-[999] min-w-full rounded-sm shadow-[0px_0px_6px_var(--accent)] 
-        flex-col gap-2 p-2 bg-background`}
-            style={{
-                left: (left && left > 0) ? `${leftPos}px` : "",
-                top: (top && top > 0) ? `${topPos}px` : "",
-                right: (right && right > 0) ? `${rightPos}px` : "",
-                bottom: (bottom && bottom > 0) ? `${bottomPos}px` : ""
-            }}>
-            {dropDownOptions.map((opt) => {
-                const Icon = opt.icon;
+                width: `${width === "auto" ? width : width + wScale}`,
+                display: "flex",
+                justifyContent: iconPos,
+                alignItems: "center"
+            }}
+        >
+            <div
+                ref={iconRef}
+                onClick={() => setOpen?.(prev => !prev)}
+                className="w-full cursor-pointer"
+            >
+                {children}
+            </div>
 
-                const commonClass = `
+            {innerHTML ? (
+                <div
+                    className={`absolute ${open ? "flex" : "hidden"} min-w-full rounded-sm z-[999] shadow-[0px_0px_6px_var(--accent)]`}
+                    style={{
+                        left: (left && left > 0) ? `${leftPos}px` : "",
+                        top: (top && top > 0) ? `${topPos}px` : "",
+                        right: (right && right > 0) ? `${rightPos}px` : "",
+                        bottom: (bottom && bottom > 0) ? `${bottomPos}px` : ""
+                    }}
+                >
+                    {innerHTML}
+                </div>
+            ) : (
+                <ul
+                    className={`absolute ${open ? "flex" : "hidden"} z-[999] min-w-full rounded-sm shadow-[0px_0px_6px_var(--accent)] flex-col gap-2 p-2 bg-background`}
+                    style={{
+                        left: (left && left > 0) ? `${leftPos}px` : "",
+                        top: (top && top > 0) ? `${topPos}px` : "",
+                        right: (right && right > 0) ? `${rightPos}px` : "",
+                        bottom: (bottom && bottom > 0) ? `${bottomPos}px` : ""
+                    }}
+                >
+                    {dropDownOptions.map((opt) => {
+                        const Icon = opt.icon;
+
+                        const commonClass = `
                             w-full p-2 cursor-pointer flex items-center gap-2
                             rounded-sm hover:bg-accent/10 transition-colors
                             ${opt.danger ? "text-red-600" : ""}
                         `;
 
-                return (
-                    <li key={opt.id}>
-                        {opt.href ? (
+                        const menuItem = opt.href ? (
                             <Link
                                 href={opt.href}
                                 onClick={closeDropDown}
@@ -112,18 +129,43 @@ const DropDown = ({
                         ) : (
                             <button
                                 type="button"
-                                onClick={() => handleClick(opt.onClick)}
+                                onClick={() => handleClick(opt.onClick, opt.close)}
                                 className={commonClass}
                             >
                                 {Icon && <Icon size={17} />}
                                 {opt.name}
                             </button>
-                        )}
-                    </li>
-                );
-            })}
-        </ul>}
-    </div>
+                        );
+
+                        return (
+                            <li key={opt.id} className="w-full">
+                                {opt.ddInfo &&
+                                    Object.keys(opt.ddInfo).length > 0 ? (
+                                    <DropDown
+                                        open={opt.ddInfo.open}
+                                        setOpen={opt.ddInfo.setOpen}
+                                        dropDownOptions={opt.ddOptions}
+                                        left={opt.ddInfo.left ?? ""}
+                                        top={opt.ddInfo.top ?? ""}
+                                        right={opt.ddInfo.right ?? ""}
+                                        bottom={opt.ddInfo.bottom ?? ""}
+                                        width={opt.ddInfo.width ?? "auto"}
+                                        wScale={opt.ddInfo.wscale ?? "px"}
+                                        iconPos={opt.ddInfo.iconPos ?? "center"}
+                                        innerHTML={opt.ddInfo.innerHTML ?? null}
+                                    >
+                                        {menuItem}
+                                    </DropDown>
+                                ) : (
+                                    menuItem
+                                )}
+                            </li>
+                        );
+                    })}
+                </ul>
+            )}
+        </div>
+    );
 }
 
 export default DropDown;
