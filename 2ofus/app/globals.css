@@ -213,6 +213,45 @@ body {
   animation-delay: 0.6s;
 }
 
+
+/* Button animation */
+.animated-btn {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+
+    background: var(--base-color);
+    color: var(--base-text);
+
+    border: none;
+    padding: 12px 24px;
+    cursor: pointer;
+
+    transition: color 0.4s ease;
+}
+
+.animated-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background: var(--hover-color);
+
+    transform: scaleX(0);
+    transform-origin: var(--origin, left);
+    transition: transform 0.4s ease;
+
+    z-index: -1;
+}
+
+.animated-btn:hover {
+    color: var(--hover-text);
+}
+
+.animated-btn:hover::before {
+    transform: scaleX(1);
+}
+
 @keyframes heartWave {
   0% {
     transform: scale(0.6);

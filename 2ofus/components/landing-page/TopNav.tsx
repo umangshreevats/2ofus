@@ -82,6 +82,9 @@ const RightSideNavElements = ({
                                 setSignIn(true);
                                 setButton(2);
                             }}
+                            hoverBackgroundColor="white"
+                            hoverTextColor="black"
+                            hoverEffect={true}
                             type="button"
                             text="sign-up"
                         />
