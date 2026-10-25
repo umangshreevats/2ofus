@@ -4,9 +4,11 @@
 const Headings = ({
     className = "",
     heading,
+    subheading,
     paragraph = "",
 }: {
     heading: string;
+    subheading?: string;
     paragraph?: string;
     className?: string;
 }) => {
@@ -25,16 +27,27 @@ const Headings = ({
                 {heading}
             </h1>
 
-            {/* Divider */}
-            {paragraph.trim().length > 0 && <div className="
+            {paragraph && paragraph.trim().length > 0 && <h2 className="
+            font-rubik
+            text-md sm:text-lg
+            font-bold
+            tracking-tight
+                leading-tight
+                text-secondary-text
+            ">
+                {subheading}
+            </h2>}
+
+                {/* Divider */}
+                {paragraph && paragraph.trim().length > 0 && <div className="
                 w-full
                 border-b border-dashed
                 border-primary-text/30
             " />}
 
-            {/* Description */}
-            {paragraph && (
-                <p className="
+                {/* Description */}
+                {paragraph && paragraph.trim().length > 0 && (
+                    <p className="
                     font-comfortaa
                     font-normal
                     text-xs sm:text-sm lg:text-base
@@ -44,9 +57,9 @@ const Headings = ({
                     max-w-3xl
                     pt-1
                 ">
-                    {paragraph}
-                </p>
-            )}
+                        {paragraph}
+                    </p>
+                )}
         </div>
     );
 };

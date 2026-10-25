@@ -94,20 +94,18 @@ const Button: React.FC<ButtonProps> = ({
             text-center cursor-pointer ${hoverEffect ? "animated-btn" : ""}`}
             style={{
                 backgroundColor: `var(--${finalBackgroundColor}, ${finalBackgroundColor})`,
-                color: `var(--${finalTextColor}, ${finalTextColor})`,
+                color: hoverEffect ? "" : finalTextColor,
                 width: `${typeof width === "number" ? width + wscale : width}`,
                 height: `${typeof height === "number" ? height + hscale : height}`,
                 fontSize: `${typeof textSize === "number" ? textSize + tscale : textSize}`,
                 padding: `${typeof padding === "number" ? padding + pscale : padding}`,
 
                 "--base-color": `var(--${finalBackgroundColor}, ${finalBackgroundColor})`,
-                "--base-text": `var(--${finalTextColor}, ${finalTextColor})`,
+                "--base-text": finalTextColor,
                 "--hover-color": hoverBackgroundColor
                     ? `var(--${hoverBackgroundColor}, ${hoverBackgroundColor})`
                     : `var(--${finalBackgroundColor}, ${finalBackgroundColor})`,
-                "--hover-text": hoverTextColor
-                    ? `var(--${hoverTextColor}, ${hoverTextColor})`
-                    : `var(--${finalTextColor}, ${finalTextColor})`,
+                "--hover-text": hoverTextColor || finalTextColor,
                 "--origin": origin,
             } as React.CSSProperties}
         >

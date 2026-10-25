@@ -1,82 +1,104 @@
+
 "use client";
+
 import { useAuth } from "@/app/auth-provider";
 import PhotoFrame from "@/components/commons/PhotoFrame";
 import Image from "next/image";
 
-
 const BioPicture = () => {
-
     const { coupleData } = useAuth();
-    return <div className="w-full flex flex-col items-center">
-        <div className="w-full h-[200px] md:h-[700px]">
-            <PhotoFrame width={100} height={100} wscale="%" hscale="%" >
-                {(coupleData?.cover_image && coupleData?.cover_image.length > 0) ?
-                    <Image src={coupleData?.cover_image} sizes="100vw" alt="Couple Image"
-                        fill className="object-cover" />
-                    : <div className="w-full h-full">
-                        Your Together Image goes here
+
+    if (!coupleData) return null;
+
+    const partner1 = coupleData.partner_1;
+    const partner2 = coupleData.partner_2;
+
+    return (
+        <section className="flex justify-center py-8 md:py-12">
+            <div className="flex items-center justify-center gap-3 sm:gap-6 md:gap-12">
+
+                {/* Partner 1 */}
+                <div className="flex flex-col items-center gap-2">
+                    <PhotoFrame
+                        width={130}
+                        height={130}
+                        wscale="px"
+                        hscale="px"
+                        round
+                    >
+                        {partner1?.profile_image ? (
+                            <Image
+                                src={partner1.profile_image}
+                                alt={partner1.firstname || partner1.username}
+                                fill
+                                sizes="130px"
+                                className="object-cover"
+                            />
+                        ) : null}
+                    </PhotoFrame>
+
+                    <div className="text-center">
+                        <h3 className="font-bold text-[#14233D] text-base md:text-lg">
+                            {partner1?.firstname || partner1?.username}
+                        </h3>
+                        <p className="text-xs md:text-sm text-[#8292AC]">
+                            The better half
+                        </p>
                     </div>
-                }
-            </PhotoFrame>
-        </div>
+                </div>
 
-        {/* Partner individual profile photo frames */}
-        <div className="w-full aspect-video grid grid-cols-1 grid-rows-2 sm:grid-cols-2 sm:grid-rows-1 place-items-center gap-4 p-4">
+                {/* Joint Couple Image */}
+                <PhotoFrame
+                    width={160}
+                    height={160}
+                    wscale="px"
+                    hscale="px"
+                    round
+                >
+                    {coupleData.cover_image ? (
+                        <Image
+                            src={coupleData.cover_image}
+                            alt="Our together picture"
+                            fill
+                            sizes="160px"
+                            className="object-cover"
+                        />
+                    ) : null}
+                </PhotoFrame>
 
-            <div className="w-full h-full flex items-center justify-center p-3">
-                <div className="relative w-[100px] aspect-square sm:w-[400px]">
+                {/* Partner 2 */}
+                <div className="flex flex-col items-center gap-2">
                     <PhotoFrame
-                        width={100}
-                        height={100}
-                        wscale="%"
-                        hscale="%"
-                        round={true}
+                        width={130}
+                        height={130}
+                        wscale="px"
+                        hscale="px"
+                        round
                     >
-                        {coupleData?.partner_1.profile_image ? (
+                        {partner2?.profile_image ? (
                             <Image
-                                src={coupleData.partner_1.profile_image}
-                                alt="Profile Image 1"
+                                src={partner2.profile_image}
+                                alt={partner2.firstname || partner2.username}
                                 fill
-                                sizes="144px"
+                                sizes="130px"
                                 className="object-cover"
                             />
-                        ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-accent text-white text-3xl font-bold rounded-full">
-                                {coupleData?.partner_1.username?.[0]?.toUpperCase() ?? "U"}
-                            </div>
-                        )}
+                        ) : null}
                     </PhotoFrame>
-                </div>
-            </div>
 
-            <div className="w-full h-full flex items-center justify-center p-3">
-                <div className="relative w-[100px] aspect-square sm:w-[400px]">
-                    <PhotoFrame
-                        width={100}
-                        height={100}
-                        wscale="%"
-                        hscale="%"
-                        round={true}
-                    >
-                        {coupleData?.partner_2.profile_image ? (
-                            <Image
-                                src={coupleData.partner_2.profile_image}
-                                alt="Profile Image 2"
-                                fill
-                                sizes="144px"
-                                className="object-cover"
-                            />
-                        ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-accent text-white text-3xl font-bold rounded-full">
-                                {coupleData?.partner_2.username?.[0]?.toUpperCase() ?? "U"}
-                            </div>
-                        )}
-                    </PhotoFrame>
+                    <div className="text-center">
+                        <h3 className="font-bold text-[#14233D] text-base md:text-lg">
+                            {partner2?.firstname || partner2?.username}
+                        </h3>
+                        <p className="text-xs md:text-sm text-[#8292AC]">
+                            The brighter half
+                        </p>
+                    </div>
                 </div>
-            </div>
 
-        </div>
-    </div >
-}
+            </div>
+        </section>
+    );
+};
 
 export default BioPicture;
