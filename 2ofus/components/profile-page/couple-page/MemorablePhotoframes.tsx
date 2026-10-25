@@ -3,10 +3,12 @@
 import Headings from "@/components/commons/Headings";
 import PhotoFrame from "@/components/commons/PhotoFrame";
 import Image from "next/image";
-
-
+import Button from "@/components/commons/Button";
+import { useRouter } from "next/navigation";
 
 const MemorablePhotoframes = ({ memorablePhotos }: { memorablePhotos: any }) => {
+
+    const router = useRouter();
 
 
     return <div className="w-full p-5 flex flex-col">
@@ -16,8 +18,7 @@ const MemorablePhotoframes = ({ memorablePhotos }: { memorablePhotos: any }) => 
             paragraph="A collections of our beautiful memories"
         />
 
-        <div className="w-full flex flex-wrap justify-center items-center gap-6">
-
+        {memorablePhotos && memorablePhotos.length > 0 ? <div className="w-full flex flex-wrap justify-center items-center gap-6">
             {memorablePhotos?.map((photo: any, index: number) => (
                 <div
                     key={photo.id}
@@ -50,7 +51,10 @@ const MemorablePhotoframes = ({ memorablePhotos }: { memorablePhotos: any }) => 
                 </div>
             ))}
 
-        </div>
+        </div> : <div className="w-full rounded-md border-2 border-dashed border-primary-text flex items-center justify-center">
+            <p className="text-md">Add a memory to your album</p>
+            <Button type="button" text="Add Photo" onClick={() => router.push("/home/my-couple/album")} />
+        </div>}
 
     </div>
 }

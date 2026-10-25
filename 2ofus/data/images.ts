@@ -6,6 +6,8 @@ import joinUsOpen from "./../public/JoinUsOpen.png";
 import defaultUser from "./../public/defaultUser.jpg";
 import romanticMemories from "./../public/romatic-memories.png";
 import connectingHearts from "./../public/ConnectingHearts.png";
+import proposal from "./../public/Proposal.png";
+
 
 export {
     frontImage,
@@ -15,5 +17,6 @@ export {
     joinUsOpen,
     defaultUser,
     romanticMemories,
-    connectingHearts
+    connectingHearts,
+    proposal
 }
