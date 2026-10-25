@@ -111,13 +111,13 @@ const RightSideNavElements = ({
                 <Bell />
             </DropDown>
 
-            {!coupleData && <SearchBar />}
+            {!coupleData && <div className="hidden md:block"><SearchBar /></div>}
 
             <ProfileIcon />
 
-            <button type="button" className="sm:hidden" onClick={() => setShowNavs(true)}>
+            {coupleData && <button type="button" className="sm:hidden" onClick={() => setShowNavs(true)}>
                 <Menu />
-            </button>
+            </button>}
 
             <Popups 
             open={showNavs} 

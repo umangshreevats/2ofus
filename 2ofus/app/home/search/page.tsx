@@ -42,7 +42,7 @@ const SearchPage = async ({ searchParams }: Props) => {
         .range((numPage - 1) * 20, 20);
 
     if (error) {
-        throw new Error("Failed to retrieve users");
+        console.error("Some error occured", error);
     }
 
     const { count, error: countError } = await supabase
@@ -54,7 +54,7 @@ const SearchPage = async ({ searchParams }: Props) => {
         .neq("id", user.id);
 
     if (countError || !count) {
-        throw new Error("No. of users failed to retrieve");
+        console.error("Some error occured while count", countError);
     }
     const numberOfPages = Math.ceil((count ?? 0) / 20);
 

@@ -30,7 +30,16 @@ const UserProfile = ({ profileInfo }: { profileInfo: any }) => {
             setRequestLoading(false);
         }
     }
-    return <div className="relative w-full rounded-full flex gap-5 items-center p-2 hover:shadow-[0_0_6px_var(--accent)]">
+
+    let finalProfileName = profileInfo.firstname && profileInfo.firstname.length > 0 ? profileInfo.firstname : "Someone Special";
+
+    if(profileInfo.lastname && profileInfo.lastname.length > 0) {
+        if(finalProfileName === profileInfo.firstname) {
+            finalProfileName = finalProfileName+profileInfo.lastname;
+        }
+    }
+
+    return <div className="relative w-full flex-wrap rounded-md flex gap-5 items-center p-2 hover:shadow-[0_0_6px_var(--accent)]">
         <div className="w-16 h-16 rounded-full">
             {(profileInfo.profile_image && profileInfo.profile_image.length > 0) ?
                 <Image src={profileInfo.profile_image} alt={`profile-image-@${profileInfo.username}`}
@@ -42,13 +51,13 @@ const UserProfile = ({ profileInfo }: { profileInfo: any }) => {
         </div>
 
         <div className="flex flex-col gap-1">
-            <p className="w-full font-bold">{profileInfo.firstname} {profileInfo.lastname}</p>
+            <p className="w-full font-bold">{finalProfileName}</p>
             <p className="w-full font-light text-secondary-text">@{profileInfo.username}</p>
         </div>
 
         <div>{profileInfo.gender === "male" ? <Mars color="green" /> : profileInfo.gender === "female" ? <Venus color="pink" /> : <VenusAndMars color="orange" />}</div>
 
-        <div className="relative right-2">
+        <div className="relative sm:absolute sm:right-10">
             <Button onClick={sendCoupleRequest} text={requestLoading ? "Sending..." : "Send Request"} disabled={requestLoading} />
         </div>
     </div>
