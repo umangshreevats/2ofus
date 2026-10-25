@@ -3,20 +3,36 @@
 
 import { useAuth } from "@/app/auth-provider";
 import PlayfulButton from "@/components/commons/PlayfulButton";
-import { useRouter } from "next/navigation";
-import type { QuizInfoProps } from "@/types/quiz";
 
+export interface QuizInfoProps {
+    id: string;
+    couple_id: string;
+    questions: number;
+    conductor_id: string;
+    conductor: string;
+    title: string;
+    overall_score: number;
+    status: "created" | "attempted";
+    created_at: string;
+    updated_at: string;
+}
 
 interface QuizInfoComponentProps {
     quizInfo: QuizInfoProps;
+    onStartQuiz?: (quizId: string) => void;
+    onViewScore?: (quizId: string) => void;
+    onViewQuiz?: (quizId: string) => void;
 }
 
 const QuizInfo = ({
-    quizInfo
+    quizInfo,
+    onStartQuiz,
+    onViewScore,
+    onViewQuiz
 }: QuizInfoComponentProps) => {
 
     const { user } = useAuth();
-    const router = useRouter();
+
     const isConductor = quizInfo.conductor_id === user.id;
     const isAttempted = quizInfo.status === "attempted";
 
@@ -35,33 +51,21 @@ const QuizInfo = ({
             ? "View score"
             : "Start quiz";
 
-
-    const onStartQuiz = () => {
-        router.push(`/home/my-couple/know-me/quiz/${quizInfo.id}`);
-    }
-
-    const onViewQuiz = () => {
-        router.push(`/home/my-couple/know-me/quiz/view/${quizInfo.id}`);
-    }
-
-    const onViewScore = () => {
-        router.push(`/home/my-couple/know-me/quiz/view/${quizInfo.id}`);
-    }
-
     const handleAction = () => {
         if (isConductor) {
-            onViewQuiz();
+            onViewQuiz?.(quizInfo.id);
         } else if (isAttempted) {
-            onViewScore();
+            onViewScore?.(quizInfo.id);
         } else {
-            onStartQuiz();
+            onStartQuiz?.(quizInfo.id);
         }
     };
 
     return (
-        <div className="w-full min-w-[280px] max-w-[340px] 
-                        rounded-xl bg-accent text-white p-5 
-                        flex flex-col gap-5 shadow-md">
+        <div className="w-full min-w-[280px] max-w-[340px]
+                rounded-md bg-accent text-white p-5
+                flex flex-col gap-5
+                shadow-[-4px_0_0_0_hsl(var(--accent)),0_4px_0_0_#ffffff]">
 
             {/* Header */}
             <div className="flex flex-col gap-2">

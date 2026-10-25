@@ -6,8 +6,10 @@ import Button from "../commons/Button";
 import Popups from "../commons/Popups";
 import Auth from "../auth/Auth";
 import { appName } from "@/data/info";
+import { useThemeSettings } from "@/app/theme-provider";
 
 const Mid = () => {
+    const { theme } = useThemeSettings();
     const [signIn, setSignIn] = useState(false);
 
     return <div className="parent-box"><div className="rounded-2xl child-box grid grid-rows-1 grid-cols-1 md:grid-rows-1 md:grid-cols-2">
@@ -24,7 +26,16 @@ const Mid = () => {
                 This website is made for you and your partner, to understand each other better, notice what's wrong and be together forever!
             </p>
 
-            <Button onClick={() => setSignIn(true)} type="button" text="Get Started" textSize={"large"} padding={1} />
+            <Button 
+            onClick={() => setSignIn(true)} 
+            type="button" 
+            text="Get Started"
+            textSize={"large"} 
+            padding={1}  
+            hoverEffect={true}
+            hoverBackgroundColor={theme === "light" ? "white" : "black"}
+            hoverTextColor={theme === "light" ? "black" : "white"}
+            />
         </div>
 
         <Popups open={signIn} setOpen={setSignIn}>

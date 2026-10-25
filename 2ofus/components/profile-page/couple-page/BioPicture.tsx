@@ -18,19 +18,7 @@ const BioPicture = () => {
         <section className="w-full flex justify-center py-8 md:py-14 px-3">
             <div className="relative flex w-full max-w-5xl items-center justify-center">
 
-                {/* Connecting Hearts */}
-                <div className="absolute inset-x-[10%] -translate-y-1/2 z-0 pointer-events-none">
-                    <Image
-                        src={connectingHearts}
-                        alt=""
-                        width={1000}
-                        height={300}
-                        priority
-                        className="w-full h-auto object-contain"
-                    />
-                </div>
-
-                <div className="relative z-10 flex w-full items-center justify-center gap-1 sm:gap-4 md:gap-10 lg:gap-14">
+                <div className="relative z-10 flex w-full items-center justify-center">
 
                     {/* Partner 1 */}
                     <div className="flex flex-col items-center gap-2">
@@ -55,13 +43,24 @@ const BioPicture = () => {
                         </div>
 
                         <div className="text-center">
-                            <h3 className="font-bold text-[#14233D] text-sm sm:text-base md:text-lg">
+                            <h3 className="font-bold text-primary-text text-sm sm:text-base md:text-lg">
                                 {partner1?.firstname || partner1?.username}
                             </h3>
-                            <p className="text-[10px] sm:text-xs md:text-sm text-[#8292AC]">
+                            <p className="text-[10px] sm:text-xs md:text-sm text-secondary-text">
                                 The better half
                             </p>
                         </div>
+                    </div>
+
+                    <div className="w-50 h-25 rotate-5 relative top-10 -translate-y-1/2 z-0 pointer-events-none">
+                        <Image
+                            src={connectingHearts}
+                            alt=""
+                            width={500}
+                            height={100}
+                            priority
+                            className="w-full h-auto object-contain"
+                        />
                     </div>
 
                     {/* Joint Couple Image */}
@@ -83,6 +82,18 @@ const BioPicture = () => {
                                 />
                             )}
                         </PhotoFrame>
+                    </div>
+
+
+                    <div className="w-50 h-25 -rotate-5 relative top-10 -translate-y-1/2 z-0 pointer-events-none">
+                        <Image
+                            src={connectingHearts}
+                            alt=""
+                            width={500}
+                            height={100}
+                            priority
+                            className="w-full h-auto object-contain"
+                        />
                     </div>
 
                     {/* Partner 2 */}
@@ -108,10 +119,10 @@ const BioPicture = () => {
                         </div>
 
                         <div className="text-center">
-                            <h3 className="font-bold text-[#14233D] text-sm sm:text-base md:text-lg">
+                            <h3 className="font-bold text-primary-text text-sm sm:text-base md:text-lg">
                                 {partner2?.firstname || partner2?.username}
                             </h3>
-                            <p className="text-[10px] sm:text-xs md:text-sm text-[#8292AC]">
+                            <p className="text-[10px] sm:text-xs md:text-sm text-secondary-text">
                                 The brighter half
                             </p>
                         </div>
