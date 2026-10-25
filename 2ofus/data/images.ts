@@ -7,7 +7,10 @@ import defaultUser from "./../public/defaultUser.jpg";
 import romanticMemories from "./../public/romatic-memories.png";
 import connectingHearts from "./../public/ConnectingHearts.png";
 import proposal from "./../public/Proposal.png";
-
+import coupleBeach from "./../public/CoupleBeach.jpg";
+import coupleNote from "./../public/CoupleNote.jpg";
+import coupleAlbum from "./../public/CoupleAlbum.jpg";
+import question from "./../public/Question.jpg";
 
 export {
     frontImage,
@@ -18,5 +21,9 @@ export {
     defaultUser,
     romanticMemories,
     connectingHearts,
-    proposal
+    proposal,
+    coupleAlbum,
+    coupleBeach,
+    coupleNote,
+    question
 }
