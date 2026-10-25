@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DayPicker } from "react-day-picker";
 import { format } from "date-fns";
 import "react-day-picker/style.css";
@@ -13,8 +13,18 @@ interface DatePickerProps {
     placeholder?: string;
 }
 
-export default function DatePicker({ value, onChange, id, placeholder }: DatePickerProps) {
+export default function DatePicker({
+    value,
+    onChange,
+    id,
+    placeholder
+}: DatePickerProps) {
     const [isOpen, setIsOpen] = useState(false);
+    const [today, setToday] = useState<Date | undefined>(undefined);
+
+    useEffect(() => {
+        setToday(new Date());
+    }, []);
 
     return (
         <div className="relative">
@@ -29,7 +39,7 @@ export default function DatePicker({ value, onChange, id, placeholder }: DatePic
                 onChange={() => { }}
             />
 
-            {isOpen && (
+            {isOpen && today && (
                 <div className="absolute z-50 mt-2 bg-background rounded-xl p-3 shadow-lg">
                     <DayPicker
                         mode="single"
@@ -40,8 +50,8 @@ export default function DatePicker({ value, onChange, id, placeholder }: DatePic
                         }}
                         captionLayout="dropdown"
                         startMonth={new Date(1950, 0)}
-                        endMonth={new Date()}
-                        disabled={{ after: new Date() }}
+                        endMonth={today}
+                        disabled={{ after: today }}
                     />
                 </div>
             )}
