@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
 
     try {
         const supabase = await createClient();
-        const { user, userData } = await getCurrentUser();
+        const { user } = await getCurrentUser();
 
         if (!user) {
             return NextResponse.json(

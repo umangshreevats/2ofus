@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
 
 
-// PATCH: /api/couple/coupling-request/:requestId/cancel
-export async function PATCH(request: NextRequest, { params }: { params: Promise<{ requestId: string }> }) {
+// DELETE: /api/couple/coupling-request/:requestId/cancel
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ requestId: string }> }) {
 
 
     try {
@@ -12,7 +12,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
         const { data: { user }, error } = await supabase.auth.getUser();
 
-        if(error || !user) {
+        if (error || !user) {
             return NextResponse.json(
                 { message: "Unauthorized" },
                 { status: 401 }
@@ -22,11 +22,11 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
         const { requestId } = await params;
 
         const { data: couplingRequest, error: crError } = await supabase
-        .from("coupling_requests")
-        .update({ status: "cancelled" })
-        .eq("id", requestId)
-        .select()
-        .single();
+            .from("coupling_requests")
+            .delete()
+            .eq("id", requestId)
+            .select()
+            .maybeSingle();
 
         if (crError) {
             return NextResponse.json(
@@ -37,14 +37,14 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
         return NextResponse.json(
             {
-                message: "Request updated successfully",
+                message: "Coupling request deleted successfully",
                 couplingRequest
             },
             { status: 200 }
         );
 
     } catch (err) {
-        
+        console.error(err);
         return NextResponse.json(
             { error: "Internal server error" },
             { status: 500 }

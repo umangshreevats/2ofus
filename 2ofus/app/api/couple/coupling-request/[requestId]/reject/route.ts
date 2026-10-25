@@ -26,7 +26,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
         .update({ status: "rejected" })
         .eq("id", requestId)
         .select()
-        .single();
+        .maybeSingle();
 
         if (crError) {
             return NextResponse.json(

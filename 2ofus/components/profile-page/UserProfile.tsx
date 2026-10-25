@@ -19,10 +19,10 @@ const UserProfile = ({ profileInfo }: { profileInfo: any }) => {
                 })
             });
 
-            const result = response.json();
+            const result = await response.json();
 
             if(!response.ok){
-                alert("An Error occured");
+                alert("An Error occured"+result.message);
             }
         } catch(err) {
             alert("An Error Occured");

@@ -11,9 +11,9 @@ const Requests = ({ requestsSend, requestsReceived }: { requestsSend: any, reque
         try {
 
             const response = await fetch(`/api/couple/coupling-request/${requestId}/${request}`, {
-                method: "PATCH",
+                method: request === "cancel" ? "DELETE" : "PATCH",
                 headers: {
-                    "content-type": "applications/json"
+                    "Content-type": "applications/json"
                 }
             });
 
