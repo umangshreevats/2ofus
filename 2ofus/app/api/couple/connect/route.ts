@@ -32,6 +32,22 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        const { data: existingCouple, error: existingCoupleError } =
+            await supabase.rpc("check_users_are_coupled", {
+                p_user_id: user.id,
+                p_requested_id: requestedId,
+            });
+
+        if (existingCoupleError) throw existingCoupleError;
+
+        if (existingCouple) {
+            return NextResponse.json(
+                { message: "One of the users is already in a couple." },
+                { status: 409 }
+            );
+        }
+
+        // User is having a pending request by someone
         const { data: senderPending, error: senderPendingError } = await supabase
             .from("coupling_requests")
             .select("id")
@@ -49,6 +65,7 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        // User to whome request send is having a pending request
         const { data: receiverPending, error: receiverPendingError } = await supabase
             .from("coupling_requests")
             .select("id")
@@ -67,12 +84,12 @@ export async function POST(request: NextRequest) {
         }
 
         const { data: sendRequest, error: sendRequestError } = await supabase
-        .from("coupling_requests")
-        .insert({
-            sender_id: user.id,
-            receiver_id: requestedId,
-            status: "pending"
-        }).select().single();
+            .from("coupling_requests")
+            .insert({
+                sender_id: user.id,
+                receiver_id: requestedId,
+                status: "pending"
+            }).select().single();
 
         if (sendRequestError) throw sendRequestError;
 

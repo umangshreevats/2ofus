@@ -57,7 +57,7 @@ const Requests = ({ requestsSend, requestsReceived }: { requestsSend: any, reque
                                 finalProfileName = finalProfileName + req.receiver.lastname;
                             }
                         }
-                        return <div className="relative w-full p-2 rounded-sm flex items-center gap-2 hover:shadow-[0px_0px_6px_var(--accent)]" key={req.id}>
+                        return <div className="relative w-full p-2 rounded-sm flex flex-wrap items-center gap-2 hover:shadow-[0px_0px_6px_var(--accent)]" key={req.id}>
 
                             <div className="w-10 h-10 rounded-full">
                                 {(req.receiver.profile_image && req.receiver.profile_image.length > 0) ?
@@ -72,7 +72,7 @@ const Requests = ({ requestsSend, requestsReceived }: { requestsSend: any, reque
                                 <p className="font-bold">@{req.receiver.username}</p>
                             </div>
 
-                            <div className="absolute right-2">
+                            <div className="sm:absolute relative sm:right-2">
                                 <Button onClick={() => handleRequest("cancel", req.id)} type="button" text="cancel" className="ml-5" />
                             </div>
                         </div>
@@ -97,7 +97,7 @@ const Requests = ({ requestsSend, requestsReceived }: { requestsSend: any, reque
                             finalProfileName = finalProfileName + req.sender.lastname;
                         }
                     }
-                    return <div className="relative w-full p-2 rounded-sm flex items-center gap-2 hover:shadow-[0px_0px_6px_var(--accent)]" key={req.id}>
+                    return <div className="relative w-full p-2 rounded-sm flex flex-wrap items-center gap-2 hover:shadow-[0px_0px_6px_var(--accent)]" key={req.id}>
 
                         <div className="w-10 h-10 rounded-full">
                             {(req.sender.profile_image && req.sender.profile_image.length > 0) ?
@@ -112,7 +112,7 @@ const Requests = ({ requestsSend, requestsReceived }: { requestsSend: any, reque
                             <p className="font-bold">@{req.sender.username}</p>
                         </div>
 
-                        <div className="absolute right-2">
+                        <div className="sm:absolute relative sm:right-2">
                             <Button onClick={() => handleRequest("reject", req.id)} type="button" text="reject" className="ml-5" />
                             <Button onClick={() => handleRequest("accept", req.id)} type="button" text="accept" />
                         </div>

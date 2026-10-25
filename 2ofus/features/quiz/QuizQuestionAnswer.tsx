@@ -1,9 +1,12 @@
 "use client";
+import Headings from "@/components/commons/Headings";
 import DisplayQuestion from "@/components/couple-profile/quiz/DisplayQuestion";
 import QuestionNav from "@/components/couple-profile/quiz/QuestionNav";
 import type { QuizInfoProps, QuizQuestions } from "@/types/quiz";
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
+import Button from "@/components/commons/Button";
+import { useThemeSettings } from "@/app/theme-provider";
+import { useRouter } from "next/navigation";
 
 interface QuizQuestionAnswerProps {
     quizInfo: QuizInfoProps;
@@ -12,26 +15,38 @@ interface QuizQuestionAnswerProps {
 
 const QuizQuestionAnswer: React.FC<QuizQuestionAnswerProps> = ({ quizInfo, quizQuestions }) => {
 
-
+    const { theme } = useThemeSettings();
+    const router = useRouter();
     const [currentQ, setCurrentQ] = useState(1);
-    const currentQuestion = quizQuestions.find(
-        (question) => question.question_number === currentQ
-    );
+    const [questionsInfo, setQuestionsInfo] = useState<QuizQuestions[]>(quizQuestions ?? []);
+    const [submitLoading, setSubmitLoading] = useState(false);
+
+    
+
 
     return <div className="parent-box">
         <div className="child-box p-10">
 
-            <div className="w-full flex flex-col gap-3 border-b-2 border-b-primary-text border-dashed">
-                <h1 className="home-headings text-5xl">
-                    {quizInfo.title}
-                </h1>
+            <Headings
+                heading={quizInfo.title}
+                paragraph="Attempt all the questions to be a star in your soulmate's eyes"
+            />
 
-                <p className="home-paragraphs">
-                    Attempt all the questions to be a star in your soulmate's eyes
-                </p>
+            {currentQ > 0 && <DisplayQuestion currentQ={currentQ} questionsInfo={questionsInfo} setQuestionsInfo={setQuestionsInfo} />}
+            <QuestionNav
+                questions={quizInfo.questions}
+                currentQ={currentQ}
+                setCurrentQ={setCurrentQ} />
+
+            <div className="w-full flex flex-col gap-2">
+                <Button type="button" text="Submit" />
+                <Button 
+                type="button" 
+                backgroundColor="background" 
+                text="Cancel" 
+                onClick={() => router.push("/home/my-couple/know-me") }
+                textColor={theme === "light" ? "black" : "white"} />
             </div>
-            {currentQuestion && <DisplayQuestion quizQuestion={currentQuestion} />}
-            <QuestionNav questions={quizInfo.questions} currentQ={currentQ} setCurrentQ={setCurrentQ} />
         </div>
     </div>
 }

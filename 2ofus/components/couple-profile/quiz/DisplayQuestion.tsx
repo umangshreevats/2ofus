@@ -2,20 +2,39 @@
 
 import PlayfulInput from "@/components/commons/PlayfulInput";
 import type { QuizQuestions } from "@/types/quiz";
+import { SetStateAction } from "react";
 
 interface DisplayQuestionProps {
-    quizQuestion: QuizQuestions;
+    currentQ: number;
+    questionsInfo: QuizQuestions[];
+    setQuestionsInfo: React.Dispatch<SetStateAction<QuizQuestions[]>>;
 }
 
-const DisplayQuestion: React.FC<DisplayQuestionProps> = ({ quizQuestion }) => {
+const DisplayQuestion: React.FC<DisplayQuestionProps> = ({ currentQ, questionsInfo, setQuestionsInfo }) => {
 
     const {
+        id,
         question,
         question_number,
         question_type,
         answer_options,
         answered_options
-    } = quizQuestion;
+    } = questionsInfo[currentQ - 1];
+
+    const handleAnswerChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const value = e.target.value;
+        const words = value.trim().split(/\s+/);
+
+        if (words.length <= 3 || value.trim() === "") {
+            setQuestionsInfo(prev =>
+                prev.map((q, index) =>
+                    index === currentQ - 1
+                        ? { ...q, given_answer: e.target.value }
+                        : q
+                )
+            );
+        }
+    };
 
     return (
         <div className="w-full flex flex-col gap-6 py-8">
@@ -41,8 +60,17 @@ const DisplayQuestion: React.FC<DisplayQuestionProps> = ({ quizQuestion }) => {
                         >
                             <input
                                 type="radio"
-                                name={`question-${quizQuestion.id}`}
+                                name={`question-${id}`}
                                 value={option}
+                                onChange={() => {
+                                    setQuestionsInfo(prev =>
+                                        prev.map((q, index) =>
+                                            index === currentQ - 1
+                                                ? { ...q, answered_options: [option] }
+                                                : q
+                                        )
+                                    );
+                                }}
                                 defaultChecked={answered_options?.includes(option)}
                                 className="accent-primary"
                             />
@@ -65,8 +93,24 @@ const DisplayQuestion: React.FC<DisplayQuestionProps> = ({ quizQuestion }) => {
                         >
                             <input
                                 type="checkbox"
-                                name={`question-${quizQuestion.id}`}
+                                name={`question-${id}`}
                                 value={option}
+                                onChange={(e) => {
+                                    setQuestionsInfo(prev =>
+                                        prev.map((q, index) =>
+                                            index === currentQ - 1
+                                                ? {
+                                                    ...q,
+                                                    answered_options: e.target.checked
+                                                        ? [...(q.answered_options ?? []), option]
+                                                        : (q.answered_options ?? []).filter(
+                                                            answer => answer !== option
+                                                        )
+                                                }
+                                                : q
+                                        )
+                                    );
+                                }}
                                 defaultChecked={answered_options?.includes(option)}
                                 className="accent-primary"
                             />
@@ -81,7 +125,8 @@ const DisplayQuestion: React.FC<DisplayQuestionProps> = ({ quizQuestion }) => {
 
             {/* Short Answer */}
             {question_type === "short-answer" && (
-                <PlayfulInput textArea={true} onChange={() => {}} text="" placeholder="Enter your Answer here..." textAlign="start" />
+                <PlayfulInput textArea={true} onChange={handleAnswerChange} maxLength={50}
+                    text={questionsInfo[currentQ - 1].given_answer ?? ""} placeholder="Enter your Answer here..." textAlign="start" />
             )}
 
         </div>
