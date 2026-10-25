@@ -5,7 +5,7 @@ import joinUsClosed from "../public/JoinUsClosed.png";
 import joinUsOpen from "./../public/JoinUsOpen.png";
 import defaultUser from "./../public/defaultUser.jpg";
 import romanticMemories from "./../public/romatic-memories.png";
-
+import connectingHearts from "./../public/ConnectingHearts.png";
 
 export {
     frontImage,
@@ -14,5 +14,6 @@ export {
     joinUsClosed,
     joinUsOpen,
     defaultUser,
-    romanticMemories
+    romanticMemories,
+    connectingHearts
 }
