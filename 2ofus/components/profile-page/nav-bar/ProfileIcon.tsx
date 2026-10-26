@@ -98,7 +98,7 @@ const ProfileIcon = () => {
             id: "view-profile",
             name: "View Profile",
             icon: User,
-            href: "/home/profile"
+            href: `/home/profile/@${userData.username}`
         },
         {
             id: "appearance",
