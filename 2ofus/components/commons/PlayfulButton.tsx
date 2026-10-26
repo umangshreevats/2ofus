@@ -131,7 +131,7 @@ const PlayfulButton: React.FC<PlayfulButtonProps> = ({
         onPointerDown={onTap}
         onPointerUp={onRelease}
         onPointerCancel={onRelease}
-        className={`cursor-pointer border-4 border-solid font-bold ${noRight ? "rounded-l-full" : "rounded-full"}`}
+        className={`flex gap-4 cursor-pointer border-4 border-solid font-bold ${noRight ? "rounded-l-full" : "rounded-full"}`}
         style={{
             backgroundColor: clicked
                 ? (clickBackColor || backgroundColor || "var(--background)")

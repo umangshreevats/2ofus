@@ -5,7 +5,7 @@ import ProfileInformations from "@/features/profile-page/ProfileInformations";
 
 interface PageProps {
     params: Promise<{
-        username: string;
+        username?: string;
     }>;
 }
 
@@ -40,7 +40,7 @@ export default async function ProfilePage({ params }: PageProps) {
     const { data: userInfo, error: userInfoError } = await supabase
         .from("users")
         .select("*")
-        .eq("username", username)
+        .eq("username", actualUsername)
         .single();
 
 
