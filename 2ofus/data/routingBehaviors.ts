@@ -3,5 +3,6 @@ export const headerFooterMain = {
     "/profile": { show: false },
     "/home": { show: true },
     "/home/couple-setup": { show: false },
-    "/home/my-couple/know-me/quiz": { show: false }
+    "/home/my-couple/know-me/quiz": { show: false },
+    "/home/profile": { show: false }
 }
