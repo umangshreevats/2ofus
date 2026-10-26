@@ -1,6 +1,7 @@
 "use client";
 import { SetStateAction, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { createPortal } from "react-dom";
 
 const DropDown = ({
     children,
@@ -14,7 +15,8 @@ const DropDown = ({
     wScale = "px",
     iconPos = "center",
     setOpen,
-    innerHTML = null
+    innerHTML = null,
+    placement = null
 }: {
     children: React.ReactNode,
     dropDownOptions?: any[],
@@ -28,6 +30,7 @@ const DropDown = ({
     open: boolean,
     setOpen: React.Dispatch<SetStateAction<boolean>>;
     innerHTML?: React.ReactNode;
+    placement?: "left" | "right" | null;
 }) => {
 
     if (open == null && setOpen == null) {
@@ -48,24 +51,22 @@ const DropDown = ({
         }
     };
     useEffect(() => {
-        const setDropDownPos = () => {
+        if (!open) return;
 
-            if (!iconRef.current) {
-                return;
-            }
+        const setDropDownPos = () => {
+            if (!iconRef.current || !parentRef.current) return;
 
             const rect = iconRef.current.getBoundingClientRect();
-            const parentRect = parentRef.current?.getBoundingClientRect();
-
-            if (!parentRect) return;
+            const parentRect = parentRef.current.getBoundingClientRect();
 
             setLeftPos(rect.left - parentRect.left + (left ?? 0));
             setTopPos(rect.bottom - parentRect.top + (top ?? 0));
             setRightPos(rect.right - parentRect.right + (right ?? 0));
             setBottomPos(rect.top - parentRect.bottom + (bottom ?? 0));
-        }
+        };
+
         setDropDownPos();
-    }, [])
+    }, [open, left, top, right, bottom]);
 
     return (
         <div
@@ -80,7 +81,10 @@ const DropDown = ({
         >
             <div
                 ref={iconRef}
-                onClick={() => setOpen?.(prev => !prev)}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    setOpen?.(prev => !prev);
+                }}
                 className="w-full cursor-pointer"
             >
                 {children}
@@ -89,24 +93,34 @@ const DropDown = ({
             {innerHTML ? (
                 <div
                     className={`absolute ${open ? "flex" : "hidden"} min-w-full rounded-sm z-[999] shadow-[0px_0px_6px_var(--accent)]`}
-                    style={{
-                        left: (left && left > 0) ? `${leftPos}px` : "",
-                        top: (top && top > 0) ? `${topPos}px` : "",
-                        right: (right && right > 0) ? `${rightPos}px` : "",
-                        bottom: (bottom && bottom > 0) ? `${bottomPos}px` : ""
-                    }}
+                    style={(placement && placement === "left")
+                        ? {
+                            right: "100%",
+                            top: 0,
+                        }
+                        : {
+                            left: left !== undefined ? `${leftPos}px` : undefined,
+                            top: top !== undefined ? `${topPos}px` : undefined,
+                            right: right !== undefined ? `${rightPos}px` : undefined,
+                            bottom: bottom !== undefined ? `${bottomPos}px` : undefined,
+                        }}
                 >
                     {innerHTML}
                 </div>
             ) : (
                 <ul
                     className={`absolute ${open ? "flex" : "hidden"} z-[999] min-w-full rounded-sm shadow-[0px_0px_6px_var(--accent)] flex-col gap-2 p-2 bg-background`}
-                    style={{
-                        left: (left && left > 0) ? `${leftPos}px` : "",
-                        top: (top && top > 0) ? `${topPos}px` : "",
-                        right: (right && right > 0) ? `${rightPos}px` : "",
-                        bottom: (bottom && bottom > 0) ? `${bottomPos}px` : ""
-                    }}
+                    style={(placement && placement === "left")
+                        ? {
+                            right: "100%",
+                            top: 0,
+                        }
+                        : {
+                            left: left !== undefined ? `${leftPos}px` : undefined,
+                            top: top !== undefined ? `${topPos}px` : undefined,
+                            right: right !== undefined ? `${rightPos}px` : undefined,
+                            bottom: bottom !== undefined ? `${bottomPos}px` : undefined,
+                        }}
                 >
                     {dropDownOptions.map((opt) => {
                         const Icon = opt.icon;
@@ -153,6 +167,7 @@ const DropDown = ({
                                         wScale={opt.ddInfo.wscale ?? "px"}
                                         iconPos={opt.ddInfo.iconPos ?? "center"}
                                         innerHTML={opt.ddInfo.innerHTML ?? null}
+                                        placement="left"
                                     >
                                         {menuItem}
                                     </DropDown>
@@ -163,8 +178,9 @@ const DropDown = ({
                         );
                     })}
                 </ul>
-            )}
-        </div>
+            )
+            }
+        </div >
     );
 }
 

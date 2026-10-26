@@ -3,13 +3,29 @@ import { useState } from "react";
 import { useAuth } from "@/app/auth-provider";
 import Image from "next/image";
 import DropDown from "@/components/commons/DropDown";
-import { User, Settings, LogOut } from 'lucide-react';
+import {
+    User,
+    Settings,
+    LogOut,
+    Sun,
+    Moon,
+    SunMoon,
+    Palette as PaletteIcon,
+    Droplet,
+    Flower2,
+    Waves,
+    Layers,
+    Flame
+} from "lucide-react";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import PhotoFrame from "@/components/commons/PhotoFrame";
+import { useThemeSettings } from "@/app/theme-provider";
+
 
 const ProfileIcon = () => {
 
+    const { setTheme, setPalette } = useThemeSettings();
     const supabase = createClient();
     const router = useRouter();
     const [open, setOpen] = useState(false);
@@ -30,26 +46,97 @@ const ProfileIcon = () => {
 
 
     const themeDropDownOptions = [
-        { id: "light", name: "Light" },
-        { id: "dark", name: "Dark" }
-    ];
-    const dropDownOptions = [
-        { id: "view-profile", name: "View Profile", icon: User, href: "/home/profile" },
         {
-            id: "theme",
-            name: "Change Theme",
-            onClick: () => setThemeOpen(true),
+            id: "light",
+            icon: Sun,
+            name: "Light",
+            onClick: () => setTheme("light")
+        },
+        {
+            id: "dark",
+            icon: Moon,
+            name: "Dark",
+            onClick: () => setTheme("dark")
+        }
+    ];
+
+    const paletteDropDownOptions = [
+        {
+            id: "dew",
+            name: "Dew",
+            icon: Droplet,
+            onClick: () => setPalette("dew")
+        },
+        {
+            id: "bloom",
+            name: "Bloom",
+            icon: Flower2,
+            onClick: () => setPalette("bloom")
+        },
+        {
+            id: "tide",
+            name: "Tide",
+            icon: Waves,
+            onClick: () => setPalette("tide")
+        },
+        {
+            id: "slate",
+            name: "Slate",
+            icon: Layers,
+            onClick: () => setPalette("slate")
+        },
+        {
+            id: "ember",
+            name: "Ember",
+            icon: Flame,
+            onClick: () => setPalette("ember")
+        }
+    ];
+
+    const dropDownOptions = [
+        {
+            id: "view-profile",
+            name: "View Profile",
+            icon: User,
+            href: "/home/profile"
+        },
+        {
+            id: "appearance",
+            name: "Appearance",
+            icon: SunMoon,
+            ddOptions: themeDropDownOptions,
             ddInfo: {
                 open: themeOpen,
-                setOpen: setThemeOpen,
-                ddOptions: themeDropDownOptions,
-                right: 0,
-                top: 0,
-            }, close: false
+                setOpen: setThemeOpen
+            },
+            close: false
         },
-        { id: "settings", name: "Settings", icon: Settings, href: "/home/settings" },
-        { id: "logout", name: "Logout", danger: true, icon: LogOut, onClick: handleSignOut }
+        {
+            id: "palette",
+            name: "Color Palette",
+            icon: PaletteIcon,
+            ddOptions: paletteDropDownOptions,
+            ddInfo: {
+                open: paletteOpen,
+                setOpen: setPaletteOpen
+            },
+            close: false
+        },
+        {
+            id: "settings",
+            name: "Settings",
+            icon: Settings,
+            href: "/home/settings"
+        },
+        {
+            id: "logout",
+            name: "Logout",
+            danger: true,
+            icon: LogOut,
+            onClick: handleSignOut
+        }
     ];
+
     return <DropDown iconPos="end" open={open} setOpen={setOpen} right={10} top={10} dropDownOptions={dropDownOptions}>
         <div className="w-10 h-10 rounded-full font-bold">
             <PhotoFrame width={100} height={100} wscale="%" hscale="%" round={true}>
