@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { createClient } from "@/utils/supabase/server";
 import { calculateQuizScore } from "@/lib/quiz/calculateQuizScore";
+import { encrypt } from "@/lib/encryption";
 
 
 // PATCH: /api/couple/quiz/:coupleId/:quizId/submit
@@ -96,11 +97,70 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
             );
         }
 
-
+        // Calculation of the score and saving the answer
         const { evaluatedQuestions, overallScore } = calculateQuizScore(quizQuestions);
 
-        // I left here
-    } catch (err) {
 
+        const updatedQuiz = await Promise.all(
+            evaluatedQuestions.map(async (question) => {
+
+                const encryptedAnsweredOptions = question.answered_options ? encrypt(JSON.stringify(question.answered_options)) : null;
+
+                const encryptedGiventAnswers = question.given_answer ? encrypt(question.given_answer) : null;
+
+                const { data: quizQuestionUpdate, error: quizQuestionUpdateError } = await supabase
+                    .from("quiz_questions")
+                    .update({
+                        answered_options: encryptedAnsweredOptions,
+                        given_answer: encryptedGiventAnswers,
+                        score: question.score
+                    })
+                    .eq("id", question.quizQuestionId)
+                    .select();
+
+                if (quizQuestionUpdateError) {
+                    console.error(quizQuestionUpdateError);
+                    return NextResponse.json({
+                        message: "Internal Server Error: Error Saving Quiz Questions",
+                        quizQuestionUpdateError
+                    });
+                }
+
+                return quizQuestionUpdate ?? {};
+            })
+        );
+
+
+        const { data: quizUpdate, error: quizUpdateError } = await supabase
+            .from("quiz")
+            .update({
+                overall_score: overallScore,
+                status: "attempted"
+            })
+            .eq("id", quizId)
+            .select()
+            .single();
+
+        if (quizUpdateError) {
+            console.error(quizUpdateError);
+            return NextResponse.json({
+                message: "Internal Server Error: Error Saving Quiz",
+                quizUpdateError
+            });
+        }
+
+        return NextResponse.json({
+            message: "Success",
+            updatedQuiz,
+            quizUpdate
+        }, {
+            status: 200
+        });
+    } catch (err) {
+        return NextResponse.json({
+            message: "Internal Server Error"
+        }, {
+            status: 500
+        })
     }
 }

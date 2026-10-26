@@ -21,7 +21,36 @@ const QuizQuestionAnswer: React.FC<QuizQuestionAnswerProps> = ({ quizInfo, quizQ
     const [questionsInfo, setQuestionsInfo] = useState<QuizQuestions[]>(quizQuestions ?? []);
     const [submitLoading, setSubmitLoading] = useState(false);
 
-    
+
+    const handleQuizSubmit = async () => {
+
+        setSubmitLoading(true);
+
+        try {
+
+            const response = await fetch(`/api/couple/quiz/${quizInfo.couple_id}/${quizInfo.id}/submit`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    quizQuestions: questionsInfo
+                })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                alert("An error occured" + result.message);
+                setSubmitLoading(false);
+                return;
+            }
+        } catch (err) {
+            alert("An error occured");
+        } finally {
+            setSubmitLoading(false);
+        }
+    }
 
 
     return <div className="parent-box">
@@ -39,13 +68,13 @@ const QuizQuestionAnswer: React.FC<QuizQuestionAnswerProps> = ({ quizInfo, quizQ
                 setCurrentQ={setCurrentQ} />
 
             <div className="w-full flex flex-col gap-2">
-                <Button type="button" text="Submit" />
-                <Button 
-                type="button" 
-                backgroundColor="background" 
-                text="Cancel" 
-                onClick={() => router.push("/home/my-couple/know-me") }
-                textColor={theme === "light" ? "black" : "white"} />
+                <Button type="button" text={submitLoading ? "Submitting..." : "Submit"} disabled={submitLoading} onClick={handleQuizSubmit} />
+                <Button
+                    type="button"
+                    backgroundColor="background"
+                    text="Cancel"
+                    onClick={() => router.push("/home/my-couple/know-me")}
+                    textColor={theme === "light" ? "black" : "white"} />
             </div>
         </div>
     </div>
