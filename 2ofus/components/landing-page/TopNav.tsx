@@ -41,7 +41,7 @@ const RightSideNavElements = ({
     const [signIn, setSignIn] = useState(false);
     const [button, setButton] = useState(0);
     const [openNav, setOpenNav] = useState(false);
-
+    const [showNavs, setShowNavs] = useState(false);
     const { theme, setTheme } = useThemeSettings();
 
     if (!userData) {
@@ -97,8 +97,7 @@ const RightSideNavElements = ({
             </>
         );
     }
-    
-    const [showNavs, setShowNavs] = useState(false);
+
     return (
         <div className="gap-5 flex items-center">
             <DropDown
@@ -119,10 +118,10 @@ const RightSideNavElements = ({
                 <Menu />
             </button>}
 
-            <Popups 
-            open={showNavs} 
-            setOpen={setShowNavs}
-            justify="end">
+            <Popups
+                open={showNavs}
+                setOpen={setShowNavs}
+                justify="end">
                 <CoupleNav openNav={showNavs} setOpenNav={setShowNavs} />
             </Popups>
         </div>
