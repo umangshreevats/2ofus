@@ -113,7 +113,7 @@ const ProfileIcon = () => {
         },
         {
             id: "palette",
-            name: "Color Palette",
+            name: "Palette",
             icon: PaletteIcon,
             ddOptions: paletteDropDownOptions,
             ddInfo: {

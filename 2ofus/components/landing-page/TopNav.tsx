@@ -115,7 +115,7 @@ const RightSideNavElements = ({
 
             <ProfileIcon />
 
-            {coupleData && <button type="button" className="sm:hidden" onClick={() => setShowNavs(true)}>
+            {coupleData && <button type="button" className="lg:hidden" onClick={() => setShowNavs(true)}>
                 <Menu />
             </button>}
 
@@ -155,7 +155,7 @@ const TopNav: React.FC<TopNavProps> = ({ display, navLocations }) => {
                     </h1>
                 </Link>
 
-                {coupleData && <div className="hidden sm:block"><CoupleNav /></div>}
+                {coupleData && <div className="hidden lg:block"><CoupleNav /></div>}
 
 
                 <RightSideNavElements userData={userData} coupleData={coupleData} />

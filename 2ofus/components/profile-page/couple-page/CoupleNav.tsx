@@ -29,17 +29,17 @@ const CoupleNav = ({ openNav, setOpenNav }: { openNav?: boolean, setOpenNav?: Re
 
     return (
         <div
-            className="max-sm:w-[300px] max-sm:h-screen bg-background overflow-x-auto font-comforta"
+            className="max-lg:w-[300px] max-lg:h-screen bg-background overflow-x-auto font-comforta"
             style={{ scrollbarWidth: "none" }}
         >
-            <div className="w-full h-10 p-5 relative block sm:hidden">
+            <div className="w-full h-10 p-5 relative block lg:hidden">
                 <button onClick={() => setOpenNav?.(false)} type="button" className="absolute right-2">
                     <X />
                 </button>
             </div>
-            <div className="w-full max-sm:h-full flex flex-col p-5">
-                <nav className="h-full sm:h-auto w-full">
-                    <ul className="flex flex-col sm:flex-row w-full items-center justify-evenly gap-5">
+            <div className="w-full max-md:h-full flex flex-col p-5">
+                <nav className="h-full md:h-auto w-full">
+                    <ul className="flex flex-col lg:flex-row w-full items-center justify-evenly gap-1 lg:gap-5">
                         {coupleNavItems.map((item) => {
                             const Icon = item.icon;
 
@@ -56,12 +56,12 @@ const CoupleNav = ({ openNav, setOpenNav }: { openNav?: boolean, setOpenNav?: Re
                                                 : "var(--primary-text)",
                                         }}
                                         className="
-                                            w-full h-10
+                                            w-12 h-10
                                             sm:w-24 sm:h-15
-                                            flex sm:flex-col
+                                            flex md:flex-col
                                             items-center
                                             justify-start 
-                                            sm:justify-center
+                                            lg:justify-center
                                             rounded-full
                                             font-bold
                                             gap-5

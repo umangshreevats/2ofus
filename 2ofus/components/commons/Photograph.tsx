@@ -1,6 +1,6 @@
 "use client";
 import { useThemeSettings } from "@/app/theme-provider";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 const Photograph = ({
     photograph = null,
@@ -16,7 +16,7 @@ const Photograph = ({
     maxWidth = "auto",
     mhscale = "px",
     mwscale = "px",
-    onClick = () => {console.log("Photograph")},
+    onClick = () => { console.log("Photograph") },
     cursor = "auto"
 }: {
     url?: string;
@@ -37,6 +37,8 @@ const Photograph = ({
 }) => {
     const { theme } = useThemeSettings();
     const [imageURL, setImageURL] = useState<string | null>(null);
+    const imageRef = useRef<HTMLImageElement>(null);
+    const [cardWidth, setCardWidth] = useState<number | null>(null);
     const [imageDimensions, setImageDimensions] = useState({
         width: 0,
         height: 0,
@@ -68,16 +70,16 @@ const Photograph = ({
         <div
             onClick={onClick}
             className="
-                group relative flex flex-col
-                gap-3 p-3
-                border
-                transition-all duration-300 ease-out
-                hover:-translate-y-2
-                hover:shadow-xl
-            "
+    group relative flex flex-col w-fit self-start
+    gap-3 p-3
+    border
+    transition-all duration-300 ease-out
+    hover:-translate-y-2
+    hover:shadow-xl
+"
             style={{
                 cursor: cursor,
-                width: fwidth === "auto" ? "auto" : `${fwidth}${fwscale}`,
+                width: cardWidth ? `${cardWidth}px` : "fit-content",
                 height: fheight === "auto" ? "auto" : `${fheight}${fhscale}`,
                 backgroundColor: isLight ? "#ffffff" : "#202020",
                 borderColor: isLight ? "#e5e5e5" : "#383838",
@@ -87,15 +89,16 @@ const Photograph = ({
             }}
         >
             {/* Photograph */}
-            <div className="w-full relative overflow-visible">
+            <div className="w-fit relative overflow-visible">
                 {imageURL ? (
                     <img
+                        ref={imageRef}
                         src={imageURL}
                         alt={alternate ?? "Photograph"}
                         className="block w-auto h-auto object-contain"
                         style={{
-                            maxWidth: `${maxWidth === "auto" ? maxWidth : maxWidth+mwscale}`,
-                            maxHeight: `${maxHeight === "auto" ? maxHeight : maxHeight+mhscale}`
+                            maxWidth: `${maxWidth === "auto" ? maxWidth : maxWidth + mwscale}`,
+                            maxHeight: `${maxHeight === "auto" ? maxHeight : maxHeight + mhscale}`
                         }}
                         onLoad={(e) => {
                             const img = e.currentTarget;
@@ -104,13 +107,12 @@ const Photograph = ({
                                 width: img.naturalWidth,
                                 height: img.naturalHeight,
                             });
-                        }}
-                        onError={(e) => {
-                            console.log("Failed URL:", e.currentTarget.src);
+
+                            setCardWidth(img.getBoundingClientRect().width + 24);
                         }}
                     />
                 ) : (
-                    <div className="w-full min-h-40 flex flex-col items-center justify-center gap-3 text-neutral-400">
+                    <div className="w-40 min-h-40 flex flex-col items-center justify-center gap-3 text-neutral-400">
                         <span className="text-2xl">♡</span>
                         <span>{alternate ?? "A memory waiting to happen"}</span>
                     </div>
@@ -118,19 +120,20 @@ const Photograph = ({
             </div>
 
             {/* Caption */}
-            <div className="flex items-center flex-col justify-between gap-2 px-1 pb-1">
+            <div className="flex flex-col items-center w-full min-w-0 gap-2 px-1 pb-1">
                 <p
-                    className="text-sm font-semibold truncate"
+                    className="text-sm font-semibold text-center whitespace-normal break-words w-full"
                     style={{
                         color: isLight ? "#333333" : "#f5f5f5",
+                        overflowWrap: "anywhere"
                     }}
                 >
                     {name || "Untitled Memory"}
                 </p>
 
-                <div className="flex gap-2 items-center flex-wrap">
+                <div className="flex gap-2 items-center flex-wrap justify-center">
                     <span
-                        className="text-xs font-medium whitespace-nowrap pt-1"
+                        className="text-xs font-medium pt-1"
                         style={{
                             color: isLight ? "#a39482" : "#b4a496"
                         }}
