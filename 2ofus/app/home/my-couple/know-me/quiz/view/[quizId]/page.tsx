@@ -1,11 +1,10 @@
 import Headings from "@/components/commons/Headings";
 import { getCurrentUser } from "@/lib/auth"
 import { decrypt } from "@/lib/encryption";
-import { redirect } from "next/navigation";
-import Button from "@/components/commons/Button";
-import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/utils/supabase/server";
 import RedirectButton from "@/components/commons/RedirectButton";
+import { TbArrowNarrowLeftDashed } from "react-icons/tb";
+import { errorMonitor } from "events";
 
 export default async function QuizScoreLoading({ params }: { params: Promise<{ quizId?: string }> }) {
 
@@ -31,6 +30,7 @@ export default async function QuizScoreLoading({ params }: { params: Promise<{ q
         .eq("couple_id", coupleData.id)
         .single();
 
+    // Quiz Informations failed to retrieve
     if (quizError || !quizData) {
         return <div className="parent-box">
             <div className="child-box flex justify-center items-center">
@@ -40,6 +40,7 @@ export default async function QuizScoreLoading({ params }: { params: Promise<{ q
     }
 
 
+    // The quiz has not been attempted yet
     if (quizData.status === "created") {
         return <div className="parent-box">
             <div className="child-box flex justify-center items-center">
@@ -69,6 +70,7 @@ export default async function QuizScoreLoading({ params }: { params: Promise<{ q
         </div>
     }
 
+    // Decrypting all the information about each question in the quiz_questions
     const updatedQuizQuestions = quizQuestions.map((question) => {
 
         const decryptedQuestion = decrypt(question.question);
