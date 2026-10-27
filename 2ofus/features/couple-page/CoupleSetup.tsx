@@ -2,9 +2,10 @@
 
 import DropDown from "@/components/commons/DropDown";
 import PlayfulInput from "@/components/commons/PlayfulInput";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import DatePicker from "@/components/commons/DatePicker";
-import Photograph from "@/components/commons/Photograph";
+import PhotoFrame from "@/components/commons/PhotoFrame";
+import Image from "next/image";
 import Button from "@/components/commons/Button";
 import { useRouter } from "next/navigation";
 
@@ -45,8 +46,8 @@ const CoupleSetup = ({ profileId }: { profileId: string }) => {
 
             const result = await response.json();
 
-            if(!response.ok) {
-                alert("Something went wrong: "+result.message);
+            if (!response.ok) {
+                alert("Something went wrong: " + result.message);
                 setLoading(false);
                 return;
             }
@@ -54,8 +55,8 @@ const CoupleSetup = ({ profileId }: { profileId: string }) => {
             router.push("/home/my-couple");
 
         } catch (err) {
-            if(err instanceof Error) {
-                alert("Something went wrong: "+err.message);
+            if (err instanceof Error) {
+                alert("Something went wrong: " + err.message);
                 return;
             }
 
@@ -148,20 +149,34 @@ const CoupleSetup = ({ profileId }: { profileId: string }) => {
                     </label>
 
 
-                    <label htmlFor="bio" className="w-full flex flex-col gap-3">
+                    <label htmlFor="bio" className="w-full flex flex-col gap-3 items-center">
 
                         <label className="w-full text-lg font-bold">
                             Pick a photograph you both enjoy:
                         </label>
 
-                        <Photograph
-                            photograph={bioImage}
-                            fwidth={100}
-                            fwscale="%"
-                            fheight={300}
-                            fhscale="px"
-                            alternate="Your photograph goes here"
-                        />
+                        <PhotoFrame
+                            width={220}
+                            height={220}
+                            wscale="px"
+                            hscale="px"
+                            round={true}
+                        >
+                            {bioImage ? (
+                                <Image
+                                    src={URL.createObjectURL(bioImage)}
+                                    alt="Couple photograph"
+                                    fill
+                                    className="object-cover"
+                                    unoptimized
+                                />
+                            ) : (
+                                <div className="w-full h-full flex flex-col items-center justify-center text-secondary-text gap-2">
+                                    <span className="text-4xl">💕</span>
+                                    <span className="text-sm">Your photograph goes here</span>
+                                </div>
+                            )}
+                        </PhotoFrame>
 
                         <input
                             className="hidden"
@@ -176,12 +191,19 @@ const CoupleSetup = ({ profileId }: { profileId: string }) => {
 
                         <label
                             htmlFor="bio"
-                            className="cursor-pointer text-center border border-dashed p-3 rounded-lg hover:opacity-70"
+                            className="cursor-pointer text-center border border-dashed p-3 rounded-lg hover:opacity-70 w-full"
                         >
                             📸 Choose Photograph
                         </label>
 
-                        <Button type="button" className={`${!bioImage && "hidden"}`} onClick={() => setBioImage(null)} text={"Remove Image"} backgroundColor="background" textColor="red" />
+                        <Button
+                            type="button"
+                            className={`${!bioImage ? "hidden" : ""}`}
+                            onClick={() => setBioImage(null)}
+                            text="Remove Image"
+                            backgroundColor="background"
+                            textColor="red"
+                        />
 
                     </label>
 

@@ -2,11 +2,23 @@
 
 import Headings from "@/components/commons/Headings";
 import PlayfulButton from "@/components/commons/PlayfulButton";
-import { Users } from "@/types/profiles";
+import type { Users } from "@/types/profiles";
 import { useState, useRef } from "react";
-import { Pencil } from "lucide-react";
+import {
+    Pencil, AtSign,
+    Mail,
+    UserRound,
+    CalendarDays,
+    VenusAndMars
+} from "lucide-react";
 import PhotoFrame from "@/components/commons/PhotoFrame";
-import PlayfulInput from "@/components/commons/PlayfulInput";
+import InformationHolder from "@/components/profile-page/InformationHolder";
+import { useThemeSettings } from "@/app/theme-provider";
+import RedirectButton from "@/components/commons/RedirectButton";
+import Popups from "@/components/commons/Popups";
+import ProfileEditing from "@/components/profile-page/ProfileEditing";
+
+
 
 const ProfileInformations = ({ userInfo, allowEdits }: {
     userInfo: any,
@@ -19,10 +31,15 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
         finalProfilename = userInfo.lastname && userInfo.lastname.length > 0 ? finalProfilename + " " + userInfo.lastname : finalProfilename;
     }
 
+    const { theme } = useThemeSettings();
     const [profile, setProfile] = useState<Users>(userInfo);
+    const [interestsEditing, setInterestsEditing] = useState(false);
 
-    // Editing options
-    const [nameEdit, setNameEdit] = useState(false);
+    let fullName = profile.firstname ? profile.firstname : "";
+
+    if (fullName === profile.firstname) {
+        fullName = fullName + " " + profile.lastname;
+    }
 
 
     // Refs
@@ -32,7 +49,10 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
     return <div className="parent-box">
         <div className="child-box flex flex-col p-10 gap-5">
 
-            <div className="w-full flex justify-between items-center border-b-2 border-b-primary-text border-dashed">
+            <div className="w-full flex flex-col gap-5 justify-between border-b-2 border-b-primary-text border-dashed">
+                <div className="w-10 h-10">
+                    <RedirectButton redirectLink="/home/my-couple" />
+                </div>
                 <Headings
                     heading={`Profile Information for: `}
                     subheading={`${finalProfilename}`}
@@ -41,20 +61,23 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
             </div>
 
             {/*Profile Information and alteration section*/}
-            <div className="grid grid-rows-[1fr_2fr] md:grid-rows-1 md:grid-cols-2 min-h-[500px]">
+            <div className="grid md:grid-cols-[1fr_2fr] md:grid-rows-[1fr_4fr] min-h-[500px]">
 
                 {/*Profile Image*/}
-                <div className="relative w-full h-full flex justify-center items-center">
+                <div className="relative w-full h-full gap-5 flex flex-col justify-center items-center p-5">
+                    <h4 className="w-full font-rubik text-primary-text text-2xl border-b border-b-primary-text border-dashed font-bold">
+                        Profile Image
+                    </h4>
                     <PhotoFrame width={300} height={300} round={true}>
-                        {profile.profile_image && profile.profile_image.length > 0 ? 
-                        <img src={profile.profile_image} alt="profile Image" width={300} height={300} className="object-cover rounded-full" />
-                        : <div className="w-full h-full font-bold background-accent flex justify-center items-center">
-                            <span className="text-2xl text-white">{profile.username ? profile.username[0].toUpperCase() : "S"} </span>
-                        </div>}
+                        {profile.profile_image && profile.profile_image.length > 0 ?
+                            <img src={profile.profile_image} alt="profile Image" width={300} height={300} className="object-cover rounded-full" />
+                            : <div className="w-full h-full font-bold background-accent flex justify-center items-center">
+                                <span className="text-2xl text-white">{profile.username ? profile.username[0].toUpperCase() : "S"} </span>
+                            </div>}
                     </PhotoFrame>
 
                     <input ref={fileInputRef} onChange={(e) => {
-                        if(!e.target.files?.[0]) return;
+                        if (!e.target.files?.[0]) return;
 
                         const url = URL.createObjectURL(e.target.files?.[0]);
 
@@ -63,52 +86,108 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
                             profile_image: url
                         }));
                     }} type="file" accept="image/*" className="hidden" id="profile-image" />
-                    {allowEdits && <label htmlFor="profile-image" className="absolute left-5 top-5 sm:left-10 sm:top-10">
+                    {allowEdits && <label htmlFor="profile-image" className="absolute left-5 top-40 sm:left-10 sm:top-16">
                         <PlayfulButton onClick={() => fileInputRef.current?.click()} icon={Pencil} />
                     </label>}
                 </div>
 
-                {/*Other Informations*/}
-                <div className="relative w-full h-full flex flex-col items-center p-5">
+                {/*Informations*/}
+                <div className="w-full h-full flex flex-col p-5 gap-5">
+                    <div className="w-full flex flex-col md:flex-row gap-5 items-center items-center">
+                        <InformationHolder
+                            profileData={profile}
+                            setProfileData={setProfile}
+                            heading="Username"
+                            information={profile.username ?? "Special Someone"}
+                            icon={AtSign}
+                            iconColor="#E8DFFF"
+                            allowEdit={false}
+                        />
 
-                    <div className="relative w-full flex flex-col gap-5">
-                        {!nameEdit && <h2 className="w-full text-lg font-bold">Full Name: </h2>}
-                        <div className="w-full flex gap-5 items-center">
-                            {nameEdit ?
-                                <div className="flex flex-col gap-2">
-                                    <h2 className="w-full text-lg font-bold">First Name: </h2>
-                                    <PlayfulInput text={profile.firstname ?? ""}
-                                        disabled={!allowEdits || !nameEdit}
-                                        textAlign="center"
-                                        onChange={(e) => setProfile(prev => ({
-                                            ...prev,
-                                            firstname: e.target.value
-                                        }))} />
-                                    <h2 className="w-full text-lg font-bold">Last Name: </h2>
-                                    <PlayfulInput text={profile.lastname ?? ""}
-                                        disabled={!allowEdits || !nameEdit}
-                                        textAlign="center"
-                                        onChange={(e) => setProfile(prev => ({
-                                            ...prev,
-                                            lastname: e.target.value
-                                        }))} />
-                                </div> :
+                        <InformationHolder
+                            profileData={profile}
+                            setProfileData={setProfile}
+                            heading="Email"
+                            information={profile.email ?? "Someone@example.com"}
+                            icon={Mail}
+                            iconColor="#DCEBFF"
+                            allowEdit={false}
+                        />
+                    </div>
+                    <div className="w-full flex-col md:flex-row flex gap-5 items-center items-center">
+                        <InformationHolder
+                            type="fullname"
+                            profileData={profile}
+                            setProfileData={setProfile}
+                            heading="Full Name"
+                            information={fullName}
+                            icon={UserRound}
+                            iconColor="#FFE1EA"
+                            allowEdit={allowEdits}
+                        />
 
-                                <PlayfulInput text={profile.firstname ?? "" + " " + profile.lastname ?? ""}
-                                    disabled={true}
-                                    textAlign="center"
-                                    onChange={(e) => setProfile(prev => ({
-                                        ...prev,
-                                        firstname: e.target.value
-                                    }))} />}
-                            {allowEdits && <label htmlFor="full-name" className="relative bottom-2">
-                                <PlayfulButton onClick={() => setNameEdit(prev => !prev)} icon={Pencil} />
-                            </label>}
-                        </div>
+                        <InformationHolder
+                            type="dob"
+                            profileData={profile}
+                            setProfileData={setProfile}
+                            heading="Date of Birth"
+                            information={profile.dob ?? "Some date"}
+                            icon={CalendarDays}
+                            iconColor="#FFF0C9"
+                            allowEdit={allowEdits}
+                        />
+                    </div>
+
+                    <div className="w-full md:w-1/2 flex flex-col md:flex-row gap-5 items-center items-center">
+                        <InformationHolder
+                            type="gender"
+                            profileData={profile}
+                            setProfileData={setProfile}
+                            heading="Gender"
+                            information={profile.gender ?? "Some kind"}
+                            icon={VenusAndMars}
+                            iconColor="#DDF5E5"
+                            allowEdit={allowEdits}
+                        />
+                    </div>
+                </div>
+
+
+                {/*Interests*/}
+                <div className={`${theme === "light" ? "bg-white" : "bg-black"} col-span-2 auto-rows-min shadow-[0_0_2px_var(--primary-text)] w-full gap-5 rounded-md p-5`}>
+
+                    <div className="w-full flex justify-between items-center">
+                        <h4 className="w-full font-rubik text-primary-text text-2xl border-b border-b-primary-text border-dashed font-bold mb-10">
+                            Interests
+                        </h4>
+
+                        {allowEdits && <div className="aspect-square p-5">
+                            <PlayfulButton onClick={() => setInterestsEditing(prev => !prev)} backgroundColor="var(--accent)" textColor="white" padding={5} pScale="px" width={100} height={100} wScale="%" hScale="%" icon={Pencil} />
+                        </div>}
+                    </div>
+                    <div className={`flex gap-5 flex-col`}>
+                        {profile.interests && Object.entries(profile.interests).map(([interestName, interestValue]) => (<div key={interestName}>
+                            {interestValue.length > 0 && <div className="flex flex-col gap-5 border-b border-b-primary-text border-dashed">
+                                <h5 className="text-primary-text font-bold font-rubik first-letter:uppercase">
+                                    {interestName}
+                                </h5>
+
+                                <div className="flex gap-2 font-medium text-sm flex-wrap font-comfortaa text-secondary-text">
+                                    {interestValue.map((interest, i) => (
+                                        <span key={i} className="p-2 rounded-full border-2">
+                                            {interest}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>}</div>))}
                     </div>
                 </div>
             </div>
         </div>
+
+        <Popups open={interestsEditing} setOpen={setInterestsEditing}>
+            <ProfileEditing type={"interests"} setEditing={setInterestsEditing} profileData={profile} setProfileData={setProfile} />
+        </Popups>
     </div>
 }
 

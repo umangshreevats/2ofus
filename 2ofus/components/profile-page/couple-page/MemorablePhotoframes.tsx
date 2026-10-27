@@ -51,7 +51,7 @@ const MemorablePhotoframes = ({ memorablePhotos }: { memorablePhotos: any }) => 
                 </div>
             ))}
 
-        </div> : <div className="w-full rounded-md border-2 border-dashed border-primary-text flex items-center justify-center">
+        </div> : <div className="w-full rounded-md border-2 border-dashed border-primary-text flex flex-col gap-5 p-5 items-center justify-center">
             <p className="text-md">Add a memory to your album</p>
             <Button type="button" text="Add Photo" onClick={() => router.push("/home/my-couple/album")} />
         </div>}

@@ -2,15 +2,21 @@
 import { LucideIcon } from "lucide-react";
 import PlayfulButton from "../commons/PlayfulButton";
 import { Pencil } from "lucide-react";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import { useThemeSettings } from "@/app/theme-provider";
+import { Users } from "@/types/profiles";
+import Popups from "../commons/Popups";
+import ProfileEditing from "./ProfileEditing";
 
-const InformationHolder = ({ heading, icon, iconColor, information, allowEdit = false }: {
+const InformationHolder = ({ heading, icon, iconColor, profileData, setProfileData, information, allowEdit = false, type }: {
     heading: string,
+    profileData: Users,
+    setProfileData: React.Dispatch<SetStateAction<Users>>,
     icon: LucideIcon,
     iconColor: string,
     information: string,
-    allowEdit?: boolean
+    allowEdit?: boolean,
+    type?: "fullname" | "dob" | "gender" | "interests"
 }) => {
 
     const Icon = icon;
@@ -45,6 +51,10 @@ const InformationHolder = ({ heading, icon, iconColor, information, allowEdit = 
         {allowEdit && <div className="aspect-square p-5">
             <PlayfulButton backgroundColor="var(--accent)" textColor="white" padding={5} pScale="px" width={100} height={100} wScale="%" hScale="%" icon={Pencil} onClick={() => setEditing(prev => !prev)} />
         </div>}
+
+        {type && <Popups open={editing} setOpen={setEditing}>
+            <ProfileEditing type={type} setEditing={setEditing} profileData={profileData} setProfileData={setProfileData} />
+        </Popups>}
     </div>
 }
 

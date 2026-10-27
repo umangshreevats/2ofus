@@ -112,7 +112,7 @@ const Requests = ({ requestsSend, requestsReceived }: { requestsSend: any, reque
                             <p className="font-bold">@{req.sender.username}</p>
                         </div>
 
-                        <div className="sm:absolute relative sm:right-2">
+                        <div className="sm:absolute relative flex gap-2 sm:right-2">
                             <Button onClick={() => handleRequest("reject", req.id)} type="button" text="reject" className="ml-5" />
                             <Button onClick={() => handleRequest("accept", req.id)} type="button" text="accept" />
                         </div>
