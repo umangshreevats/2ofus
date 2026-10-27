@@ -117,3 +117,18 @@ export async function uploadMemoryImage(
 
     return { path: data.path };
 }
+
+
+// path finder
+export function getStoragePath(url: string, bucket: string) {
+    const marker = `/${bucket}/`;
+    const index = url.indexOf(marker);
+
+    if (index === -1) {
+        throw new Error("Invalid storage URL");
+    }
+
+    return decodeURIComponent(
+        url.slice(index + marker.length).split("?")[0]
+    );
+}

@@ -3,7 +3,7 @@
 
 import { Users } from "@/types/profiles";
 import { X } from "lucide-react";
-import { SetStateAction } from "react";
+import { SetStateAction, useEffect } from "react";
 import Button from "../commons/Button";
 import DatePicker from "../commons/DatePicker";
 import { interest } from "@/data/profile";
@@ -24,7 +24,7 @@ const interestCategories: {
     )
 }));
 
-const genders = ["Male", "Female", "Other"];
+const genders = ["male", "female", "other"];
 
 const ProfileEditing = ({
     type,
@@ -59,6 +59,10 @@ const ProfileEditing = ({
         });
     };
 
+    useEffect(() => {
+        console.log(profileData);
+    }, [profileData])
+
     const isSelected = (
         category: InterestCategory,
         value: string
@@ -70,7 +74,7 @@ const ProfileEditing = ({
     };
 
     return (
-        <div className="relative p-8 md:p-10 flex flex-col gap-5 bg-background rounded-md max-h-[85vh] overflow-y-auto w-full">
+        <div className="relative p-8 md:p-10 flex flex-col gap-5 bg-background rounded-md max-h-[85vh] overflow-y-auto w-full" style={{ scrollbarWidth: "none" }}>
 
             <button
                 type="button"

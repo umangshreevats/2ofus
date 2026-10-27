@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
-import { uploadProfileImage } from "@/lib/supabase/storage";
+import { uploadProfileImage, getStoragePath } from "@/lib/supabase/storage";
+import { getCurrentUser } from "@/lib/auth";
+
+
 
 // POST: /api/profile/:username
 export const POST = async (request: NextRequest, { params }: { params: Promise<{ username: string }> }) => {
@@ -45,7 +48,7 @@ export const POST = async (request: NextRequest, { params }: { params: Promise<{
         const gender = formData.get("gender");
         const profileImg = formData.get("profileImg");
 
-         let uploadedImage: {
+        let uploadedImage: {
             path: string;
             publicUrl: string;
         } | null = null;
@@ -95,5 +98,131 @@ export const POST = async (request: NextRequest, { params }: { params: Promise<{
             { status: 500 }
         );
 
+    }
+}
+
+//  PATCH: /api/profile/:username
+export const PATCH = async (request: NextRequest, { params }: { params: Promise<{ username: string }> }) => {
+
+
+    try {
+
+        const { user, userData } = await getCurrentUser();
+
+
+        if (!user) {
+
+            return NextResponse.json({
+                message: "Unauthorized"
+            }, {
+                status: 401
+            });
+        }
+
+        const supabase = await createClient();
+
+
+        const { username } = await params;
+
+
+        if (!username) {
+            return NextResponse.json({
+                message: "Bad Request: Username is required"
+            }, {
+                status: 400
+            });
+        }
+
+
+        if (userData.username !== username) {
+            return NextResponse.json({
+                message: "Forbidden: Only the same users are allowed to edit their profiles"
+            }, {
+                status: 403
+            });
+        }
+
+
+        const formData = await request.formData();
+        const firstname = formData.get("firstname");
+        const lastname = formData.get("lastname");
+        const dob = formData.get("dob");
+        const gender = formData.get("gender");
+        const profileImg = formData.get("profileImg");
+        const removeProfileImage = formData.get("removeProfileImage");
+        const interests = formData.get("interests");
+
+        const updatedData: Record<string, unknown> = {};
+
+
+        if(firstname) {
+            updatedData.firstname = firstname;
+        }
+
+        if(lastname) {
+            updatedData.lastname = lastname;
+        }
+
+        if(dob) {
+            updatedData.dob = String(dob);
+        }
+
+        if(gender) {
+            updatedData.gender = gender;
+        }
+
+        if(interests) {
+            updatedData.interests = interests;
+        }
+
+        if (removeProfileImage === "true") {
+            const savedProfilePath = getStoragePath(userData.profile_image, "profile_images");
+
+            await supabase.storage
+                .from("profile-images")
+                .remove([savedProfilePath]);
+            
+            updatedData.profile_image = null;
+        }
+        if (profileImg instanceof File && profileImg.size > 0) {
+
+
+            const uploadedImage = await uploadProfileImage(supabase, profileImg, user.id);
+
+            if(uploadedImage) {
+                updatedData.profile_image = uploadedImage.publicUrl;
+            }
+        }
+
+
+        const { data: profileUpdateData, error: profileUpdateError } = await supabase
+        .from("users")
+        .update(updatedData)
+        .eq("id", user.id)
+        .select()
+        .single();
+
+
+        if(profileUpdateError || !profileUpdateData) {
+
+            console.error(profileUpdateError);
+            return NextResponse.json(
+                { message: "Internal Server Error: Error updating the profile Informations" },
+                { status: 500 }
+            );
+        }
+
+        return NextResponse.json(
+            { message: "Successfully updated the profile data", profileUpdateData },
+            { status: 200 }
+        );
+
+    } catch (err) {
+        console.error(err);
+
+        return NextResponse.json(
+            { message: "Internal Server Error" },
+            { status: 500 }
+        );
     }
 }

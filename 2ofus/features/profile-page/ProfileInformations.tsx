@@ -32,6 +32,8 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
     }
 
     const { theme } = useThemeSettings();
+
+    const originalProfile: Users = userInfo;
     const [profile, setProfile] = useState<Users>(userInfo);
     const [interestsEditing, setInterestsEditing] = useState(false);
 
@@ -48,7 +50,9 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
 
     return <div className="parent-box">
         <div className="child-box flex flex-col p-10 gap-5">
-
+            <Popups open={interestsEditing} setOpen={setInterestsEditing}>
+                <ProfileEditing type={"interests"} setEditing={setInterestsEditing} profileData={profile} setProfileData={setProfile} />
+            </Popups>
             <div className="w-full flex flex-col gap-5 justify-between border-b-2 border-b-primary-text border-dashed">
                 <div className="w-10 h-10">
                     <RedirectButton redirectLink="/home/my-couple" />
@@ -61,7 +65,7 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
             </div>
 
             {/*Profile Information and alteration section*/}
-            <div className="grid md:grid-cols-[1fr_2fr] md:grid-rows-[1fr_4fr] min-h-[500px]">
+            <div className="flex max-md:flex-col max-md:items-center md:grid md:grid-cols-[1fr_2fr] md:grid-rows-[1fr_5fr] min-h-[500px]">
 
                 {/*Profile Image*/}
                 <div className="relative w-full h-full gap-5 flex flex-col justify-center items-center p-5">
@@ -184,10 +188,6 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
                 </div>
             </div>
         </div>
-
-        <Popups open={interestsEditing} setOpen={setInterestsEditing}>
-            <ProfileEditing type={"interests"} setEditing={setInterestsEditing} profileData={profile} setProfileData={setProfile} />
-        </Popups>
     </div>
 }
 
