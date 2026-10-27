@@ -3,7 +3,7 @@
 
 import { Users } from "@/types/profiles";
 import { X } from "lucide-react";
-import { SetStateAction, useEffect } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import Button from "../commons/Button";
 import DatePicker from "../commons/DatePicker";
 import { interest } from "@/data/profile";
@@ -30,14 +30,21 @@ const ProfileEditing = ({
     type,
     profileData,
     setEditing,
-    setProfileData
+    setProfileData,
+    selectedImage,
+    setSelectedImage,
+    originalProfile
 }: {
     type: "fullname" | "dob" | "gender" | "interests";
     profileData: Users;
     setEditing: React.Dispatch<SetStateAction<boolean>>;
     setProfileData: React.Dispatch<SetStateAction<Users>>;
+    selectedImage: File | null;
+    setSelectedImage: React.Dispatch<SetStateAction<File | null>>;
+    originalProfile: React.RefObject<Users>;
 }) => {
 
+    const [loading, setLoading] = useState(false);
     const toggleInterest = (
         category: InterestCategory,
         value: string
@@ -68,9 +75,94 @@ const ProfileEditing = ({
         value: string
     ) => profileData.interests?.[category]?.includes(value) ?? false;
 
-    const handleSubmit = () => {
-        // Profile data is already updated through setProfileData.
-        setEditing(false);
+    const handleInfoSubmit = async () => {
+        setLoading(true);
+
+        try {
+            try {
+                const formData = new FormData();
+
+                const editableFields: (keyof Users)[] = [
+                    "firstname",
+                    "lastname",
+                    "dob",
+                    "gender",
+                    "interests"
+                ];
+
+                // Compare original and edited profile
+                editableFields.forEach((field) => {
+                    const originalValue = originalProfile.current[field];
+                    const editedValue = profileData[field];
+
+                    const hasChanged =
+                        JSON.stringify(originalValue ?? null) !==
+                        JSON.stringify(editedValue ?? null);
+
+                    if (hasChanged) {
+                        if (field === "interests") {
+                            formData.append(
+                                field,
+                                JSON.stringify(editedValue ?? {})
+                            );
+                        } else {
+                            formData.append(
+                                field,
+                                typeof editedValue === "object"
+                                    ? JSON.stringify(editedValue ?? {})
+                                    : String(editedValue ?? "")
+                            );
+                        }
+                    }
+                });
+
+                // Profile image comparison
+                if (selectedImage) {
+                    formData.append("removeProfileImage", "true");
+                    formData.append("profile_image", selectedImage);
+                } else if (
+                    originalProfile.current.profile_image &&
+                    !profileData.profile_image
+                ) {
+                    formData.append("removeProfileImage", "true");
+                } else {
+                    formData.append("removeProfileImage", "false");
+                }
+
+                // Check if anything changed
+                if ([...formData.keys()].length === 0) {
+                    console.log("Nothing to update");
+                    return;
+                }
+
+                const response = await fetch(`/api/profile/${profileData.username}`, {
+                    method: "PATCH",
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.message || "Update failed");
+                }
+
+                setSelectedImage(null);
+
+                // Update original snapshot
+                originalProfile.current = structuredClone(result.user);
+
+                console.log("Profile updated!");
+
+            } catch (error) {
+                console.error("Error updating profile:", error);
+            }
+            setEditing(false);
+        } catch (err) {
+            console.error(err);
+            alert("An error occured");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -164,8 +256,8 @@ const ProfileEditing = ({
                             <label
                                 key={gender}
                                 className={`flex items-center gap-3 p-3 rounded-md border-2 cursor-pointer transition-colors ${profileData.gender === gender
-                                        ? "border-accent bg-accent/10"
-                                        : "border-secondary-text/30"
+                                    ? "border-accent bg-accent/10"
+                                    : "border-secondary-text/30"
                                     }`}
                             >
                                 <input
@@ -229,8 +321,8 @@ const ProfileEditing = ({
                                                     )
                                                 }
                                                 className={`px-3 py-2 rounded-full border text-sm transition-all ${selected
-                                                        ? "bg-accent text-white border-accent"
-                                                        : "border-secondary-text/30 text-primary-text hover:border-accent"
+                                                    ? "bg-accent text-white border-accent"
+                                                    : "border-secondary-text/30 text-primary-text hover:border-accent"
                                                     }`}
                                             >
                                                 {option}
@@ -245,8 +337,9 @@ const ProfileEditing = ({
             )}
 
             <Button
-                text="Submit"
-                onClick={handleSubmit}
+                type="button"
+                text={loading ? "Submitting..." : "Submit"}
+                onClick={handleInfoSubmit}
             />
         </div>
     );

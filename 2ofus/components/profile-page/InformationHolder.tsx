@@ -8,7 +8,19 @@ import { Users } from "@/types/profiles";
 import Popups from "../commons/Popups";
 import ProfileEditing from "./ProfileEditing";
 
-const InformationHolder = ({ heading, icon, iconColor, profileData, setProfileData, information, allowEdit = false, type }: {
+const InformationHolder = ({ 
+    heading, 
+    icon, 
+    iconColor, 
+    profileData, 
+    setProfileData, 
+    information, 
+    allowEdit = false, 
+    type,
+    selectedImage,
+    setSelectedImage,
+    originalProfile
+ }: {
     heading: string,
     profileData: Users,
     setProfileData: React.Dispatch<SetStateAction<Users>>,
@@ -16,7 +28,10 @@ const InformationHolder = ({ heading, icon, iconColor, profileData, setProfileDa
     iconColor: string,
     information: string,
     allowEdit?: boolean,
-    type?: "fullname" | "dob" | "gender" | "interests"
+    type?: "fullname" | "dob" | "gender" | "interests",
+    selectedImage: File | null;
+    setSelectedImage: React.Dispatch<SetStateAction<File | null>>;
+    originalProfile: React.RefObject<Users>
 }) => {
 
     const Icon = icon;
@@ -52,9 +67,19 @@ const InformationHolder = ({ heading, icon, iconColor, profileData, setProfileDa
             <PlayfulButton backgroundColor="var(--accent)" textColor="white" padding={5} pScale="px" width={100} height={100} wScale="%" hScale="%" icon={Pencil} onClick={() => setEditing(prev => !prev)} />
         </div>}
 
-        {type && <Popups open={editing} setOpen={setEditing}>
-            <ProfileEditing type={type} setEditing={setEditing} profileData={profileData} setProfileData={setProfileData} />
-        </Popups>}
+        {editing && type && (
+            <Popups open={editing} setOpen={setEditing}>
+                <ProfileEditing
+                    selectedImage={selectedImage}
+                    setSelectedImage={setSelectedImage}
+                    originalProfile={originalProfile}
+                    type={type}
+                    setEditing={setEditing}
+                    profileData={profileData}
+                    setProfileData={setProfileData}
+                />
+            </Popups>
+        )}
     </div>
 }
 

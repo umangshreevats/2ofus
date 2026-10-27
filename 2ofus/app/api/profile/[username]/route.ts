@@ -144,35 +144,35 @@ export const PATCH = async (request: NextRequest, { params }: { params: Promise<
 
 
         const formData = await request.formData();
-        const firstname = formData.get("firstname");
-        const lastname = formData.get("lastname");
-        const dob = formData.get("dob");
-        const gender = formData.get("gender");
-        const profileImg = formData.get("profileImg");
+        const profileImg = formData.get("profile_image");
         const removeProfileImage = formData.get("removeProfileImage");
         const interests = formData.get("interests");
 
         const updatedData: Record<string, unknown> = {};
 
 
-        if(firstname) {
-            updatedData.firstname = firstname;
-        }
+        const editableFields = ["firstname", "lastname", "dob", "gender"] as const;
 
-        if(lastname) {
-            updatedData.lastname = lastname;
-        }
+        editableFields.forEach((field) => {
+            if (formData.has(field)) {
+                const value = formData.get(field);
+                updatedData[field] = value === "" ? null : String(value);
+            }
+        });
 
-        if(dob) {
-            updatedData.dob = String(dob);
-        }
+        if (interests) {
 
-        if(gender) {
-            updatedData.gender = gender;
-        }
+            try {
+                updatedData.interests = JSON.parse(
+                    String(formData.get("interests"))
+                );
+            } catch {
+                return NextResponse.json(
+                    { message: "Invalid interests format" },
+                    { status: 400 }
+                );
 
-        if(interests) {
-            updatedData.interests = interests;
+            }
         }
 
         if (removeProfileImage === "true") {
@@ -181,7 +181,7 @@ export const PATCH = async (request: NextRequest, { params }: { params: Promise<
             await supabase.storage
                 .from("profile-images")
                 .remove([savedProfilePath]);
-            
+
             updatedData.profile_image = null;
         }
         if (profileImg instanceof File && profileImg.size > 0) {
@@ -189,21 +189,21 @@ export const PATCH = async (request: NextRequest, { params }: { params: Promise<
 
             const uploadedImage = await uploadProfileImage(supabase, profileImg, user.id);
 
-            if(uploadedImage) {
+            if (uploadedImage) {
                 updatedData.profile_image = uploadedImage.publicUrl;
             }
         }
 
 
         const { data: profileUpdateData, error: profileUpdateError } = await supabase
-        .from("users")
-        .update(updatedData)
-        .eq("id", user.id)
-        .select()
-        .single();
+            .from("users")
+            .update(updatedData)
+            .eq("id", user.id)
+            .select()
+            .single();
 
 
-        if(profileUpdateError || !profileUpdateData) {
+        if (profileUpdateError || !profileUpdateData) {
 
             console.error(profileUpdateError);
             return NextResponse.json(

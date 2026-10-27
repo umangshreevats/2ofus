@@ -9,7 +9,8 @@ import {
     Mail,
     UserRound,
     CalendarDays,
-    VenusAndMars
+    VenusAndMars,
+    X
 } from "lucide-react";
 import PhotoFrame from "@/components/commons/PhotoFrame";
 import InformationHolder from "@/components/profile-page/InformationHolder";
@@ -33,8 +34,11 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
 
     const { theme } = useThemeSettings();
 
-    const originalProfile: Users = userInfo;
+    const originalProfile = useRef<Users>(
+        structuredClone(userInfo)
+    );
     const [profile, setProfile] = useState<Users>(userInfo);
+    const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [interestsEditing, setInterestsEditing] = useState(false);
 
     let fullName = profile.firstname ? profile.firstname : "";
@@ -48,10 +52,104 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
 
+    const handleRemoveProfileImage = () => {
+        setSelectedImage(null);
+
+        setProfile(prev => ({
+            ...prev,
+            profile_image: null
+        }));
+
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
+    };
+
+
+    const handleSubmit = async () => {
+        try {
+            const formData = new FormData();
+
+            const editableFields: (keyof Users)[] = [
+                "firstname",
+                "lastname",
+                "dob",
+                "gender",
+                "interests"
+            ];
+
+            // Compare original and edited profile
+            editableFields.forEach((field) => {
+                const originalValue = originalProfile.current[field];
+                const editedValue = profile[field];
+
+                const hasChanged =
+                    JSON.stringify(originalValue ?? null) !==
+                    JSON.stringify(editedValue ?? null);
+
+                if (hasChanged) {
+                    if (field === "interests") {
+                        formData.append(
+                            field,
+                            JSON.stringify(editedValue ?? {})
+                        );
+                    } else {
+                        formData.append(
+                            field,
+                            typeof editedValue === "object"
+                                ? JSON.stringify(editedValue ?? {})
+                                : String(editedValue ?? "")
+                        );
+                    }
+                }
+            });
+
+            // Profile image comparison
+            if (selectedImage) {
+                formData.append("removeProfileImage", "true");
+                formData.append("profile_image", selectedImage);
+            } else if (
+                originalProfile.current.profile_image &&
+                !profile.profile_image
+            ) {
+                formData.append("removeProfileImage", "true");
+            } else {
+                formData.append("removeProfileImage", "false");
+            }
+
+            // Check if anything changed
+            if ([...formData.keys()].length === 0) {
+                console.log("Nothing to update");
+                return;
+            }
+
+            const response = await fetch(`/api/profile/${userInfo.username}`, {
+                method: "PATCH",
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.message || "Update failed");
+            }
+            setSelectedImage(null);
+
+            // Update original snapshot
+            originalProfile.current = structuredClone(result.user);
+
+            console.log("Profile updated!");
+
+        } catch (error) {
+            console.error("Error updating profile:", error);
+        }
+    };
+
+
     return <div className="parent-box">
         <div className="child-box flex flex-col p-10 gap-5">
             <Popups open={interestsEditing} setOpen={setInterestsEditing}>
-                <ProfileEditing type={"interests"} setEditing={setInterestsEditing} profileData={profile} setProfileData={setProfile} />
+                <ProfileEditing selectedImage={selectedImage} setSelectedImage={setSelectedImage} originalProfile={originalProfile} type={"interests"} setEditing={setInterestsEditing} profileData={profile} setProfileData={setProfile} />
             </Popups>
             <div className="w-full flex flex-col gap-5 justify-between border-b-2 border-b-primary-text border-dashed">
                 <div className="w-10 h-10">
@@ -80,25 +178,50 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
                             </div>}
                     </PhotoFrame>
 
-                    <input ref={fileInputRef} onChange={(e) => {
-                        if (!e.target.files?.[0]) return;
+                    <input
+                        ref={fileInputRef}
+                        onChange={(e) => {
+                            const file = e.target.files?.[0];
 
-                        const url = URL.createObjectURL(e.target.files?.[0]);
+                            if (!file) return;
 
-                        setProfile(prev => ({
-                            ...prev,
-                            profile_image: url
-                        }));
-                    }} type="file" accept="image/*" className="hidden" id="profile-image" />
-                    {allowEdits && <label htmlFor="profile-image" className="absolute left-5 top-40 sm:left-10 sm:top-16">
-                        <PlayfulButton onClick={() => fileInputRef.current?.click()} icon={Pencil} />
-                    </label>}
+                            setSelectedImage(file);
+
+                            const url = URL.createObjectURL(file);
+
+                            setProfile(prev => ({
+                                ...prev,
+                                profile_image: url
+                            }));
+                        }}
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        id="profile-image"
+                    />
+                    {allowEdits && <label htmlFor="profile-image" className="absolute left-5 top-40 sm:left-10 sm:top-16 flex gap-2">
+                        <div>
+                            <PlayfulButton
+                                onClick={() => fileInputRef.current?.click()}
+                                icon={Pencil}
+                            />
+
+                            {profile.profile_image && (
+                                <PlayfulButton
+                                    onClick={handleRemoveProfileImage}
+                                    icon={X}
+                                />
+                            )}
+                        </div>
+                    </label>
+                    }
                 </div>
 
                 {/*Informations*/}
                 <div className="w-full h-full flex flex-col p-5 gap-5">
                     <div className="w-full flex flex-col md:flex-row gap-5 items-center items-center">
                         <InformationHolder
+                            selectedImage={selectedImage} setSelectedImage={setSelectedImage} originalProfile={originalProfile}
                             profileData={profile}
                             setProfileData={setProfile}
                             heading="Username"
@@ -109,6 +232,7 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
                         />
 
                         <InformationHolder
+                            selectedImage={selectedImage} setSelectedImage={setSelectedImage} originalProfile={originalProfile}
                             profileData={profile}
                             setProfileData={setProfile}
                             heading="Email"
@@ -120,6 +244,7 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
                     </div>
                     <div className="w-full flex-col md:flex-row flex gap-5 items-center items-center">
                         <InformationHolder
+                            selectedImage={selectedImage} setSelectedImage={setSelectedImage} originalProfile={originalProfile}
                             type="fullname"
                             profileData={profile}
                             setProfileData={setProfile}
@@ -131,6 +256,7 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
                         />
 
                         <InformationHolder
+                            selectedImage={selectedImage} setSelectedImage={setSelectedImage} originalProfile={originalProfile}
                             type="dob"
                             profileData={profile}
                             setProfileData={setProfile}
@@ -144,6 +270,7 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
 
                     <div className="w-full md:w-1/2 flex flex-col md:flex-row gap-5 items-center items-center">
                         <InformationHolder
+                            selectedImage={selectedImage} setSelectedImage={setSelectedImage} originalProfile={originalProfile}
                             type="gender"
                             profileData={profile}
                             setProfileData={setProfile}
