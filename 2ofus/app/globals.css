@@ -252,6 +252,29 @@ body {
     transform: scaleX(1);
 }
 
+
+/*Transparent theme colored component classes*/
+.trans-accent {
+    background-color: color-mix(in srgb, var(--accent) 50%, transparent);
+}
+
+.trans-background {
+    background-color: color-mix(in srgb, var(--background) 50%, transparent);
+}
+
+.trans-primary-text {
+    background-color: color-mix(in srgb, var(--primary-text) 50%, transparent);
+}
+
+.trans-secondary-text {
+    background-color: color-mix(in srgb, var(--secondary-text) 50%, transparent);
+}
+
+.trans-surface {
+    background-color: color-mix(in srgb, var(--surface) 50%, transparent);
+}
+
+
 @keyframes heartWave {
   0% {
     transform: scale(0.6);

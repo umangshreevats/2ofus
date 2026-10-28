@@ -35,3 +35,6 @@ WITH CHECK (auth.uid() = receiver);
 
 ALTER PUBLICATION supabase_realtime
 ADD TABLE public.notifications;
+
+
+GRANT ALL ON TABLE public.notifications TO authenticated;

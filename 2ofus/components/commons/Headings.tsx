@@ -6,24 +6,26 @@ const Headings = ({
     heading,
     subheading,
     paragraph = "",
+    headingColor = ""
 }: {
     heading: string;
     subheading?: string;
     paragraph?: string;
     className?: string;
+    headingColor?: string;
 }) => {
     return (
         <div className={`px-4 py-5 flex flex-col gap-2 ${className} ${!className.split(" ").some(cls => cls.startsWith("w-")) ? "w-full" : ""}`}>
 
             {/* Heading */}
-            <h1 className="
+            <h1 className={`
                 font-rubik
                 text-2xl sm:text-3xl lg:text-4xl
                 font-bold
                 tracking-tight
                 leading-tight
-                text-primary-text
-            ">
+                ${headingColor.length > 0 ? headingColor : "text-primary-text"}
+            `}>
                 {heading}
             </h1>
 

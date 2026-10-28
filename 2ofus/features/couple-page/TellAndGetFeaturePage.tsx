@@ -2,14 +2,15 @@
 
 import Headings from "@/components/commons/Headings";
 import Button from "@/components/commons/Button";
-import { Clock } from "lucide-react";
+import { Clock, Heart, HeartCrack } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useThemeSettings } from "@/app/theme-provider";
+import Liking from "../tell-and-get/Liking";
 
 const TellAndGetFeaturePage = () => {
 
     const { theme } = useThemeSettings();
-    const [selected, setSelected] = useState(localStorage.getItem("t&gValue") ?? "liking");
+    const [selected, setSelected] = useState("liking");
 
     useEffect(() => {
         const savedValue = localStorage.getItem("t&gValue");
@@ -37,29 +38,39 @@ const TellAndGetFeaturePage = () => {
             <div className="w-full flex flex-col gap-5 items-center px-5">
 
                 <nav className="w-full rounded-full h-10 flex p-1"
-                style={{
-                    backgroundColor: theme === "light" ? "white" : "black"
-                }}>
-                    <button className="w-full rounded-full h-full flex items-center justify-center cursor-pointer"
                     style={{
-                        backgroundColor: selected === "liking" ? "var(--accent)" : "inherit",
-                        color: selected === "liking" ? "white" : "var(--primary-text)"
-                    }}
-                    onClick={() => setSelected("liking")}
+                        backgroundColor: theme === "light" ? "white" : "black"
+                    }}>
+                    <button className={`w-full rounded-full h-full flex gap-5 items-center justify-center cursor-pointer
+                    ${selected === "liking"
+                            ? "trans-accent border-2 border-solid border-accent"
+                            : ""}`}
+                        style={{
+                            color: selected === "liking" ? "white" : "var(--primary-text)"
+                        }}
+                        onClick={() => setSelected("liking")}
                     >
+                        <Heart />
                         Liking
-                    </button> 
+                    </button>
 
-                    <button className="w-full rounded-full h-full flex items-center justify-center cursor-pointer"
-                    style={{
-                        backgroundColor: selected === "unliking" ? "var(--accent)" : "inherit",
-                        color: selected === "unliking" ? "white" : "var(--primary-text)"
-                    }}
-                    onClick={() => setSelected("unliking")}
+                    <button className={`w-full rounded-full h-full flex items-center gap-5 justify-center cursor-pointer
+                    ${selected === "unliking"
+                            ? "trans-accent border-2 border-solid border-accent"
+                            : ""}`}
+                        style={{
+                            color: selected === "unliking" ? "white" : "var(--primary-text)"
+                        }}
+                        onClick={() => setSelected("unliking")}
                     >
+                        <HeartCrack />
                         Unliking
                     </button>
                 </nav>
+
+                <div className="w-full">
+                    <Liking />
+                </div>
             </div>
         </div>
     </div>
