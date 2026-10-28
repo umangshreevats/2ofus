@@ -11,6 +11,7 @@ import coupleBeach from "./../public/CoupleBeach.jpg";
 import coupleNote from "./../public/CoupleNote.jpg";
 import coupleAlbum from "./../public/CoupleAlbum.jpg";
 import question from "./../public/Question.jpg";
+import addMorePhoto from "./../public/AddMorePhoto.png";
 
 export {
     frontImage,
@@ -25,5 +26,6 @@ export {
     coupleAlbum,
     coupleBeach,
     coupleNote,
-    question
+    question,
+    addMorePhoto
 }

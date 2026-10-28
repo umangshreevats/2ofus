@@ -26,30 +26,30 @@ export const backgroundTextStyles = (
 ) => {
     if (blackAndWhite) {
         return {
-            backgroundColor: properties.backgroundColor
-                ? `var(--${properties.backgroundColor}, ${properties.backgroundColor})`
-                : theme === "light" ? "white" : "black",
+            backgroundColor: properties.backgroundColor.length === 0 ?
+                theme === "light" ? "white" : "black" : properties.backgroundColor === "inherit" ? "inherit" :
+                 `var(--${properties.backgroundColor}, ${properties.backgroundColor})`,
 
-            color: properties.textColor
-                ? `var(--${properties.textColor}, ${properties.textColor})`
-                : theme === "light" ? "black" : "white",
+            color: properties.textColor.length === 0 ?
+            theme === "light" ? "black" : "white"
+                : `var(--${properties.textColor}, ${properties.textColor})`,
 
-            borderColor: properties.borderColor
+            borderColor: properties.borderColor.length > 0
                 ? `var(--${properties.borderColor}, ${properties.borderColor})`
                 : theme === "light" ? "black" : "white"
         };
     }
 
     return {
-        backgroundColor: properties.backgroundColor
-            ? `var(--${properties.backgroundColor}, var(--background))`
-            : "var(--background)",
+        backgroundColor: properties.backgroundColor.length === 0
+            ? "var(--background)" : properties.backgroundColor === "inherit" ? "inherit" :
+                 `var(--${properties.backgroundColor}, ${properties.backgroundColor})`,
 
-        color: properties.textColor
+        color: properties.textColor.length > 0
             ? `var(--${properties.textColor}, var(--primary-text))`
             : "var(--primary-text)",
 
-        borderColor: properties.borderColor
+        borderColor: properties.borderColor.length > 0
             ? `var(--${properties.borderColor}, var(--accent))`
             : "var(--accent)"
     };

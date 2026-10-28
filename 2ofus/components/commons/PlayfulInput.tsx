@@ -80,7 +80,7 @@ const PlayfulInput: React.FC<PlayfulInputProps> = ({
         style={{
             boxShadow: `
         inset 3px -3px 5px rgba(0,0,0,0.08),
-        inset -6px 6px 0px 0px var(--${borderColor})
+        inset -6px 6px 0px 0px var(--${borderColor}, ${borderColor})
     `,
             height: `${height === "auto" ? height : height + hScale}`,
             padding: `${padding}${pScale}`,

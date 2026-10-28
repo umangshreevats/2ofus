@@ -5,9 +5,8 @@ import { useEffect, useState, useRef } from "react";
 const Photograph = ({
     photograph = null,
     alternate,
-    fwidth = "auto",
+    showTitle = true,
     fheight = "auto",
-    fwscale = "px",
     fhscale = "px",
     name = "",
     url = "",
@@ -31,6 +30,7 @@ const Photograph = ({
     mwscale?: "px" | "rem" | "%";
     mhscale?: "px" | "rem" | "%";
     name?: string;
+    showTitle?: boolean;
     date?: string;
     onClick?: (...args: any[]) => any | Promise<any>;
     cursor?: string;
@@ -120,7 +120,7 @@ const Photograph = ({
             </div>
 
             {/* Caption */}
-            <div className="flex flex-col items-center w-full min-w-0 gap-2 px-1 pb-1">
+            {showTitle && <div className="flex flex-col items-center w-full min-w-0 gap-2 px-1 pb-1">
                 <p
                     className="text-sm font-semibold text-center whitespace-normal break-words w-full"
                     style={{
@@ -149,7 +149,7 @@ const Photograph = ({
                         ♡
                     </span>
                 </div>
-            </div>
+            </div>}
         </div>
     );
 };

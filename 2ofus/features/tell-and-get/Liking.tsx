@@ -6,12 +6,17 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase/client";
 import HeartBeatLoader from "@/components/commons/HeartBeatLoader";
 import PlayfulInput from "@/components/commons/PlayfulInput";
+import Photograph from "@/components/commons/Photograph";
+import { addMorePhoto } from "@/data/images";
+import Button from "@/components/commons/Button";
 
 const Liking = () => {
     const [messagesLoading, setMessagesLoading] = useState(false);
     const [predefinedMessages, setPredefinedMessages] = useState<any[] | null>(null);
     const [selectedOption, setSelectedOption] = useState("");
     const [selectedOptionArray, setSelectedOptionArray] = useState<string[]>([]);
+
+    const [message, setMessage] = useState("");
 
 
     useEffect(() => {
@@ -81,6 +86,20 @@ const Liking = () => {
                                     {option} <Plus />
                                 </button>
                             ))}
+                        </div>
+
+                        <PlayfulInput onChange={(e) => setMessage(e.target.value)} placeholder="Write a message optional" text={message} textAlign="start" backgroundColor="inherit" textColor="#EC4899" textArea={true} />
+
+                        <div className="w-full py-5 flex gap-5 items-center">
+                            <label htmlFor="add-photo" className="aspect-square cursor-pointer">
+                                <Photograph url={addMorePhoto.src} alternate="Add More Image" showTitle={false} maxHeight={200} maxWidth={200} />
+                            </label>
+
+                            <input id="add-photo" type="file" className="hidden" />
+                        </div>
+
+                        <div className="w-full flex justiy-end">
+                            <Button type="button" text="Add Liking" textColor="white" className="bg-pink-500" backgroundColor="" />
                         </div>
                     </div>
                 </div>}
