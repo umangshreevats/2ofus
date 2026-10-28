@@ -1,7 +1,9 @@
+import TellAndGetFeaturePage from "@/features/couple-page/TellAndGetFeaturePage";
+
 export default async function TellAndGetPage() {
 
 
     return <section className="w-full min-h-screen">
-        This is tell and get page
+        <TellAndGetFeaturePage />
     </section>
 }
