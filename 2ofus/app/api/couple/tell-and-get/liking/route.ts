@@ -2,7 +2,7 @@ import { createClient } from "@/utils/supabase/server";
 import { getCurrentUser } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { encrypt } from "@/lib/encryption";
-import { uploadTellAndGetImage, getStoragePath } from "@/lib/supabase/storage";
+import { uploadTellAndGetImage } from "@/lib/supabase/storage";
 
 
 
@@ -87,7 +87,8 @@ export const POST = async (request: NextRequest) => {
             .insert({
                 sender: user.id,
                 receiver: coupleData.partner_1 === user.id ? coupleData.partner_2 : coupleData.partner_1,
-                title: "Your partner shared a liking for you",
+                title: "Your partner shared a un-liking for you",
+                image: imageUrl
             }).select();
 
         if (notificationError || notificationData) {
