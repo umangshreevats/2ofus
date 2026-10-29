@@ -2,7 +2,7 @@ import { createClient } from "@/utils/supabase/server";
 import { getCurrentUser } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { encrypt } from "@/lib/encryption";
-import { uploadTellAndGetImage } from "@/lib/supabase/storage";
+import { uploadTellAndGetImage, getStoragePath } from "@/lib/supabase/storage";
 
 
 
@@ -51,10 +51,19 @@ export const POST = async (request: NextRequest) => {
         }
 
         const image = formData.get("image");
-
+        let imageUrl = null;
         if (image && image instanceof File) {
             const { path } = await uploadTellAndGetImage(supabase, image, coupleData.id, "liking");
             insertValues.image_id = path;
+
+            // image url extraction for notification
+            const { data: imageURL, error: imageURLError } = await supabase.storage
+                .from("liking-unliking")
+                .createSignedUrl(insertValues.image, 3600);
+
+            if (imageURLError) throw imageURLError;
+
+            imageUrl = imageURL.signedUrl;
         }
 
         const { data, error } = await supabase
@@ -70,6 +79,19 @@ export const POST = async (request: NextRequest) => {
                 { message: "Internal Server Error: An error occured while saving the informations" },
                 { status: 500 }
             );
+        }
+
+        // Notification
+        const { data: notificationData, error: notificationError } = await supabase
+            .from("notifications")
+            .insert({
+                sender: user.id,
+                receiver: coupleData.partner_1 === user.id ? coupleData.partner_2 : coupleData.partner_1,
+                title: "Your partner shared a liking for you",
+            }).select();
+
+        if (notificationError || notificationData) {
+            console.error("Some problem with notifications: ", notificationError);
         }
 
         return NextResponse.json(
