@@ -1,7 +1,7 @@
 "use client";
 
 import Headings from "@/components/commons/Headings";
-import { HeartPlus, Plus } from "lucide-react";
+import { HeartCrack } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase/client";
 import HeartBeatLoader from "@/components/commons/HeartBeatLoader";
@@ -54,18 +54,18 @@ const Unliking = () => {
 
         getMessages();
     }, []);
-    return <div className="w-full rounded-2xl p-5 border border-solid border-pink-500 bg-pink-500/5 text-pink-500">
+    return <div className="w-full rounded-2xl p-5 border border-solid border-violet-500 bg-violet-500/5 text-violet-500">
 
         {/*Top section*/}
         <div className="w-full flex gap-5 items-center">
-            <div className="border border-solid border-pink-500 rounded-full p-5">
-                <HeartPlus />
+            <div className="border border-solid border-violet-500 rounded-full p-5">
+                <HeartCrack />
             </div>
 
             <Headings
-                heading="Express What you like or appriciate"
-                paragraph="Let your partner know a little(or big) things that mean a lot."
-                headingColor="text-pink-500"
+                heading="Express What you're feeling or struggling with"
+                paragraph="It's ok to have tough days. Share how you feel, and let your partner know."
+                headingColor="text-violet-500"
             />
         </div>
 
@@ -97,11 +97,11 @@ const Unliking = () => {
                         <input type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Search for an option... (for eg, cooking, caring, funny supportive)"
+                            placeholder="Search for an option... (for eg, lonely, overwhelmed, need attention)"
                             className={`w-full p-2 outline-none 
                         rounded-lg shadow-lg ${theme === "light" ? "bg-white" : "bg-black"} text-primary-text`} />
 
-                        {/*Navigation through the predefined messages through the category of liking*/}
+                        {/*Navigation through the predefined messages through the category of un-liking*/}
                         <div className="w-full flex flex-wrap gap-2">
                             {filteredOptions.map((option, i) => (
                                 <button key={i} 
@@ -118,7 +118,7 @@ const Unliking = () => {
                         </div>
 
                         {/*Message box for typing personal message*/}
-                        <PlayfulInput onChange={(e) => setMessage(e.target.value)} placeholder="Write a message optional" text={message} textAlign="start" backgroundColor="inherit" textColor="#EC4899" textArea={true} />
+                        <PlayfulInput onChange={(e) => setMessage(e.target.value)} placeholder="Write a message optional" text={message} textAlign="start" backgroundColor="inherit" textColor="#8B5CF6" textArea={true} />
 
 
                         {/*Photograph section*/}
@@ -132,7 +132,7 @@ const Unliking = () => {
 
                         {/*Submit button*/}
                         <div className="w-full flex justiy-end">
-                            <PlayfulButton type="button" text="Add Liking" textColor="white" backgroundColor="#EC4899" borderColor="#EC4899" />
+                            <PlayfulButton type="button" text="Add Un-liking" textColor="white" backgroundColor="#8B5CF6" borderColor="#8B5CF6" />
                         </div>
                     </div>
                 </div>}

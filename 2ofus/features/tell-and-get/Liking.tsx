@@ -1,7 +1,7 @@
 "use client";
 
 import Headings from "@/components/commons/Headings";
-import { HeartPlus, Plus } from "lucide-react";
+import { HeartPlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase/client";
 import HeartBeatLoader from "@/components/commons/HeartBeatLoader";

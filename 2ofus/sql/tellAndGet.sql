@@ -1,3 +1,80 @@
+--Tell and Get Table creation
+CREATE TABLE public.tell_and_get (
+    id UUID PRIMARY KEY DEFAULT get_random_uuid(),
+    category public.message_category NOT NULL,
+    image_id TEXT,
+    predefined_messages JSONB DEFAULT '[]'::jsonb,
+    user_message JSONB,
+    user_id UUID REFERENCES public.users(id) NOT NULL ON DELETE CASCADE,
+    couple_id UUID REFERENCES public.couples(id) NOT NULL ON DELETE CASCADE,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    is_pinned BOOLEAN DEFAULT FALSE,
+
+    CONSTRAINT at_least_one_message_required
+    CHECK (
+        (
+            predefined_messages IS NOT NULL
+            AND predefined_messages <> '[]'::jsonb
+        )
+        OR user_message IS NOT NULL
+    )
+);
+
+
+ALTER TABLE public.tell_and_get
+ENABLE ROW LEVEL SECURITY;
+
+--Policies
+CREATE POLICY "authenticated users can read their own likings and unlikings"
+ON public.tell_and_get
+FOR SELECT
+TO authenticated
+USING (user_id = auth.uid()
+       AND EXISTS(
+        SELECT 1 FROM public.couples c
+        WHERE c.id = couple_id
+        AND (
+            c.partner_1 = auth.uid() OR
+            c.partner_2 = auth.uid()
+        )
+       )
+);
+
+
+CREATE POLICY "authenticated users can insert in the likings and unlikings"
+ON public.tell_and_get
+FOR INSERT
+TO authenticated
+WITH CHECK(
+    user_id = auth.uid()
+);
+
+
+CREATE POLICY "authenticated users can update their own likings and unlikings"
+ON public.tell_and_get
+FOR UPDATE
+TO authenticated
+USING(user_id = auth.uid())
+WITH CHECK(
+    user_id = auth.uid()
+);
+
+
+CREATE POLICY "authenticated users can delete their own likings and unlikings"
+ON public.tell_and_get
+FOR DELETE
+TO authenticated
+USING(user_id = auth.uid());
+
+
+GRANT ALL ON public.tell_and_get TO authenticated;
+
+
+
+
+
+
 -- Predefined messages
 CREATE TYPE public.message_category AS ENUM ('liking', 'unliking');
 
