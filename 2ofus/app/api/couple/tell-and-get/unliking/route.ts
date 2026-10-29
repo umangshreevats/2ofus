@@ -28,7 +28,7 @@ export const POST = async (request: NextRequest) => {
         }
         const supabase = await createClient();
         const formData = await request.formData();
-        const predefined_messages = formData.get("predefinedMessages");
+        const predefined_messages = (formData.get("predefinedMessages") as string);
         const user_message = (formData.get("userMessage") as string);
 
 
@@ -40,7 +40,7 @@ export const POST = async (request: NextRequest) => {
 
 
         if (predefined_messages) {
-            const encryptedPredefinedMessages = encrypt(JSON.stringify(predefined_messages));
+            const encryptedPredefinedMessages = encrypt(predefined_messages);
             insertValues.predefined_messages = encryptedPredefinedMessages;
         }
 

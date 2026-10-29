@@ -28,7 +28,7 @@ export const POST = async (request: NextRequest) => {
         }
         const supabase = await createClient();
         const formData = await request.formData();
-        const predefined_messages = formData.get("predefinedMessages");
+        const predefined_messages = (formData.get("predefinedMessages") as string);
         const user_message = (formData.get("userMessage") as string);
 
 
@@ -40,7 +40,7 @@ export const POST = async (request: NextRequest) => {
 
 
         if (predefined_messages) {
-            const encryptedPredefinedMessages = encrypt(JSON.stringify(predefined_messages));
+            const encryptedPredefinedMessages = encrypt(predefined_messages);
             insertValues.predefined_messages = encryptedPredefinedMessages;
         }
 
@@ -59,11 +59,13 @@ export const POST = async (request: NextRequest) => {
             // image url extraction for notification
             const { data: imageURL, error: imageURLError } = await supabase.storage
                 .from("liking-unliking")
-                .createSignedUrl(insertValues.image, 3600);
+                .createSignedUrl(path, 3600);
 
-            if (imageURLError) throw imageURLError;
 
-            imageUrl = imageURL.signedUrl;
+            if (imageURLError) {
+                console.error(imageURLError);
+                imageUrl = null;
+            } else imageUrl = imageURL.signedUrl;
         }
 
         const { data, error } = await supabase
@@ -86,8 +88,8 @@ export const POST = async (request: NextRequest) => {
             .from("notifications")
             .insert({
                 sender: user.id,
-                receiver: coupleData.partner_1 === user.id ? coupleData.partner_2 : coupleData.partner_1,
-                title: "Your partner shared a un-liking for you",
+                receiver: coupleData.partner_1 === user.id ? coupleData.partner_2.id : coupleData.partner_1.id,
+                title: "Your partner shared an un-liking for you",
                 image: imageUrl
             }).select();
 

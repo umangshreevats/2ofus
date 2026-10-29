@@ -118,6 +118,48 @@ export async function uploadMemoryImage(
     return { path: data.path };
 }
 
+type TellAndGetCategory = "liking" | "unliking";
+
+export async function uploadTellAndGetImage(
+    supabase: SupabaseClient,
+    file: File,
+    coupleId: string,
+    category: TellAndGetCategory
+) {
+    const allowedTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+        throw new Error("Only JPEG, PNG and WebP images are allowed.");
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+        throw new Error("Image size must be less than 10MB.");
+    }
+
+    const fileExtension = file.type.split("/")[1];
+
+    const filePath = `${category}/${coupleId}/${crypto.randomUUID()}.${fileExtension}`;
+
+    const { data, error } = await supabase.storage
+        .from("liking-unliking")
+        .upload(filePath, file, {
+            contentType: file.type,
+            upsert: false
+        });
+
+    if (error) {
+        throw new Error(error.message);
+    }
+
+    return {
+        path: data.path
+    };
+}
+
 
 // path finder
 export function getStoragePath(url: string, bucket: string) {
