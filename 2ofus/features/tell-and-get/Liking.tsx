@@ -20,6 +20,8 @@ const Liking = () => {
     const [predefinedMessages, setPredefinedMessages] = useState<any[] | null>(null);
     const [selectedOption, setSelectedOption] = useState("");
     const [selectedOptionArray, setSelectedOptionArray] = useState<string[]>([]);
+
+    const[pickedOption, setPickedOption] = useState<string>("");
     const [searchQuery, setSearchQuery] = useState("");
     const [message, setMessage] = useState("");
 
@@ -102,8 +104,15 @@ const Liking = () => {
                         {/*Navigation through the predefined messages through the category of liking*/}
                         <div className="w-full flex flex-wrap gap-2">
                             {filteredOptions.map((option, i) => (
-                                <button key={i} className="p-3 flex gap-3 cursor-pointer shadow-md bg-surface text-primary-text rounded-2xl">
-                                    {option} <Plus />
+                                <button key={i} 
+                                onClick={() => setPickedOption(prev => {
+                                    if(prev === option) return "";
+
+                                    return option
+                                })}
+                                disabled={pickedOption.length > 0 && option !== pickedOption} className={`p-3 disabled:cursor-not-allowed flex gap-3 cursor-pointer 
+                                shadow-md ${(pickedOption.length > 0 && option !== pickedOption) ? "trans-surface" : "bg-surface"} text-primary-text rounded-2xl`}>
+                                    {option}
                                 </button>
                             ))}
                         </div>
