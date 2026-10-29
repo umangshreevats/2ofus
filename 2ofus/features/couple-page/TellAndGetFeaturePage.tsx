@@ -6,6 +6,7 @@ import { Clock, Heart, HeartCrack } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useThemeSettings } from "@/app/theme-provider";
 import Liking from "../tell-and-get/Liking";
+import Unliking from "../tell-and-get/Unliking";
 
 const TellAndGetFeaturePage = () => {
 
@@ -69,7 +70,8 @@ const TellAndGetFeaturePage = () => {
                 </nav>
 
                 <div className="w-full">
-                    <Liking />
+                    {selected === "liking" && <Liking />}
+                    {selected === "unliking" && <Unliking />}
                 </div>
             </div>
         </div>
