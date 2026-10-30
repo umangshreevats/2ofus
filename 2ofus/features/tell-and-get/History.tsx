@@ -4,11 +4,12 @@ import Headings from "@/components/commons/Headings";
 import RedirectButton from "@/components/commons/RedirectButton";
 import { useState } from "react";
 import { useThemeSettings } from "@/app/theme-provider";
+import Pagination from "@/components/commons/Pagination";
+import Link from "next/link";
 
 
-const History = () => {
+const History = ({ historyData, totalPages, currentPage, category }: { historyData: any[], totalPages: number, currentPage: number, category: "liking" | "unliking" | null }) => {
 
-    const [selectedOption, setSelectedOption] = useState<"liking" | "unliking" | "all">("all");
     const { theme } = useThemeSettings();
 
     const finalBg = theme === "light" ? "bg-white border-black text-black" : "bg-black border-white text-white";
@@ -35,28 +36,44 @@ const History = () => {
                     <nav>
                         <ul className="flex gap-2">
                             <li>
-                                <button type="button" onClick={() => setSelectedOption("liking")}
-                                className={`p-2 rounded-md cursor-pointer border ${selectedOption === "liking" ? "bg-accent text-white" : finalBg}`}>
+                                <Link href={`/home/my-couple/tell-and-get/history?category=liking&page=1`}
+                                className={`p-2 rounded-md cursor-pointer border ${category === "liking" ? "bg-accent text-white" : finalBg}`}>
                                     Liking
-                                </button>
+                                </Link>
                             </li>
 
                             <li>
-                                <button type="button" onClick={() => setSelectedOption("unliking")}
-                                className={`p-2 rounded-md cursor-pointer border ${selectedOption === "unliking" ? "bg-accent text-white" : finalBg}`}>
+                                <Link href={`/home/my-couple/tell-and-get/history?category=unliking&page=1`}
+                                className={`p-2 rounded-md cursor-pointer border ${category === "unliking" ? "bg-accent text-white" : finalBg}`}>
                                     Unlking
-                                </button> 
+                                </Link> 
                             </li>
 
                             <li>
-                                <button type="button" onClick={() => setSelectedOption("all")}
-                                className={`p-2 rounded-md cursor-pointer border ${selectedOption === "all" ? "bg-accent text-white" : finalBg}`}>
+                                <Link href={`/home/my-couple/tell-and-get/history?page=1`}
+                                className={`p-2 rounded-md cursor-pointer border ${category === null ? "bg-accent text-white" : finalBg}`}>
                                     All
-                                </button>
+                                </Link>
                             </li>
                         </ul>
                     </nav>
                 </div>
+
+
+                <div className="w-full">
+                    <div className="inline-block w-16 h-full">
+
+                    </div>
+
+                    <div className="flex-1 flex-col gap-5 flex items-center">
+                        here will all history elements go
+                    </div>
+                </div>
+
+                <Pagination numPage={currentPage} numberOfPages={totalPages} 
+                q={category ? [`category=${category}`] : []}
+                url="/home/my-couple/tell-and-get/history" 
+                />
             </div>
         </div>
     </div>

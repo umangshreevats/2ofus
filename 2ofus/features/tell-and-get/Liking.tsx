@@ -27,7 +27,7 @@ const Liking = () => {
     const [message, setMessage] = useState("");
     const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
 
-    const filteredOptions = selectedOptionArray.filter((option) =>
+    let filteredOptions = selectedOptionArray.filter((option) =>
         option.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
@@ -58,9 +58,9 @@ const Liking = () => {
             formData.append("predefinedMessages", JSON.stringify(pickedOptions));
             formData.append("userMessage", message);
 
-            if(selectedPhoto && selectedPhoto instanceof File) {
+            if (selectedPhoto && selectedPhoto instanceof File) {
                 formData.append("image", selectedPhoto);
-            } 
+            }
 
             const response = await fetch("/api/couple/tell-and-get/liking", {
                 method: "POST",
@@ -69,8 +69,8 @@ const Liking = () => {
 
             const result = await response.json();
 
-            if(!response.ok) {
-                console.error("An error occured"+result.message);
+            if (!response.ok) {
+                console.error("An error occured" + result.message);
                 return;
             }
 
@@ -85,28 +85,35 @@ const Liking = () => {
 
     // Effects
     useEffect(() => {
-
         async function getMessages() {
-
             setMessagesLoading(true);
-            const { data: predefinedMessagesServer, error: predefinedMessagesError } = await supabase
+
+            const { data: predefinedMessagesServer, error } = await supabase
                 .from("predefined_messages")
                 .select("*")
                 .eq("category", "liking");
 
-            if (predefinedMessagesError || !predefinedMessagesServer) {
+            if (error || !predefinedMessagesServer || predefinedMessagesServer.length === 0) {
                 setPredefinedMessages(null);
                 setMessagesLoading(false);
                 return;
             }
+
             setPredefinedMessages(predefinedMessagesServer);
+
+            // Set the first category as selected
             setSelectedOption(predefinedMessagesServer[0].id);
-            setSelectedOption(predefinedMessagesServer[0].options);
+
+            // Set its options
+            setSelectedOptionArray(predefinedMessagesServer[0].options);
+
             setMessagesLoading(false);
         }
 
         getMessages();
     }, []);
+
+
     return <div className="w-full rounded-2xl p-5 border border-solid border-pink-500 bg-pink-500/5 text-pink-500">
 
         {/*Top section*/}

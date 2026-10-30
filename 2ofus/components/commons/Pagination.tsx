@@ -8,7 +8,7 @@ interface PaginationProps {
     query?: string;
     numPage: number;
     numberOfPages: number;
-    numbers: number[];
+    numbers?: number[];
     url: string;
     q?: string[];
 }
@@ -22,6 +22,12 @@ const Pagination = ({
     q = []
 }: PaginationProps) => {
 
+    if (!numbers) {
+        numbers = Array.from(
+            { length: numberOfPages },
+            (_, index) => index + 1
+        );
+    }
     const currentPage = Number(numPage) || 0;
 
     const getPageUrl = (page: number) => {

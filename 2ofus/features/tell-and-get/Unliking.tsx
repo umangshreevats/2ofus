@@ -86,28 +86,35 @@ const Unliking = () => {
 
     // Effects
     useEffect(() => {
-
         async function getMessages() {
-
             setMessagesLoading(true);
-            const { data: predefinedMessagesServer, error: predefinedMessagesError } = await supabase
+
+            const { data: predefinedMessagesServer, error } = await supabase
                 .from("predefined_messages")
                 .select("*")
                 .eq("category", "unliking");
 
-            if (predefinedMessagesError || !predefinedMessagesServer) {
+            if (error || !predefinedMessagesServer || predefinedMessagesServer.length === 0) {
                 setPredefinedMessages(null);
                 setMessagesLoading(false);
                 return;
             }
+
             setPredefinedMessages(predefinedMessagesServer);
+
+            // Set the first category as selected
             setSelectedOption(predefinedMessagesServer[0].id);
-            setSelectedOption(predefinedMessagesServer[0].options);
+
+            // Set its options
+            setSelectedOptionArray(predefinedMessagesServer[0].options);
+
             setMessagesLoading(false);
         }
 
         getMessages();
     }, []);
+
+
     return <div className="w-full rounded-2xl p-5 border border-solid border-violet-500 bg-violet-500/5 text-violet-500">
 
         {/*Top section*/}
