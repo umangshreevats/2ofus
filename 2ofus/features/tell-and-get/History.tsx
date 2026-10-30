@@ -2,13 +2,12 @@
 
 import Headings from "@/components/commons/Headings";
 import RedirectButton from "@/components/commons/RedirectButton";
-import { useState } from "react";
 import { useThemeSettings } from "@/app/theme-provider";
 import Pagination from "@/components/commons/Pagination";
 import Link from "next/link";
 import type { TellAndGet } from "@/types/tell-and-get";
 import Sharing from "@/components/couple-profile/tellandget/Sharing";
-import { Heart, HeartCrack } from "lucide-react";
+import { HeartPlus, HeartCrack } from "lucide-react";
 
 const History = ({ historyData, totalPages, currentPage, category }: { historyData: TellAndGet[], totalPages: number, currentPage: number, category: "liking" | "unliking" | null }) => {
 
@@ -77,7 +76,7 @@ const History = ({ historyData, totalPages, currentPage, category }: { historyDa
                                 }`}
                             >
                                 {sharing.category === "liking"
-                                    ? <Heart size={20} />
+                                    ? <HeartPlus size={20} />
                                     : <HeartCrack size={20} />
                                 }
                             </div>

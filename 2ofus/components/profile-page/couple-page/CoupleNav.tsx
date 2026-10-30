@@ -14,7 +14,6 @@ const CoupleNav = ({ openNav, setOpenNav }: { openNav?: boolean, setOpenNav?: Re
         { name: "Home", icon: Home, href: "/home/my-couple", onClick: () => setOpenNav?.(false) },
         { name: "Know Me", icon: Brain, href: "/home/my-couple/know-me", onClick: () => setOpenNav?.(false) },
         { name: "Tell & Get", icon: MessagesSquare, href: "/home/my-couple/tell-and-get", onClick: () => setOpenNav?.(false) },
-        { name: "Fun", icon: Gamepad2, href: "/home/my-couple/fun", onClick: () => setOpenNav?.(false) },
         { name: "Your Album", icon: Library, href: "/home/my-couple/album", onClick: () => setOpenNav?.(false) },
     ];
 

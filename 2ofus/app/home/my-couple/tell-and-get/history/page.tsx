@@ -46,7 +46,7 @@ export default async function TellAndGetHistoryPage({
         queryCount = queryCount.eq("category", category);
     }
 
-    const { data: historyData, error: historyError } = await query.range(from, to);
+    const { data: historyData, error: historyError } = await query.order("created_at", { ascending: false }).range(from, to);
 
     const { count } = await queryCount;
 

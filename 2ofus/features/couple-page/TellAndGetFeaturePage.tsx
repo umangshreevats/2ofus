@@ -7,10 +7,12 @@ import { useState, useEffect } from "react";
 import { useThemeSettings } from "@/app/theme-provider";
 import Liking from "../tell-and-get/Liking";
 import Unliking from "../tell-and-get/Unliking";
+import { useRouter } from "next/navigation";
 
 const TellAndGetFeaturePage = () => {
 
     const { theme } = useThemeSettings();
+    const router = useRouter();
     const [selected, setSelected] = useState("liking");
 
     useEffect(() => {
@@ -33,7 +35,7 @@ const TellAndGetFeaturePage = () => {
                     paragraph="Share your feelings, express appreciation and be there for each other"
                 />
 
-                <Button type="button" text="History" icon={Clock} />
+                <Button type="button" text="History" onClick={() => router.push("/home/my-couple/tell-and-get/history") } icon={Clock} />
             </div>
 
             <div className="w-full flex flex-col gap-5 items-center px-5">
