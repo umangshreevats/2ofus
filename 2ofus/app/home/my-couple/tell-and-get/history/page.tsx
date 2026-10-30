@@ -35,19 +35,20 @@ export default async function TellAndGetHistoryPage({
             email
         )`)
         .eq("couple_id", coupleData.id);
+    let queryCount = 
+    supabase.from('tell_and_get')
+        .select(`*`, { count: "exact", head: true })
+        .eq("couple_id", coupleData.id);
 
 
     if (category) {
         query = query.eq("category", category);
+        queryCount = queryCount.eq("category", category);
     }
 
     const { data: historyData, error: historyError } = await query.range(from, to);
 
-    console.log(historyData);
-    const { count } = await supabase
-        .from('tell_and_get')
-        .select('*', { count: "exact", head: true })
-        .eq('couple_id', coupleData.id);
+    const { count } = await queryCount;
 
 
     if (count) {
