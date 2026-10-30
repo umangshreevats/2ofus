@@ -6,9 +6,10 @@ import { useState } from "react";
 import { useThemeSettings } from "@/app/theme-provider";
 import Pagination from "@/components/commons/Pagination";
 import Link from "next/link";
+import type { TellAndGet } from "@/types/tell-and-get";
+import Sharing from "@/components/couple-profile/tellandget/Sharing";
 
-
-const History = ({ historyData, totalPages, currentPage, category }: { historyData: History[], totalPages: number, currentPage: number, category: "liking" | "unliking" | null }) => {
+const History = ({ historyData, totalPages, currentPage, category }: { historyData: TellAndGet[], totalPages: number, currentPage: number, category: "liking" | "unliking" | null }) => {
 
     const { theme } = useThemeSettings();
     const [history, setHistory] = useState(historyData);
@@ -38,21 +39,21 @@ const History = ({ historyData, totalPages, currentPage, category }: { historyDa
                         <ul className="flex gap-2">
                             <li>
                                 <Link href={`/home/my-couple/tell-and-get/history?category=liking&page=1`}
-                                className={`p-2 rounded-md cursor-pointer border ${category === "liking" ? "bg-accent text-white" : finalBg}`}>
+                                    className={`p-2 rounded-md cursor-pointer border ${category === "liking" ? "bg-accent text-white" : finalBg}`}>
                                     Liking
                                 </Link>
                             </li>
 
                             <li>
                                 <Link href={`/home/my-couple/tell-and-get/history?category=unliking&page=1`}
-                                className={`p-2 rounded-md cursor-pointer border ${category === "unliking" ? "bg-accent text-white" : finalBg}`}>
-                                    Unlking
-                                </Link> 
+                                    className={`p-2 rounded-md cursor-pointer border ${category === "unliking" ? "bg-accent text-white" : finalBg}`}>
+                                    Unliking
+                                </Link>
                             </li>
 
                             <li>
                                 <Link href={`/home/my-couple/tell-and-get/history?page=1`}
-                                className={`p-2 rounded-md cursor-pointer border ${category === null ? "bg-accent text-white" : finalBg}`}>
+                                    className={`p-2 rounded-md cursor-pointer border ${category === null ? "bg-accent text-white" : finalBg}`}>
                                     All
                                 </Link>
                             </li>
@@ -61,19 +62,23 @@ const History = ({ historyData, totalPages, currentPage, category }: { historyDa
                 </div>
 
 
-                <div className="w-full">
-                    <div className="inline-block w-16 h-full">
+                <div className="w-full flex">
+                    <div className="w-16 shrink-0">
 
                     </div>
 
-                    <div className="flex-1 flex-col gap-5 flex items-center">
-                        here will all history elements go
+                    <div className="flex-1 flex flex-col gap-5 items-center min-w-0">
+                        {historyData.map((sharing) => (
+                            <div key={sharing.id} className="w-full">
+                                <Sharing sharingInfo={sharing} />
+                            </div>
+                        ))}
                     </div>
                 </div>
 
-                <Pagination numPage={currentPage} numberOfPages={totalPages} 
-                q={category ? [`category=${category}`] : []}
-                url="/home/my-couple/tell-and-get/history" 
+                <Pagination numPage={currentPage} numberOfPages={totalPages}
+                    q={category ? [`category=${category}`] : []}
+                    url="/home/my-couple/tell-and-get/history"
                 />
             </div>
         </div>

@@ -43,7 +43,7 @@ export default async function TellAndGetHistoryPage({
 
     const { data: historyData, error: historyError } = await query.range(from, to);
 
-
+    console.log(historyData);
     const { count } = await supabase
         .from('tell_and_get')
         .select('*', { count: "exact", head: true })
@@ -99,6 +99,9 @@ export default async function TellAndGetHistoryPage({
 
 
     return <section className="w-full">
-        <History historyData={updatedHistoryData ?? []} totalPages={totalPages} currentPage={currentPage} category={category ?? null} />
+        <History historyData={updatedHistoryData ?? []} 
+        totalPages={totalPages} 
+        currentPage={currentPage} 
+        category={category ?? null} />
     </section>
 }
