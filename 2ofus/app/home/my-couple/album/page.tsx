@@ -14,32 +14,65 @@ interface PageProps {
 
 export default async function AlbumPage({ searchParams }: PageProps) {
 
+    const memoryTypes = ["image", "note"];
     const { m, page } = await searchParams;
     const supabase = await createClient();
     const { coupleData } = await getCurrentUser();
 
     // Pagination: Request for the album items, based on page and the memory: m selected
     const currentPage = Math.max(1, Number(page) || 1);
-    const limit = 2;
+    const limit = 10;
     const from = (currentPage - 1) * limit;
     const to = from + limit - 1;
 
-    let query = supabase
-        .from("memory")
-        .select("*", { count: "exact" })
-        .eq("couple_id", coupleData.id);
+
+    let albumData = null;
+
+    let queryCount = supabase
+    .from("memory")
+    .select("*", { count: "exact", head: true })
+    .eq("couple_id", coupleData.id);
+
+    if(m && m !== "all") {
+        queryCount = queryCount.eq("content_type", m);
+    }
+
+
+    const fetchMemory = async (contentType: string) => {
+        let query = supabase
+            .from("memory")
+            .select("*")
+            .eq("couple_id", coupleData.id)
+            .eq("content_type", contentType);
+
+        const { data: albumData, error: albumDataError } = await query
+            .order("created_at", { ascending: false })
+            .range(from, to);
+
+        if (albumDataError) {
+            console.error(albumDataError);
+        }
+
+        return albumData;
+    }
 
     if (m && m !== "all") {
-        query = query.eq("content_type", m);
+        const memories = await fetchMemory(m);
+        albumData = memories;
+    } else {
+        const completeAlbum = await Promise.all(
+            memoryTypes.map(async (m) => {
+                const memories = await fetchMemory(m);
+
+                return memories;
+            })
+        );
+
+        albumData = completeAlbum.flat();
     }
 
-    const { data: albumData, error: albumDataError, count } = await query
-        .order("created_at", { ascending: false })
-        .range(from, to);
 
-    if (albumDataError) {
-        console.error(albumDataError);
-    }
+    const { count } = await queryCount;
 
     // Getting the url of the images, that are stored privately in the bucket
     const updatedAlbumData = await Promise.all(
