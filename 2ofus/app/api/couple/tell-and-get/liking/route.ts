@@ -53,19 +53,11 @@ export const POST = async (request: NextRequest) => {
         const image = formData.get("image");
         let imageUrl = null;
         if (image && image instanceof File) {
-            const { path } = await uploadTellAndGetImage(supabase, image, coupleData.id, "liking");
+            const { url, path } = await uploadTellAndGetImage(supabase, image, coupleData.id, "liking");
             insertValues.image_id = path;
 
             // image url extraction for notification
-            const { data: imageURL, error: imageURLError } = await supabase.storage
-                .from("liking-unliking")
-                .createSignedUrl(path, 3600);
-
-
-            if (imageURLError) {
-                console.error(imageURLError);
-                imageUrl = null;
-            } else imageUrl = imageURL.signedUrl;
+            imageUrl = url;
         }
 
         const { data, error } = await supabase
@@ -88,12 +80,13 @@ export const POST = async (request: NextRequest) => {
             .from("notifications")
             .insert({
                 sender: user.id,
-                receiver: coupleData.partner_1 === user.id ? coupleData.partner_2.id : coupleData.partner_1.id,
+                receiver: coupleData.partner_1.id === user.id ? coupleData.partner_2.id : coupleData.partner_1.id,
                 title: "Your partner shared an un-liking for you",
-                image: imageUrl
+                image: imageUrl,
+                message: "Check what your partner has shared for you"
             }).select();
 
-        if (notificationError || notificationData) {
+        if (notificationError || !notificationData) {
             console.error("Some problem with notifications: ", notificationError);
         }
 
