@@ -8,9 +8,10 @@ import Pagination from "@/components/commons/Pagination";
 import Link from "next/link";
 
 
-const History = ({ historyData, totalPages, currentPage, category }: { historyData: any[], totalPages: number, currentPage: number, category: "liking" | "unliking" | null }) => {
+const History = ({ historyData, totalPages, currentPage, category }: { historyData: History[], totalPages: number, currentPage: number, category: "liking" | "unliking" | null }) => {
 
     const { theme } = useThemeSettings();
+    const [history, setHistory] = useState(historyData);
 
     const finalBg = theme === "light" ? "bg-white border-black text-black" : "bg-black border-white text-white";
 
