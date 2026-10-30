@@ -53,17 +53,12 @@ export const POST = async (request: NextRequest) => {
         const image = formData.get("image");
         let imageUrl = null;
         if (image && image instanceof File) {
-            const { path } = await uploadTellAndGetImage(supabase, image, coupleData.id, "unliking");
+            const { url, path } = await uploadTellAndGetImage(supabase, image, coupleData.id, "unliking");
             insertValues.image_id = path;
 
             // image url extraction for notification
-            const { data: imageURL, error: imageURLError } = await supabase.storage
-                .from("liking-unliking")
-                .createSignedUrl(insertValues.image, 3600);
 
-            if (imageURLError) throw imageURLError;
-
-            imageUrl = imageURL.signedUrl;
+            imageUrl = url;
         }
 
         const { data, error } = await supabase

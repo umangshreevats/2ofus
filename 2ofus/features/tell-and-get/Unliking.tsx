@@ -16,6 +16,7 @@ const Unliking = () => {
     // States and values
     const { theme } = useThemeSettings();
 
+    const [submitLoading, setSubmitLoading] = useState(false);
     const [messagesLoading, setMessagesLoading] = useState(false);
     const [predefinedMessages, setPredefinedMessages] = useState<any[] | null>(null);
     const [selectedOption, setSelectedOption] = useState("");
@@ -46,6 +47,39 @@ const Unliking = () => {
             ...prev,
             option
         ]));
+    }
+
+    // Submit function:
+    const handleSubmit = async () => {
+        setSubmitLoading(true);
+        try {
+
+            const formData = new FormData();
+            formData.append("predefinedMessages", JSON.stringify(pickedOptions));
+            formData.append("userMessage", message);
+
+            if(selectedPhoto && selectedPhoto instanceof File) {
+                formData.append("image", selectedPhoto);
+            } 
+
+            const response = await fetch("/api/couple/tell-and-get/unliking", {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if(!response.ok) {
+                console.error("An error occured"+result.message);
+                return;
+            }
+
+
+        } catch (err) {
+            console.error("An error occured");
+        } finally {
+            setSubmitLoading(false);
+        }
     }
 
 
@@ -159,7 +193,7 @@ const Unliking = () => {
 
                         {/*Submit button*/}
                         <div className="w-full flex justiy-end">
-                            <PlayfulButton type="button" text="Add Un-liking" textColor="white" backgroundColor="#8B5CF6" borderColor="#8B5CF6" />
+                            <PlayfulButton onClick={handleSubmit} type="button" text={submitLoading ? "Adding..." : `Add Un-liking`} textColor="white" backgroundColor="#8B5CF6" borderColor="#8B5CF6" />
                         </div>
                     </div>
                 </div>}
