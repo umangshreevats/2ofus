@@ -227,7 +227,7 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
                     }
 
 
-                    {(allowEdits && (selectedImage)) &&
+                    {(allowEdits && (selectedImage || (originalProfile.current && originalProfile.current.profile_image && !profile.profile_image))) &&
                     <Button type="button" onClick={handleSubmit} text={loading ? "Saving..." : "Save Changes"} disabled={loading} />}
                 </div>
 

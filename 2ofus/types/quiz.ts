@@ -4,7 +4,7 @@ export interface QuizInfoProps {
     questions: number;
     conductor_id: string;
     conductor: string;
-    title: string | { iv: string, authTag: string , encryptedData: string };
+    title: string;
     overall_score: number;
     status: "created" | "attempted";
     created_at: string;
@@ -14,13 +14,13 @@ export interface QuizInfoProps {
 
 export interface QuizQuestions {
     id: string;
-    question: string | { iv: string, authTag: string , encryptedData: string };
-    correct_options: string[] | { iv: string, authTag: string , encryptedData: string } | null;
-    answer_options: string[] | { iv: string, authTag: string , encryptedData: string } | null;
-    answered_options: string[] | { iv: string, authTag: string , encryptedData: string } | null;
-    written_answer: string | { iv: string, authTag: string , encryptedData: string } | null;
+    question: string;
+    correct_options: string[];
+    answer_options: string[] | null;
+    answered_options: string[] | null;
+    written_answer: string | null;
     score: number;
-    given_answer: string | { iv: string, authTag: string , encryptedData: string } | null;
+    given_answer: string | null;
     quiz_id: string;
     question_number: number;
     question_type: "multi-choice" | "multi-select" | "short-answer";
