@@ -11,7 +11,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     try {
         const supabase = await createClient();
-        const { user } = await getCurrentUser();
+        const { user, coupleData } = await getCurrentUser();
 
         if (!user) {
             return NextResponse.json(
@@ -28,6 +28,15 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
                 { status: 400 }
             );
         }
+
+        // Different user who is not a part of the same couple profile try to access the informations
+        if(!coupleData || (coupleData.id !== coupleId)) {
+            return NextResponse.json(
+                { message: "Forbidden" },
+                { status: 403 }
+            )
+        }
+
         const searchParams = request.nextUrl.searchParams;
 
         const limit = Number(searchParams.get("limit") ?? 20);
@@ -44,7 +53,11 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
             .range(skip, skip + limit - 1);
 
         if (memoryDataError) {
-            throw memoryDataError
+            console.error(memoryDataError);
+            return NextResponse.json(
+                { message: "Error fetching the couple details in server" },
+                { status: 500 }
+            );
         }
         let updatedMemoryData = null;
         if (m === "image") {
@@ -105,7 +118,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
     try {
         const supabase = await createClient();
-        const { user, userData } = await getCurrentUser();
+        const { user, userData, coupleData } = await getCurrentUser();
 
         if (!user) {
             return NextResponse.json(
@@ -120,6 +133,15 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
             return NextResponse.json(
                 { message: "Bad Request: Couple Id is required" },
                 { status: 400 }
+            );
+        }
+
+
+        if(!coupleData || (coupleData.id !== coupleId)) {
+
+            return NextResponse.json(
+                { message: "Forbidden" },
+                { status: 403 }
             );
         }
 
@@ -199,7 +221,10 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
         if (memoryCreationError) {
             console.error(memoryCreationError);
-            throw memoryCreationError;
+            return NextResponse.json(
+                { message: "Error creating the memory in server" },
+                { status: 500 }
+            );
         }
 
         return NextResponse.json(
