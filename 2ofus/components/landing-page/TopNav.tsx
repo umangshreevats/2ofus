@@ -5,7 +5,7 @@ import Button from "../commons/Button";
 import Popups from "@/components/commons/Popups";
 import Auth from "@/components/auth/Auth";
 import { useThemeSettings } from "@/app/theme-provider";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Bell, Menu, Moon, Sun } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { headerFooterMain } from "@/data/routingBehaviors";
@@ -39,10 +39,44 @@ const RightSideNavElements = ({
     coupleData: any;
 }) => {
     const [signIn, setSignIn] = useState(false);
+    const [isMobileWidth, setIsMobileWidth] = useState(false);
     const [button, setButton] = useState(0);
     const [openNav, setOpenNav] = useState(false);
     const [showNavs, setShowNavs] = useState(false);
     const { theme, setTheme } = useThemeSettings();
+    const bodyRef = useRef<HTMLElement | null>(null);
+
+    useEffect(() => {
+        bodyRef.current = document.body;
+    }, []);
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia("(max-width: 768px)");
+
+        setIsMobileWidth(mediaQuery.matches);
+
+        const handleResize = (e: MediaQueryListEvent) => {
+            setIsMobileWidth(e.matches);
+        };
+
+        mediaQuery.addEventListener("change", handleResize);
+
+        return () => {
+            mediaQuery.removeEventListener("change", handleResize);
+        };
+    }, []);
+
+    useEffect(() => {
+        if(isMobileWidth && openNav) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "";
+        }
+
+        return () => {
+            document.body.style.overflow = "";
+        }
+    }, [isMobileWidth, openNav]);
 
     if (!userData) {
         return (
@@ -103,9 +137,10 @@ const RightSideNavElements = ({
             <DropDown
                 open={openNav}
                 setOpen={setOpenNav}
-                right={10}
-                top={10}
-                innerHTML={<Notifications />}
+                right={isMobileWidth ? 0 : 10}
+                top={isMobileWidth ? 0 : 10}
+                innerHTML={<Notifications setOpenNav={setOpenNav} />}
+                innerHTMLPortalRef={isMobileWidth ? bodyRef : undefined}
             >
                 <Bell />
             </DropDown>

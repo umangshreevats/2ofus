@@ -16,6 +16,7 @@ const DropDown = ({
     iconPos = "center",
     setOpen,
     innerHTML = null,
+    innerHTMLPortalRef,
     placement = null
 }: {
     children: React.ReactNode,
@@ -31,6 +32,7 @@ const DropDown = ({
     setOpen: React.Dispatch<SetStateAction<boolean>>;
     innerHTML?: React.ReactNode;
     placement?: "left" | "right" | null;
+    innerHTMLPortalRef?: React.RefObject<HTMLElement | null>;
 }) => {
 
     if (open == null && setOpen == null) {
@@ -42,6 +44,7 @@ const DropDown = ({
     const [bottomPos, setBottomPos] = useState<number>(0);
     const iconRef = useRef<HTMLDivElement | null>(null);
     const parentRef = useRef<HTMLDivElement | null>(null);
+    const portalTarget = innerHTMLPortalRef?.current ?? parentRef.current;
 
     const closeDropDown = () => setOpen?.(false);
     const handleClick = async (callback?: () => Promise<void>, close?: undefined | boolean) => {
@@ -110,24 +113,7 @@ const DropDown = ({
                 {children}
             </div>
 
-            {innerHTML ? (
-                <div
-                    className={`absolute ${open ? "flex" : "hidden"} min-w-full bg-surface rounded-sm z-[999] shadow-[0px_0px_6px_var(--accent)]`}
-                    style={(placement && placement === "left")
-                        ? {
-                            right: "100%",
-                            top: 0,
-                        }
-                        : {
-                            left: left !== undefined ? `${leftPos}px` : undefined,
-                            top: top !== undefined ? `${topPos}px` : undefined,
-                            right: right !== undefined ? `${rightPos}px` : undefined,
-                            bottom: bottom !== undefined ? `${bottomPos}px` : undefined,
-                        }}
-                >
-                    {innerHTML}
-                </div>
-            ) : (
+            {!innerHTML ? (
                 <ul
                     className={`absolute ${open ? "flex" : "hidden"} z-[999] min-w-full rounded-sm shadow-[0px_0px_6px_var(--accent)] flex-col gap-2 p-2 bg-background`}
                     style={(placement && placement === "left")
@@ -198,7 +184,39 @@ const DropDown = ({
                         );
                     })}
                 </ul>
-            )
+            ) : portalTarget ? createPortal(
+                <div
+                    className={`absolute ${open ? "flex" : "hidden"} min-w-full bg-surface rounded-sm z-[999] shadow-[0px_0px_6px_var(--accent)]`}
+                    style={(placement && placement === "left")
+                        ? {
+                            right: "100%",
+                            top: 0,
+                        }
+                        : {
+                            left: left !== undefined ? `${leftPos}px` : undefined,
+                            top: top !== undefined ? `${topPos}px` : undefined,
+                            right: right !== undefined ? `${rightPos}px` : undefined,
+                            bottom: bottom !== undefined ? `${bottomPos}px` : undefined,
+                        }}
+                >
+                    {innerHTML}
+                </div>, portalTarget
+            ) : (<div
+                className={`absolute ${open ? "flex" : "hidden"} min-w-full bg-surface rounded-sm z-[999] shadow-[0px_0px_6px_var(--accent)]`}
+                style={(placement && placement === "left")
+                    ? {
+                        right: "100%",
+                        top: 0,
+                    }
+                    : {
+                        left: left !== undefined ? `${leftPos}px` : undefined,
+                        top: top !== undefined ? `${topPos}px` : undefined,
+                        right: right !== undefined ? `${rightPos}px` : undefined,
+                        bottom: bottom !== undefined ? `${bottomPos}px` : undefined,
+                    }}
+            >
+                {innerHTML}
+            </div>)
             }
         </div >
     );
