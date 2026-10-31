@@ -172,15 +172,40 @@ export async function uploadTellAndGetImage(
 
 
 // path finder
-export function getStoragePath(url: string, bucket: string) {
-    const marker = `/${bucket}/`;
-    const index = url.indexOf(marker);
+export function getStoragePath(url: string, bucket: string): string {
+    try {
+        const parsedUrl = new URL(url);
 
-    if (index === -1) {
-        throw new Error("Invalid storage URL");
+        const storageMarker = "/storage/v1/object/";
+        const storageIndex = parsedUrl.pathname.indexOf(storageMarker);
+
+        if (storageIndex === -1) {
+            throw new Error("Invalid Supabase storage URL");
+        }
+
+        const storagePath = parsedUrl.pathname.slice(
+            storageIndex + storageMarker.length
+        );
+
+        const parts = storagePath.split("/");
+
+        // Supports public, sign and authenticated object URLs
+        if (["public", "sign", "authenticated"].includes(parts[0])) {
+            parts.shift();
+        }
+
+        const urlBucket = parts.shift();
+
+        if (urlBucket !== bucket || !parts.length) {
+            throw new Error("Invalid bucket or storage path");
+        }
+
+        return decodeURIComponent(parts.join("/"));
+    } catch (error) {
+        throw new Error(
+            error instanceof Error
+                ? error.message
+                : "Unable to extract storage path"
+        );
     }
-
-    return decodeURIComponent(
-        url.slice(index + marker.length).split("?")[0]
-    );
 }

@@ -43,7 +43,8 @@ export default async function AlbumPage({ searchParams }: PageProps) {
             .from("memory")
             .select("*")
             .eq("couple_id", coupleData.id)
-            .eq("content_type", contentType);
+            .eq("content_type", contentType)
+            .order("priority", { ascending: false });
 
         const { data: albumData, error: albumDataError } = await query
             .order("created_at", { ascending: false })

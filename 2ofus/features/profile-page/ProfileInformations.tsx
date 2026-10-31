@@ -18,6 +18,7 @@ import { useThemeSettings } from "@/app/theme-provider";
 import RedirectButton from "@/components/commons/RedirectButton";
 import Popups from "@/components/commons/Popups";
 import ProfileEditing from "@/components/profile-page/ProfileEditing";
+import Button from "@/components/commons/Button";
 
 
 
@@ -37,6 +38,8 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
     const originalProfile = useRef<Users>(
         structuredClone(userInfo)
     );
+
+    const [loading, setLoading] = useState(false);
     const [profile, setProfile] = useState<Users>(userInfo);
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const [interestsEditing, setInterestsEditing] = useState(false);
@@ -67,6 +70,8 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
 
 
     const handleSubmit = async () => {
+
+        setLoading(true);
         try {
             const formData = new FormData();
 
@@ -106,7 +111,8 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
 
             // Profile image comparison
             if (selectedImage) {
-                formData.append("removeProfileImage", "true");
+                if(originalProfile.current.profile_image !== null) formData.append("removeProfileImage", "true");
+                else formData.append("removeProfileImage", "false");
                 formData.append("profile_image", selectedImage);
             } else if (
                 originalProfile.current.profile_image &&
@@ -142,6 +148,8 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
 
         } catch (error) {
             console.error("Error updating profile:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -199,6 +207,8 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
                         className="hidden"
                         id="profile-image"
                     />
+
+                    
                     {allowEdits && <label htmlFor="profile-image" className="absolute left-5 top-40 sm:left-10 sm:top-16 flex gap-2">
                         <div>
                             <PlayfulButton
@@ -215,6 +225,10 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
                         </div>
                     </label>
                     }
+
+
+                    {(allowEdits && (selectedImage)) &&
+                    <Button type="button" onClick={handleSubmit} text={loading ? "Saving..." : "Save Changes"} disabled={loading} />}
                 </div>
 
                 {/*Informations*/}
@@ -256,7 +270,8 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
                         />
 
                         <InformationHolder
-                            selectedImage={selectedImage} setSelectedImage={setSelectedImage} originalProfile={originalProfile}
+                            selectedImage={selectedImage} 
+                            setSelectedImage={setSelectedImage} originalProfile={originalProfile}
                             type="dob"
                             profileData={profile}
                             setProfileData={setProfile}

@@ -176,8 +176,9 @@ export const PATCH = async (request: NextRequest, { params }: { params: Promise<
         }
 
         if (removeProfileImage === "true") {
-            const savedProfilePath = getStoragePath(userData.profile_image, "profile_images");
+            const savedProfilePath = getStoragePath(userData.profile_image, "profile-images");
 
+            console.log(savedProfilePath);
             await supabase.storage
                 .from("profile-images")
                 .remove([savedProfilePath]);
