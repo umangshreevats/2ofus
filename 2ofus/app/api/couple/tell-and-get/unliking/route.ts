@@ -77,7 +77,7 @@ export const POST = async (request: NextRequest) => {
         }
 
         // Notification
-        const { data: notificationData, error: notificationError } = await supabase
+        const { error: notificationError } = await supabase
             .from("notifications")
             .insert({
                 sender: user.id,

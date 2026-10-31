@@ -32,7 +32,7 @@ const CoupleNav = ({ setOpenNav }: { openNav?: boolean, setOpenNav?: React.Dispa
 
     return (
         <div
-            className="max-lg:w-[300px] max-lg:h-screen bg-background overflow-x-auto font-comforta"
+            className="max-lg:w-[300px] max-lg:h-screen bg-background overflow-x-auto font-comfortaa"
             style={{ scrollbarWidth: "none" }}
         >
             <div className="w-full h-10 p-5 relative block lg:hidden">
@@ -64,7 +64,7 @@ const CoupleNav = ({ setOpenNav }: { openNav?: boolean, setOpenNav?: React.Dispa
                                             flex md:flex-col
                                             items-center
                                             justify-start 
-                                            lg:justify-center
+                                            md:justify-center
                                             rounded-full
                                             font-bold
                                             gap-5

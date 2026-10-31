@@ -37,7 +37,7 @@ const SearchPage = async ({ searchParams }: Props) => {
 
     const { data: users, error } = await supabase
         .from("users")
-        .select("id, username, firstname, lastname, gender, profile_image")
+        .select("id, username, firstname, lastname, gender, profile_image, interests")
         .or(`username.ilike.%${query.trim()}%,firstname.ilike.%${query.trim()}%,lastname.ilike.%${query.trim()}%`)
         .range((numPage - 1) * 20, 20);
 
@@ -56,6 +56,9 @@ const SearchPage = async ({ searchParams }: Props) => {
     if (countError || !count) {
         console.error("Some error occured while count", countError);
     }
+
+
+    console.log(users);
     const numberOfPages = Math.ceil((count ?? 0) / 20);
 
     const numbers = Array.from(
