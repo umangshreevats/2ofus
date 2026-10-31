@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/auth"
 import { createClient } from "@/utils/supabase/server"
 import { decrypt } from "@/lib/encryption";
 
+
 export default async function QuizPage() {
 
     const { user, coupleData } = await getCurrentUser();
@@ -23,10 +24,10 @@ export default async function QuizPage() {
                 .limit(5)
                 .order("created_at", { ascending: false });
 
-            if (quizesError || !quizes) {
-                throw quizesError;
+            if (quizesError) {
+                throw new Error("Failed to load the quiz: " + quizesError.message);
             }
-            return quizes;
+            return quizes ?? [];
         }
 
         const { data: quizes, error: quizesError } = await supabase
@@ -37,10 +38,10 @@ export default async function QuizPage() {
             .limit(5)
             .order("created_at", { ascending: false });
 
-        if (quizesError || !quizes) {
-            throw quizesError;
+        if (quizesError) {
+            throw new Error ("Failed to load the quiz: " + quizesError.message);
         }
-        return quizes;
+        return quizes ?? [];
     }
 
 

@@ -55,11 +55,11 @@ export default async function HomePage() {
     ]);
 
     if (sentResult.error) {
-        console.error("Sent requests error:", sentResult.error);
+        throw new Error("Sent requests error:" + sentResult.error);
     }
 
     if (receivedResult.error) {
-        console.error("Received requests error:", receivedResult.error);
+        throw new Error("Received requests error:" + receivedResult.error);
     }
 
     return (

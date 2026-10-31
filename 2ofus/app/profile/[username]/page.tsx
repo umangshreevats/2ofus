@@ -17,8 +17,6 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
     const { data: profile, error } = await supabase.from("users").select("*").eq("username", cleanUsername).single();
 
     if (error || !profile) {
-        console.log("Error: ", error);
-        console.log("Profile: ", profile);
         notFound();
     }
 
@@ -28,7 +26,9 @@ export default async function ProfilePage({ params }: { params: Promise<{ userna
     
     const { error: profileUpdateError } = await supabase.from("users").update({ is_profile_completed: true }).eq("username", cleanUsername).single();
 
-    if(profileUpdateError) throw profileUpdateError;
+    if(profileUpdateError) {
+        throw profileUpdateError;
+    }
 
     return <div className="parent-box flex-col justify-start items-center">
         <div className="child-box p-10 flex flex-col gap-5">

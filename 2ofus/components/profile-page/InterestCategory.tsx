@@ -2,7 +2,7 @@
 import { SetStateAction, useState } from "react";
 import Button from "../commons/Button";
 import { useThemeSettings } from "@/app/theme-provider";
-
+import { toast } from "sonner";
 
 const InterestCategory = ({ username, setPage, setOption, interestsList }: { username: string, interestsList: any, setPage: React.Dispatch<SetStateAction<number>>, setOption: React.Dispatch<SetStateAction<any>> }) => {
 
@@ -40,17 +40,18 @@ const InterestCategory = ({ username, setPage, setOption, interestsList }: { use
             const result = await response.json();
 
             if (!response.ok) {
-                alert(`Error occurred: ${result.message}`);
+                toast.error(`Error occurred: ${result.message}`);
+                setLoading(false);
                 return;
             }
 
-            console.log("Interests saved successfully:", result);
+            toast.success("Interests saved successfully:", result);
         } catch (err: unknown) {
 
             if (err instanceof Error) {
-                alert(`Error submitting response: ${err.message}`);
+                toast.error(`Error submitting response: ${err.message}`);
             } else {
-                alert("An unknown error occurred");
+                toast.error("An unknown error occurred");
             }
         } finally {
             setLoading(false);

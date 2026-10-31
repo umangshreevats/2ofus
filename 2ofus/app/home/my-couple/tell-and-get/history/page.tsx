@@ -4,6 +4,8 @@ import { createClient } from "@/utils/supabase/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { decrypt } from "@/lib/encryption";
 
+
+
 export default async function TellAndGetHistoryPage({
     searchParams
 }: {
@@ -56,8 +58,8 @@ export default async function TellAndGetHistoryPage({
     }
 
 
-    if (historyError || !historyData) {
-        console.error("History failed to retrieve");
+    if (historyError) {
+        throw historyError;
     }
 
 
@@ -74,7 +76,7 @@ export default async function TellAndGetHistoryPage({
                     .createSignedUrl(history.image_id, 3600);
 
                 if (imageUrlError || !imageUrl) {
-                    console.error("Error getting the signed url: ", imageUrlError);
+                    throw new Error("Error getting the signed url: " + imageUrlError.message);
                 } else {
                     historyImage = imageUrl?.signedUrl;
                 }

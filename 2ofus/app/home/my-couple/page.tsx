@@ -23,7 +23,7 @@ export default async function CouplePage() {
         .limit(5)
 
     if (memorablePhotosError) {
-        console.error("Memorable photos error:", memorablePhotosError);
+        throw memorablePhotosError;
     }
 
     const updatedMemorablePhotos = await Promise.all(
@@ -35,7 +35,7 @@ export default async function CouplePage() {
                 .createSignedUrl(photo.media_id, 3600);
 
             if (error) {
-                console.error("Signed URL error:", error.message);
+                console.error("Signed URL error:" + error.message);
 
                 return {
                     ...photo,
@@ -51,8 +51,6 @@ export default async function CouplePage() {
             };
         })
     );
-
-    console.log(updatedMemorablePhotos);
 
     return <>
         <CoupleHome memorablePhotos={updatedMemorablePhotos} />

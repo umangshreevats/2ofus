@@ -9,8 +9,7 @@ export default async function QuizSolvePage({ params }: { params: Promise<{ quiz
     const { quizId } = await params;
 
     if(!quizId) {
-        alert("No quiz Id");
-        return null;
+        throw new Error("No quiz Id");
     }
 
     const supabase = await createClient();

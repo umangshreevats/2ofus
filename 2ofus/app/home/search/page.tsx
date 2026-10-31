@@ -14,11 +14,15 @@ interface Props {
 
 const SearchPage = async ({ searchParams }: Props) => {
 
-    const { user } = await getCurrentUser();
+    const { user, coupleData } = await getCurrentUser();
 
 
     if (!user) {
         redirect("/");
+    }
+
+    if (coupleData) {
+        redirect("/home/my-couple");
     }
     const { query, page } = await searchParams;
 
@@ -42,7 +46,7 @@ const SearchPage = async ({ searchParams }: Props) => {
         .range((numPage - 1) * 20, 20);
 
     if (error) {
-        console.error("Some error occured", error);
+        throw new Error("Some error occured" + error.message);
     }
 
     const { count, error: countError } = await supabase
@@ -54,7 +58,7 @@ const SearchPage = async ({ searchParams }: Props) => {
         .neq("id", user.id);
 
     if (countError || !count) {
-        console.error("Some error occured while count", countError);
+        throw new Error("Some error occured while count" + countError?.message);
     }
 
 

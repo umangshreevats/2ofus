@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import ProfileInformations from "@/features/profile-page/ProfileInformations";
 
+
 interface PageProps {
     params: Promise<{
         username?: string;
@@ -45,7 +46,7 @@ export default async function ProfilePage({ params }: PageProps) {
 
 
     if (userInfoError || !userInfo) {
-        console.error("Profile Informations failed to retrieve", userInfoError)
+        throw new Error("Profile Informations failed to retrieve" + userInfoError?.message)
     }
 
     return (

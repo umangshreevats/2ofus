@@ -9,6 +9,7 @@ import PlayfulInput from "../commons/PlayfulInput";
 import PlayfulButton from "../commons/PlayfulButton";
 import Button from "../commons/Button";
 import { useThemeSettings } from "@/app/theme-provider";
+import { toast } from "sonner";
 
 
 interface ProfileFormProps {
@@ -42,7 +43,7 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ username, profileData, setPro
         e.preventDefault();
 
         if (profileData.firstname.length === 0 || profileData.lastname.length === 0 || !profileData.dob || !profileData.gender) {
-            alert("One or more entries are empty");
+            toast.error("One or more entries are empty");
             return;
         }
         setLoading(true);
@@ -69,11 +70,15 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ username, profileData, setPro
 
             const result = await response.json();
             if (!response.ok) {
-                throw new Error(result.message || "Profile creation failed");
+                toast.error(result.message || "Profile creation failed");
             }
+
+            toast.success("Profile informations stored successfully");
             setPage(2);
-        } catch (err) {
-            alert("An error occured");
+        } catch (err: unknown) {
+            if(err instanceof Error) {
+                toast.error("An error occured: " + err.message);
+            }else toast.error("An error occured");
         } finally {
             setLoading(false);
         }

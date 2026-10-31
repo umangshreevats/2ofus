@@ -4,7 +4,6 @@ import { getCurrentUser } from "@/lib/auth";
 import Album from "@/features/couple-page/Album";
 import { decrypt } from "@/lib/encryption";
 
-
 interface PageProps {
     searchParams: Promise<{
         m?: string;
@@ -51,7 +50,7 @@ export default async function AlbumPage({ searchParams }: PageProps) {
             .range(from, to);
 
         if (albumDataError) {
-            console.error(albumDataError);
+            throw new Error("Error fetching album data: " + albumDataError.message);
         }
 
         return albumData;
@@ -93,11 +92,8 @@ export default async function AlbumPage({ searchParams }: PageProps) {
                 .createSignedUrl(item.media_id, 3600);
 
             if (error) {
-                console.error("Signed URL error:", error.message);
-                return item;
+                throw new Error("Signed URL error:" + error.message);
             }
-
-            console.log("Generated URL:", data.signedUrl);
 
             return {
                 ...item,

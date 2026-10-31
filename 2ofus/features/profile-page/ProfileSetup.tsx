@@ -58,10 +58,6 @@ const ProfileSetup = ({ username }: { username: string }) => {
         localStorage.setItem("page", String(page));
     }, [page]);
 
-    useEffect(() => {
-        console.log(interests);
-    }, [interests]);
-
 
     const [option, setOption] = useState<"places" | "hobbies" | "food" | "entertainment" | "music" | "sports" | "lifestyle" | null>(null);
 
