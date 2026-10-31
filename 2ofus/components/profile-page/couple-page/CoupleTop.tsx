@@ -4,11 +4,11 @@ import Button from "@/components/commons/Button";
 import Headings from "@/components/commons/Headings";
 import { GalleryThumbnails, Settings } from "lucide-react";
 import { useThemeSettings } from "@/app/theme-provider";
-import PhotoFrame from "@/components/commons/PhotoFrame";
-import Image from "next/image";
+import { useRouter } from "next/navigation";
 import BioPicture from "./BioPicture";
 const CoupleTop = () => {
 
+    const router = useRouter();
     const { theme } = useThemeSettings();
     const { coupleData } = useAuth();
 
@@ -43,6 +43,7 @@ const CoupleTop = () => {
                         hoverBackgroundColor={theme === "light" ? "white" : "black"}
                         hoverTextColor={theme === "light" ? "black" : "white"}
                         hoverEffect={true}
+                        onClick={() => router.push("/home/my-couple/profile-edit")}
                     />
                     <Button type="button" backgroundColor="white" text="Settings" textColor="black" icon={Settings} />
                 </div>
