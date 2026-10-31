@@ -1,15 +1,19 @@
 "use client";
 
-import { Brain, MessagesSquare, Gamepad2, Library, Home, X } from "lucide-react";
+import { Brain, MessagesSquare, Library, Home, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SetStateAction } from "react";
 
 
-const CoupleNav = ({ openNav, setOpenNav }: { openNav?: boolean, setOpenNav?: React.Dispatch<SetStateAction<boolean>> }) => {
+
+/*Client component for showing the couple profile navigations, 
+like home page, the tell and get page, the quiz page and album*/
+const CoupleNav = ({ setOpenNav }: { openNav?: boolean, setOpenNav?: React.Dispatch<SetStateAction<boolean>> }) => {
 
     const pathname = usePathname();
 
+    // nav links and informations
     const coupleNavItems = [
         { name: "Home", icon: Home, href: "/home/my-couple", onClick: () => setOpenNav?.(false) },
         { name: "Know Me", icon: Brain, href: "/home/my-couple/know-me", onClick: () => setOpenNav?.(false) },
@@ -55,7 +59,7 @@ const CoupleNav = ({ openNav, setOpenNav }: { openNav?: boolean, setOpenNav?: Re
                                                 : "var(--primary-text)",
                                         }}
                                         className="
-                                            w-12 h-10
+                                            h-10
                                             sm:w-24 sm:h-15
                                             flex md:flex-col
                                             items-center
