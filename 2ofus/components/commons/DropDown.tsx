@@ -68,6 +68,26 @@ const DropDown = ({
         setDropDownPos();
     }, [open, left, top, right, bottom]);
 
+
+    useEffect(() => {
+        if (!open) return;
+
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                parentRef.current &&
+                !parentRef.current.contains(event.target as Node)
+            ) {
+                closeDropDown();
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [open]);
+
     return (
         <div
             ref={parentRef}
@@ -92,7 +112,7 @@ const DropDown = ({
 
             {innerHTML ? (
                 <div
-                    className={`absolute ${open ? "flex" : "hidden"} min-w-full rounded-sm z-[999] shadow-[0px_0px_6px_var(--accent)]`}
+                    className={`absolute ${open ? "flex" : "hidden"} min-w-full bg-surface rounded-sm z-[999] shadow-[0px_0px_6px_var(--accent)]`}
                     style={(placement && placement === "left")
                         ? {
                             right: "100%",

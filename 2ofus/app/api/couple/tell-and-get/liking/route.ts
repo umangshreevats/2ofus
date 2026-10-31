@@ -76,16 +76,17 @@ export const POST = async (request: NextRequest) => {
         }
 
         // Notification
-        const { data: notificationData, error: notificationError } = await supabase
+        const { error: notificationError } = await supabase
             .from("notifications")
             .insert({
+                sender: user.id,
                 receiver: coupleData.partner_1.id === user.id ? coupleData.partner_2.id : coupleData.partner_1.id,
-                title: "Your partner shared an un-liking for you",
+                title: "Your partner shared an liking for you",
                 image: imageUrl,
                 message: "Check what your partner has shared for you"
-            }).select();
+            });
 
-        if (notificationError || !notificationData) {
+        if (notificationError) {
             console.error("Some problem with notifications: ", notificationError);
         }
 

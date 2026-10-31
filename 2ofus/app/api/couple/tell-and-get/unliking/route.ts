@@ -81,12 +81,13 @@ export const POST = async (request: NextRequest) => {
             .from("notifications")
             .insert({
                 sender: user.id,
-                receiver: coupleData.partner_1 === user.id ? coupleData.partner_2 : coupleData.partner_1,
-                title: "Your partner shared a liking for you",
-                image: imageUrl
-            }).select();
+                receiver: coupleData.partner_1.id === user.id ? coupleData.partner_2.id : coupleData.partner_1.id,
+                title: "Your partner shared a un-liking for you",
+                image: imageUrl,
+                message: "See what your partner has to say about you!"
+            });
 
-        if (notificationError || notificationData) {
+        if (notificationError) {
             console.error("Some problem with notifications: ", notificationError);
         }
 
