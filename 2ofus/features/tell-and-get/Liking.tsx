@@ -10,6 +10,8 @@ import Photograph from "@/components/commons/Photograph";
 import { addMorePhoto } from "@/data/images";
 import PlayfulButton from "@/components/commons/PlayfulButton";
 import { useThemeSettings } from "@/app/theme-provider";
+import { toast } from "sonner";
+
 
 const Liking = () => {
 
@@ -39,7 +41,7 @@ const Liking = () => {
         }
 
         if (pickedOptions.length >= 2) {
-            alert("You cannot pick more than 2 likings");
+            toast.warning("You cannot pick more than 2 likings");
             return;
         }
 
@@ -70,13 +72,17 @@ const Liking = () => {
             const result = await response.json();
 
             if (!response.ok) {
-                console.error("An error occured" + result.message);
+                toast.error("An error occured" + result.message);
+                setSubmitLoading(false);
                 return;
             }
 
 
         } catch (err) {
-            console.error("An error occured");
+
+            if (err instanceof Error) {
+                toast.error("An error occured: " + err.message);
+            }
         } finally {
             setSubmitLoading(false);
         }

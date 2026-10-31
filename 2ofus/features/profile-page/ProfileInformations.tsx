@@ -19,7 +19,7 @@ import RedirectButton from "@/components/commons/RedirectButton";
 import Popups from "@/components/commons/Popups";
 import ProfileEditing from "@/components/profile-page/ProfileEditing";
 import Button from "@/components/commons/Button";
-
+import { toast } from "sonner";
 
 
 const ProfileInformations = ({ userInfo, allowEdits }: {
@@ -137,17 +137,22 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
             const result = await response.json();
 
             if (!response.ok) {
-                throw new Error(result.message || "Update failed");
+                toast.error(result.message || "Update failed");
+                setLoading(false);
+                return;
             }
             setSelectedImage(null);
 
             // Update original snapshot
             originalProfile.current = structuredClone(result.user);
 
-            console.log("Profile updated!");
+            toast.success("Profile updated!");
 
-        } catch (error) {
-            console.error("Error updating profile:", error);
+        } catch (err) {
+
+            if(err instanceof Error) {
+            toast.error("Error updating profile:" + err.message);
+            } else toast.error("Error updating profile");
         } finally {
             setLoading(false);
         }

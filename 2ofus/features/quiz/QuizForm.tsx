@@ -6,6 +6,8 @@ import { X } from "lucide-react";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/auth-provider";
+import { toast } from "sonner";
+
 
 export type Question = {
     question: string,
@@ -36,7 +38,7 @@ const QuizForm = () => {
     const addQuestions = () => {
 
         if (questions.length >= 10) {
-            alert("Cannot add more questions");
+            toast.warning("Cannot add more questions");
             return;
         }
         const q: Question = {
@@ -61,12 +63,12 @@ const QuizForm = () => {
         e.preventDefault();
 
         if (!title.trim() || !questions || questions.length === 0) {
-            alert("Quiz title and at least one question are required!");
+            toast.error("Quiz title and at least one question are required!");
             return;
         }
 
         if (questions.length > 10) {
-            alert("Only 10 questions are allowed!");
+            toast.error("Only 10 questions are allowed!");
             return;
         }
 
@@ -75,7 +77,7 @@ const QuizForm = () => {
             const questionNumber = i + 1;
 
             if (!question.question.trim()) {
-                alert(`Question ${questionNumber} cannot be empty!`);
+                toast.warning(`Question ${questionNumber} cannot be empty!`);
                 return;
             }
 
@@ -84,14 +86,14 @@ const QuizForm = () => {
                 const answer = question.writtenAnswer?.trim() ?? "";
 
                 if (!answer) {
-                    alert(`Please provide an answer for Question ${questionNumber}!`);
+                    toast.warning(`Please provide an answer for Question ${questionNumber}!`);
                     return;
                 }
 
                 const wordCount = answer.split(/\s+/).filter(Boolean).length;
 
                 if (wordCount > 3 || answer.length > 50) {
-                    alert(`Answer for Question ${questionNumber} must contain at most 3 words and 50 characters!`);
+                    toast.warning(`Answer for Question ${questionNumber} must contain at most 3 words and 50 characters!`);
                     return;
                 }
             }
@@ -106,7 +108,7 @@ const QuizForm = () => {
                     question.options.length !== 4 ||
                     question.options.some(option => !option.trim())
                 ) {
-                    alert(`All four options are required for Question ${questionNumber}!`);
+                    toast.warning(`All four options are required for Question ${questionNumber}!`);
                     return;
                 }
 
@@ -116,7 +118,7 @@ const QuizForm = () => {
                         !question.correctOptions.trim() ||
                         !question.options.includes(question.correctOptions)
                     ) {
-                        alert(`Select one correct answer for Question ${questionNumber}!`);
+                        toast.warning(`Select one correct answer for Question ${questionNumber}!`);
                         return;
                     }
                 }
@@ -129,7 +131,7 @@ const QuizForm = () => {
                             option => !question.options!.includes(option)
                         )
                     ) {
-                        alert(`Select at least one correct answer for Question ${questionNumber}!`);
+                        toast.warning(`Select at least one correct answer for Question ${questionNumber}!`);
                         return;
                     }
                 }
@@ -150,17 +152,17 @@ const QuizForm = () => {
 
             const result = await response.json();
             if (!response.ok) {
-                alert("Something went wrong!" + result.message);
+                toast.error("Something went wrong!" + result.message);
                 return;
             }
 
-            alert("Success creating the quiz");
+            toast.success("Success creating the quiz");
             router.push("/home/my-couple/know-me");
         } catch (err) {
 
             console.error(err);
             if (err instanceof Error) {
-                alert("Something went wrong" + err.message);
+                toast.error("Something went wrong" + err.message);
             }
         } finally {
             setLoading(false);

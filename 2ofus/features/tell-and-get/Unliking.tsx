@@ -10,6 +10,8 @@ import Photograph from "@/components/commons/Photograph";
 import { addMorePhoto } from "@/data/images";
 import PlayfulButton from "@/components/commons/PlayfulButton";
 import { useThemeSettings } from "@/app/theme-provider";
+import { toast } from "sonner";
+
 
 const Unliking = () => {
 
@@ -39,7 +41,7 @@ const Unliking = () => {
         }
 
         if (pickedOptions.length >= 2) {
-            alert("You cannot pick more than 2 unlikings");
+            toast.warning("You cannot pick more than 2 unlikings");
             return;
         }
 
@@ -58,9 +60,9 @@ const Unliking = () => {
             formData.append("predefinedMessages", JSON.stringify(pickedOptions));
             formData.append("userMessage", message);
 
-            if(selectedPhoto && selectedPhoto instanceof File) {
+            if (selectedPhoto && selectedPhoto instanceof File) {
                 formData.append("image", selectedPhoto);
-            } 
+            }
 
             const response = await fetch("/api/couple/tell-and-get/unliking", {
                 method: "POST",
@@ -69,14 +71,18 @@ const Unliking = () => {
 
             const result = await response.json();
 
-            if(!response.ok) {
-                console.error("An error occured"+result.message);
+            if (!response.ok) {
+                toast.error("An error occured" + result.message);
+                setSubmitLoading(false);
                 return;
             }
 
 
         } catch (err) {
-            console.error("An error occured");
+
+            if (err instanceof Error) {
+                toast.error("An error occured: " + err.message);
+            }
         } finally {
             setSubmitLoading(false);
         }
@@ -167,7 +173,7 @@ const Unliking = () => {
                             {filteredOptions.map((option, i) => (
                                 <button key={i}
                                     onClick={() => handlePickedOptions(option)}
-                                   className={`p-3 disabled:cursor-not-allowed flex gap-3 cursor-pointer 
+                                    className={`p-3 disabled:cursor-not-allowed flex gap-3 cursor-pointer 
                                 shadow-md ${(pickedOptions.includes(option)) ? "trans-accent" : "bg-surface"} text-primary-text rounded-2xl`}>
                                     {option} <Plus />
                                 </button>

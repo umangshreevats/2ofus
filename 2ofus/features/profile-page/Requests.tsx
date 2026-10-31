@@ -2,6 +2,7 @@
 import Button from "@/components/commons/Button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const Requests = ({ requestsSend, requestsReceived }: { requestsSend: any, requestsReceived: any }) => {
 
@@ -19,17 +20,19 @@ const Requests = ({ requestsSend, requestsReceived }: { requestsSend: any, reque
 
             const result = await response.json();
             if (!response.ok) {
-                alert("An error occured!" + result.message);
+                toast.error("An error occured!" + result.message);
                 return;
             }
-
-            alert("success");
-
+            toast.success("Request handled successfully");
             if (request === "accept") {
                 router.push(`/home/couple-setup/${result?.couplingRequest?.couple_id}`);
+                toast.success(`You have accepted to be the couple with someone!`);
             }
         } catch (err) {
-            alert("An error occured!");
+
+            if (err instanceof Error) {
+                toast.error("An error occured: " + err.message);
+            } else toast.error("An error occured!");
         }
     }
 

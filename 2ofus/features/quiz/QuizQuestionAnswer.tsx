@@ -3,10 +3,12 @@ import Headings from "@/components/commons/Headings";
 import DisplayQuestion from "@/components/couple-profile/quiz/DisplayQuestion";
 import QuestionNav from "@/components/couple-profile/quiz/QuestionNav";
 import type { QuizInfoProps, QuizQuestions } from "@/types/quiz";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Button from "@/components/commons/Button";
 import { useThemeSettings } from "@/app/theme-provider";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
 
 interface QuizQuestionAnswerProps {
     quizInfo: QuizInfoProps;
@@ -41,12 +43,13 @@ const QuizQuestionAnswer: React.FC<QuizQuestionAnswerProps> = ({ quizInfo, quizQ
             const result = await response.json();
 
             if (!response.ok) {
-                alert("An error occured" + result.message);
+                toast.error("An error occured" + result.message);
                 setSubmitLoading(false);
                 return;
             }
         } catch (err) {
-            alert("An error occured");
+
+            if(err instanceof Error) toast.error("An error occured: " + err.message);
         } finally {
             setSubmitLoading(false);
         }

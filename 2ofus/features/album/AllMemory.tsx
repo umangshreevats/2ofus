@@ -9,7 +9,7 @@ import { useAuth } from "@/app/auth-provider";
 import Popups from "@/components/commons/Popups";
 import MemoryHolder from "@/components/couple-profile/album/MemoryHolder";
 import { Plus } from "lucide-react";
-
+import { toast } from "sonner";
 
 const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
 
@@ -45,7 +45,7 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
             const result = await response.json();
 
             if (!response.ok) {
-                alert("Something went wrong" + result.message);
+                toast.error("Something went wrong" + result.message);
                 return;
             }
 
@@ -59,7 +59,12 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
                 setNoMoreNotes(result.memoryData.length === 0);
             }
         } catch (err) {
-            alert("Something went wrong");
+
+            if(err instanceof Error) {
+                toast.error("Something went wrong" + err.message);
+            } else {
+                toast.error("Something went wrong");
+            }
         } finally {
             if (m === "image") {
                 setImgLoading(false);

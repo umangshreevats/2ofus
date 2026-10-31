@@ -7,6 +7,7 @@ import { Plus } from "lucide-react";
 import Button from "@/components/commons/Button";
 import { useRouter } from "next/navigation";
 import Headings from "@/components/commons/Headings";
+import { toast } from "sonner";
 
 
 const QuizfeaturePage = ({ quizes }: { quizes: QuizInfoProps[] }) => {
@@ -45,7 +46,7 @@ const QuizfeaturePage = ({ quizes }: { quizes: QuizInfoProps[] }) => {
             setUserLoading(true);
             skip = userSkip;
         } else {
-            alert("Such category quizes cannot be retrieved");
+            toast.error("Such category quizes cannot be retrieved");
             return;
         }
 
@@ -57,7 +58,7 @@ const QuizfeaturePage = ({ quizes }: { quizes: QuizInfoProps[] }) => {
 
             if (!response.ok) {
 
-                alert("Request failed" + result.message);
+                toast.error("Request failed" + result.message);
                 return;
             }
 
@@ -82,8 +83,9 @@ const QuizfeaturePage = ({ quizes }: { quizes: QuizInfoProps[] }) => {
             }
         } catch (err) {
 
-            console.error(err);
-            alert("Somethign went wrong");
+            if(err instanceof Error) {
+                toast.error("Something went wrong: " + err.message);
+            }else toast.error("Somethign went wrong");
         } finally {
             if (category === "pending") {
                 setPendingLoading(false);
