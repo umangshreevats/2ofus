@@ -5,6 +5,7 @@ import { X } from 'lucide-react';
 import { FcGoogle } from "react-icons/fc";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 
 // This component is very complicated, rather than dividing the sign in, and sign up pages in two different component,
@@ -50,7 +51,7 @@ const Auth = ({ setOpen, signIn: si }: { signIn: boolean, setOpen: React.Dispatc
 
         setLoading(false);
         if (profileError || !profile) {
-            alert(profileError.message);
+            toast.error("Something went wrong: " + profileError.message);
             return;
         }
 
@@ -60,6 +61,8 @@ const Auth = ({ setOpen, signIn: si }: { signIn: boolean, setOpen: React.Dispatc
 
         router.push(`/profile/@${profile.username}`);
         router.refresh();
+
+        toast.success("You signed in successfully!");
     }
 
 
@@ -71,7 +74,7 @@ const Auth = ({ setOpen, signIn: si }: { signIn: boolean, setOpen: React.Dispatc
         setLoading(true);
 
         if (username.length === 0 || email.length === 0 || password.length === 0) {
-            alert("Some or all entries are empty");
+            toast.error("Some or all entries are empty");
             return;
         }
 
@@ -88,7 +91,7 @@ const Auth = ({ setOpen, signIn: si }: { signIn: boolean, setOpen: React.Dispatc
         setLoading(false);
 
         if (error) {
-            alert(error.message);
+            toast.error("Something went wrong: " + error.message);
             return;
         }
 
@@ -97,7 +100,7 @@ const Auth = ({ setOpen, signIn: si }: { signIn: boolean, setOpen: React.Dispatc
             router.push(`/profile/@${username}`);
         } else {
             // Email confirmation is enabled.
-            alert("Please check your email to verify your account.");
+            toast("Please check your email to verify your account.");
         }
 
         router.refresh();

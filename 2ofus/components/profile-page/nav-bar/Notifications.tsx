@@ -105,7 +105,7 @@ const Notifications = () => {
 
 
 
-    return <div className="w-[200px] sm:w-[500px] p-5 rounded-sm bg-surface flex flex-col gap-5 items-center">
+    return <div className="w-screen h-screen sm:h-auto sm:w-[500px] p-5 rounded-sm bg-surface flex flex-col gap-5 items-center">
 
         <h3 className="w-full rounded-t-sm border-b border-b-solid border-b-primary-text text-lg font-bold">
             Recent Notifications

@@ -7,6 +7,8 @@ import { navLocations } from "@/data/info";
 import Footer from "@/components/landing-page/Footer";
 import { getCurrentUser } from "@/lib/auth";
 import { AuthProvider } from "./auth-provider";
+import { Toaster } from "sonner";
+
 
 export const instant = false;
 
@@ -39,6 +41,18 @@ export default async function RootLayout({
             <body className="font-rubik">
                 <AuthProvider initialAuth={auth}>
                     <ThemeProvider>
+                        <Toaster
+                            position="top-center"
+                            closeButton
+                            duration={3000}
+                            toastOptions={{
+                                classNames: {
+                                    toast: "font-rubik rounded-xl shadow-lg",
+                                    title: "font-semibold text-primary-text",
+                                    description: "text-sm font-comfortaa text-secondary-text",
+                                },
+                            }}
+                        />
                         <header>
                             <TopNav display={true} navLocations={navLocations} />
                         </header>
