@@ -34,7 +34,11 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
             .maybeSingle();
 
         if (profileError) {
-            throw profileError;
+            console.error(profileError);
+            return NextResponse.json(
+                { message: "Error processing the request" },
+                { status: 500 }
+            );
         }
 
         if (!profile || profile.username !== username) {

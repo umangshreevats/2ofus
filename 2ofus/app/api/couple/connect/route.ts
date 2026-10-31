@@ -38,7 +38,13 @@ export async function POST(request: NextRequest) {
                 p_requested_id: requestedId,
             });
 
-        if (existingCoupleError) throw existingCoupleError;
+        if (existingCoupleError) {
+            console.error(existingCoupleError);
+            return NextResponse.json(
+                { message: "Error while processing the request!" },
+                { status: 500 }
+            );
+        };
 
         if (existingCouple) {
             return NextResponse.json(
@@ -56,7 +62,12 @@ export async function POST(request: NextRequest) {
             .limit(1)
             .maybeSingle();
 
-        if (senderPendingError) throw senderPendingError;
+        if (senderPendingError) {
+            return NextResponse.json(
+                { message: "Error while processing the request!" },
+                { status: 500 }
+            );
+        };
 
         if (senderPending) {
             return NextResponse.json(
@@ -74,7 +85,12 @@ export async function POST(request: NextRequest) {
             .limit(1)
             .maybeSingle();
 
-        if (receiverPendingError) throw receiverPendingError;
+        if (receiverPendingError) {
+            return NextResponse.json(
+                { message: "Error while processing the request!" },
+                { status: 500 }
+            );
+        };
 
         if (receiverPending) {
             return NextResponse.json(
@@ -91,7 +107,12 @@ export async function POST(request: NextRequest) {
                 status: "pending"
             }).select().single();
 
-        if (sendRequestError) throw sendRequestError;
+        if (sendRequestError) {
+            return NextResponse.json(
+                { message: "Error while processing the request!" },
+                { status: 500 }
+            );
+        };
 
 
         return NextResponse.json({

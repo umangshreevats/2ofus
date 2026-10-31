@@ -30,7 +30,11 @@ export const POST = async (request: NextRequest, { params }: { params: Promise<{
             .single();
 
         if (profileError) {
-            throw profileError;
+            console.error(profileError);
+            return NextResponse.json(
+                { message: "Error processing the request" },
+                { status: 500 }
+            )
         }
 
         if (!profile || profile.username !== username) {
