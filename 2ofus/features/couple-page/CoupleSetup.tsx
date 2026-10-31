@@ -8,6 +8,7 @@ import PhotoFrame from "@/components/commons/PhotoFrame";
 import Image from "next/image";
 import Button from "@/components/commons/Button";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const CoupleSetup = ({ profileId }: { profileId: string }) => {
 
@@ -22,8 +23,6 @@ const CoupleSetup = ({ profileId }: { profileId: string }) => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
         e.preventDefault();
-
-        console.log(profileId);
         setLoading(true);
 
         try {
@@ -47,7 +46,7 @@ const CoupleSetup = ({ profileId }: { profileId: string }) => {
             const result = await response.json();
 
             if (!response.ok) {
-                alert("Something went wrong: " + result.message);
+                toast.error("Something went wrong: " + result.message);
                 setLoading(false);
                 return;
             }
@@ -56,11 +55,11 @@ const CoupleSetup = ({ profileId }: { profileId: string }) => {
 
         } catch (err) {
             if (err instanceof Error) {
-                alert("Something went wrong: " + err.message);
+                toast.error("Something went wrong: " + err.message);
                 return;
             }
 
-            alert("Something went wrong");
+            toast.error("Something went wrong!");
         } finally {
             setLoading(false);
         }
@@ -156,8 +155,8 @@ const CoupleSetup = ({ profileId }: { profileId: string }) => {
                         </label>
 
                         <PhotoFrame
-                            width={220}
-                            height={220}
+                            width={300}
+                            height={300}
                             wscale="px"
                             hscale="px"
                             round={true}
@@ -167,8 +166,8 @@ const CoupleSetup = ({ profileId }: { profileId: string }) => {
                                     src={URL.createObjectURL(bioImage)}
                                     alt="Couple photograph"
                                     fill
+                                    sizes="(max-width: 640px) 85px, (max-width: 768px) 120px, (max-width: 1024px) 160px, 185px"
                                     className="object-cover"
-                                    unoptimized
                                 />
                             ) : (
                                 <div className="w-full h-full flex flex-col items-center justify-center text-secondary-text gap-2">

@@ -9,6 +9,10 @@ export default async function CoupleSetupPage ({ params }: { params: Promise<{ c
 
     const { coupleData } = await getCurrentUser();
 
+    if(!coupleData) {
+        throw new Error(`You are either not a part of any couple profile, or are trying to access
+        a profile that you are not part of!`);
+    }
     if(coupleData.is_profile_completed) {
         redirect("/home/my-couple");
     }
@@ -16,6 +20,10 @@ export default async function CoupleSetupPage ({ params }: { params: Promise<{ c
 
     if(!coupleId) {
         throw Error("Couple Id is required");
+    }
+
+    if(coupleId !== coupleData.id) {
+        throw new Error(`You are not a part of this couple profile!`);
     }
 
     await supabase.from("couples").update({ is_profile_completed: true }).eq("id", coupleId).single();
