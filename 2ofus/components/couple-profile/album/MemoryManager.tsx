@@ -11,7 +11,9 @@ import PlayfulInput from "@/components/commons/PlayfulInput";
 import Photograph from "@/components/commons/Photograph";
 import Button from "@/components/commons/Button";
 import DatePicker from "@/components/commons/DatePicker";
+import { toast } from "sonner";
 import { useAuth } from "@/app/auth-provider";
+
 type MemoryType = "image" | "note";
 
 
@@ -46,7 +48,10 @@ const MemoryManager: React.FC<MemoryManagerProps> = ({
     const handleMemoryFormSubmit = async (e: any) => {
         e.preventDefault();
 
-        if (!memoryType) return;
+        if (!memoryType) {
+            toast.warning("No memory type available to create or update!");
+            return;
+        }
 
         setLoading(true);
         try {
@@ -58,7 +63,7 @@ const MemoryManager: React.FC<MemoryManagerProps> = ({
 
             if (memoryType === "image") {
                 if (!image) {
-                    alert("Select Image");
+                    toast.warning("Choose an Image to save!");
                     return;
                 }
                 formData.append("content", image);
@@ -66,14 +71,14 @@ const MemoryManager: React.FC<MemoryManagerProps> = ({
 
             if (memoryType === "note") {
                 if (note.length === 0) {
-                    alert("Write something");
+                    toast.warning("Write a note or something for this type!");
                     return;
                 }
                 formData.append("content", note);
             }
 
             if (!memoryDate) {
-                alert("Give a memory date");
+                toast.warning("Give a memory date");
                 return;
             }
             formData.append("memory_date", memoryDate.toISOString());
@@ -88,13 +93,17 @@ const MemoryManager: React.FC<MemoryManagerProps> = ({
             const result = await response.json();
 
             if (!response.ok) {
-                alert("Something went wrong! " + result.message);
+                toast.error("Something went wrong! " + result.message);
                 return;
             }
             setShow(false);
+
+            toast.success("Memory created successfully!");
         } catch (err) {
-            alert("Something went wrong!");
-            console.error(err);
+
+            if (err instanceof Error) {
+                toast.error("Something went wrong: " + err.message);
+            }
         } finally {
             setLoading(false);
         }

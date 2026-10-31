@@ -3,10 +3,12 @@
 
 import { Users } from "@/types/profiles";
 import { X } from "lucide-react";
-import { SetStateAction, useEffect, useState } from "react";
+import { SetStateAction, useState } from "react";
+import { toast } from "sonner";
 import Button from "../commons/Button";
 import DatePicker from "../commons/DatePicker";
 import { interest } from "@/data/profile";
+
 
 type InterestCategory = keyof NonNullable<Users["interests"]>;
 
@@ -65,10 +67,6 @@ const ProfileEditing = ({
             };
         });
     };
-
-    useEffect(() => {
-        console.log(profileData);
-    }, [profileData])
 
     const isSelected = (
         category: InterestCategory,
@@ -131,7 +129,7 @@ const ProfileEditing = ({
 
                 // Check if anything changed
                 if ([...formData.keys()].length === 0) {
-                    console.log("Nothing to update");
+                    toast.warning("Nothing to update");
                     return;
                 }
 
@@ -143,7 +141,7 @@ const ProfileEditing = ({
                 const result = await response.json();
 
                 if (!response.ok) {
-                    throw new Error(result.message || "Update failed");
+                    toast.error(result.message || "Update failed");
                 }
 
                 setSelectedImage(null);
@@ -151,15 +149,20 @@ const ProfileEditing = ({
                 // Update original snapshot
                 originalProfile.current = structuredClone(result.user);
 
-                console.log("Profile updated!");
+                toast.success("Profile updated!");
 
-            } catch (error) {
-                console.error("Error updating profile:", error);
+            } catch (err) {
+
+                if (err instanceof Error) {
+                    toast.error("Error updating profile:" + err.message);
+                }
             }
             setEditing(false);
         } catch (err) {
-            console.error(err);
-            alert("An error occured");
+
+            if(err instanceof Error) {
+            toast.error("An error occured: " + err.message);
+            }
         } finally {
             setLoading(false);
         }
