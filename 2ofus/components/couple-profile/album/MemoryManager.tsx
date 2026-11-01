@@ -20,8 +20,9 @@ type MemoryType = "image" | "note";
 type MemoryData = {
     title: string,
     content: string,
-    contentType: MemoryType,
-    memoryDate: Date
+    content_type: MemoryType,
+    memoryDate: Date,
+    priority: number
 }
 
 interface MemoryManagerProps {
@@ -37,12 +38,12 @@ const MemoryManager: React.FC<MemoryManagerProps> = ({
 }) => {
 
     const { coupleData } = useAuth();
-    const [memoryType, setMemoryType] = useState<MemoryType | null>(null);
-    const [title, setTitle] = useState("");
-    const [note, setNote] = useState("");
+    const [memoryType, setMemoryType] = useState<MemoryType | null>(memoryData?.content_type ?? null);
+    const [title, setTitle] = useState(memoryData?.title ?? "");
+    const [note, setNote] = useState(memoryData?.content || "");
     const [image, setImage] = useState<File | null>(null);
     const [memoryDate, setMemoryDate] = useState<Date | null>(null);
-    const [priority, setPriority] = useState(0);
+    const [priority, setPriority] = useState(memoryData?.priority ?? 0);
     const [loading, setLoading] = useState(false);
 
     const handleMemoryFormSubmit = async (e: any) => {

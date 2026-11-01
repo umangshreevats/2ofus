@@ -6,12 +6,15 @@ import { Dropdown } from "@/types/dropdown";
 import { Pin, PinOff } from "lucide-react";
 import DropDown from "@/components/commons/DropDown";
 import { useState } from "react";
+import MemoryManager from "./MemoryManager";
+import Popups from "@/components/commons/Popups";
 import { toggleMemoryPin } from "@/app/services/supabase/album";
 
 const AlbumData = ({ dataType, data, handleChoosenOne, marginTop = "auto" }: { dataType: "note" | "image", data: any, handleChoosenOne: (...args: any[]) => void, marginTop?: "auto" | number }) => {
 
 
     const [albumData, setAlbumData] = useState(data);
+    const [edit, setEdit] = useState(false);
     const dropDownOptions: Dropdown[] = [
         {
             id: "pin",
@@ -30,7 +33,7 @@ const AlbumData = ({ dataType, data, handleChoosenOne, marginTop = "auto" }: { d
         {
             id: "edit",
             name: "Edit",
-            onClick: () => { },
+            onClick: () => setEdit(prev => !prev),
             icon: Pencil,
             danger: false
         },
@@ -80,6 +83,10 @@ const AlbumData = ({ dataType, data, handleChoosenOne, marginTop = "auto" }: { d
             </div>}
             <Note cursor="pointer" onClick={() => handleChoosenOne(albumData)} title={albumData.title} note={albumData.content} author={albumData.created_by} date={albumData.memory_date} />
         </div>}
+
+        <Popups open={edit} setOpen={setEdit} className="rounded-2xl">
+            <MemoryManager memoryData={albumData} show={edit} setShow={setEdit} />
+        </Popups>
     </>
 }
 
