@@ -22,7 +22,6 @@ import { useRouter } from "next/navigation";
 import PhotoFrame from "@/components/commons/PhotoFrame";
 import { useThemeSettings } from "@/app/theme-provider";
 
-
 const ProfileIcon = () => {
 
     const { setTheme, setPalette } = useThemeSettings();
@@ -136,6 +135,7 @@ const ProfileIcon = () => {
             onClick: handleSignOut
         }
     ];
+
 
     return <DropDown iconPos="end" open={open} setOpen={setOpen} right={10} top={10} dropDownOptions={dropDownOptions}>
         <div className="w-10 h-10 rounded-full font-bold">

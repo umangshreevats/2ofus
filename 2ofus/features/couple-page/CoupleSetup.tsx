@@ -9,6 +9,7 @@ import Image from "next/image";
 import Button from "@/components/commons/Button";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { Dropdown } from "@/types/dropdown";
 
 const CoupleSetup = ({ profileId }: { profileId: string }) => {
 
@@ -65,7 +66,7 @@ const CoupleSetup = ({ profileId }: { profileId: string }) => {
         }
     }
 
-    const dropDownOptions = [
+    const dropDownOptions: Dropdown[] = [
         {
             id: 1,
             name: "Talking",

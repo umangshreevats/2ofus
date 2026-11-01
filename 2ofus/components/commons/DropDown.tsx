@@ -2,6 +2,7 @@
 import { SetStateAction, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { createPortal } from "react-dom";
+import { Dropdown } from "@/types/dropdown";
 
 const DropDown = ({
     children,
@@ -20,7 +21,7 @@ const DropDown = ({
     placement = null
 }: {
     children: React.ReactNode,
-    dropDownOptions?: any[],
+    dropDownOptions?: Dropdown[],
     left?: number,
     top?: number,
     right?: number,
@@ -165,10 +166,10 @@ const DropDown = ({
                                         open={opt.ddInfo.open}
                                         setOpen={opt.ddInfo.setOpen}
                                         dropDownOptions={opt.ddOptions}
-                                        left={opt.ddInfo.left ?? ""}
-                                        top={opt.ddInfo.top ?? ""}
-                                        right={opt.ddInfo.right ?? ""}
-                                        bottom={opt.ddInfo.bottom ?? ""}
+                                        left={opt.ddInfo.left ?? 0}
+                                        top={opt.ddInfo.top ?? 0}
+                                        right={opt.ddInfo.right ?? 0}
+                                        bottom={opt.ddInfo.bottom ?? 0}
                                         width={opt.ddInfo.width ?? "auto"}
                                         wScale={opt.ddInfo.wscale ?? "px"}
                                         iconPos={opt.ddInfo.iconPos ?? "center"}
