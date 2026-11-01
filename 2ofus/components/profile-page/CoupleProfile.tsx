@@ -118,8 +118,9 @@ const CoupleProfile = ({
                 setLoading(false);
                 return;
             }
-
+            setSelectedImage(null);
             toast.success("Profile Informations updated successfully.");
+            setEditing(false);
 
         } catch (err) {
             if (err instanceof Error) {

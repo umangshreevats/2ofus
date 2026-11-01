@@ -5,6 +5,8 @@ import { Couples, Users } from "@/types/profiles";
 import { SetStateAction } from "react";
 import IndividualProfile from "./IndividualProfile";
 import CoupleProfile from "./CoupleProfile";
+import { X } from "lucide-react";
+
 
 const ProfileEditing = ({
     type,
@@ -39,6 +41,9 @@ const ProfileEditing = ({
 
     return (
         <div className="relative p-8 md:p-10 flex flex-col gap-5 bg-background rounded-md max-h-[85vh] overflow-y-auto w-full" style={{ scrollbarWidth: "none" }}>
+            <button type="button" onClick={()=> setEditing(false)} className="cursor-pointer absolute right-2 top-2">
+                <X />
+            </button>
             {setProfileData && originalProfile ? (
                 <IndividualProfile
                     profileInfo={{
@@ -53,17 +58,17 @@ const ProfileEditing = ({
                     type={type}
                 />
             ) : (setCoupleData && originalCouple) ? <CoupleProfile
-                 profileInfo={{
+                profileInfo={{
                     profileType: "couples",
                     profileData: profileData as Couples,
                     setCoupleData: setCoupleData,
                     originalCouple: originalCouple
-                 }}
-                 setEditing={setEditing}
-                 selectedImage={selectedImage}
-                 setSelectedImage={setSelectedImage}
-                 type={type}
-                 />
+                }}
+                setEditing={setEditing}
+                selectedImage={selectedImage}
+                setSelectedImage={setSelectedImage}
+                type={type}
+            />
                 : null}
         </div>
     );
