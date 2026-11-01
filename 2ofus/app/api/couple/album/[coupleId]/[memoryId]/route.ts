@@ -1,50 +1,142 @@
-// import { getCurrentUser } from "@/lib/auth";
-// import { NextRequest, NextResponse } from "next/server";
+import { getCurrentUser } from "@/lib/auth";
+import { encrypt } from "@/lib/encryption";
+import { supabaseAdmin } from "@/lib/supabase/admin";
+import { uploadMemoryImage } from "@/lib/supabase/storage";
+import { supabase } from "@/utils/supabase/client";
+import { NextRequest, NextResponse } from "next/server";
 
 
 
+// PATCH: /api/couple/album/:coupleId/:memoryId
+export const PATCH = async (request: NextRequest, { params }: { params: Promise<{ coupleId?: string, memoryId?: string}> }) => {
 
-// export const PATCH = async (request: NextRequest, { params }: { params: Promise<{ coupleId?: string, memoryId?: string}> }) => {
 
+    try {
 
-//     try {
-
-//         const { user } = await getCurrentUser();
+        const { user, coupleData } = await getCurrentUser();
         
         
-//         if(!user) {
-//             return NextResponse.json(
-//                 { message: "Unauthorized" },
-//                 { status: 401 }
-//             );
-//         }
+        if(!user) {
+            return NextResponse.json(
+                { message: "Unauthorized" },
+                { status: 401 }
+            );
+        }
 
-//         const { coupleId, memoryId } = await params;
+        const { coupleId, memoryId } = await params;
 
-//         if(!coupleId) {
-//             return NextResponse.json(
-//                 { message: "Couple Id is required" },
-//                 { status: 400 }
-//             );
-//         }
+        if(!coupleId) {
+            return NextResponse.json(
+                { message: "Couple Id is required" },
+                { status: 400 }
+            );
+        }
 
-//         if(!memoryId) {
-//             return NextResponse.json(
-//                 { message: "Memory Id is required" },
-//                 { status: 400 }
-//             );
-//         }
+        if(!memoryId) {
+            return NextResponse.json(
+                { message: "Memory Id is required" },
+                { status: 400 }
+            );
+        }
+
+        if(coupleData.id !== coupleId) {
+            return NextResponse.json(
+                { message: "Forbidden" },
+                { status: 403 }
+            )
+        }
 
 
-//         const body = await request.json();
+        const formData = await request.formData();
 
 
-//         const { pin } = body;
+        const title = formData.get("title");
+        const content = formData.get("content");
+        const priority = formData.get("priority");
+
+        const { data: contentType, error: contentTypeError } = await supabase
+        .from("memory")
+        .select("content_type, media_id")
+        .eq("id", memoryId)
+        .eq("couple_id", coupleId)
+        .single();
+
+        if(contentTypeError || !contentType) {
+            return NextResponse.json(
+                { message: "Error Updating the informations" },
+                { status: 500 }
+            );
+        }
 
 
-//         if(pin) {
-//             await update
-//         }
+        let updatedMemory: Record<string, any> = {};
 
-//     }
-// }
+
+        if(title && typeof title === "string") {
+            const encryptedTitle = encrypt(title);
+            updatedMemory.title = encryptedTitle;
+        }
+
+        if(priority) {
+            updatedMemory.priority = Number(priority);
+        }
+
+        if(content && 
+        ((contentType.content_type === "note" && typeof content !== "string") || 
+        contentType.content_type === "image" && !(content instanceof File))) {
+            return NextResponse.json(
+                { message: "Bad Request: Type mismatch for content" },
+                { status: 400 }
+            );
+        } else if(typeof content === "string") {
+            const encryptedContent = encrypt(content as string);
+            updatedMemory.content = encryptedContent;
+        } else if(content && contentType.content_type === "image") {
+
+            if(contentType.media_id) {
+                const { error } = await supabaseAdmin.storage.from("couple-memories").remove([contentType.media_id]);
+
+                if(error) {
+                    return NextResponse.json(
+                        { message: "Error updating the informations" },
+                        { status: 500 }
+                    )
+                }
+            }
+
+            const { path } = await uploadMemoryImage(supabase, content, coupleId);
+
+            updatedMemory.media_id = path;
+        }
+
+
+        const { data: updatedData, error: updateError } = await supabase
+        .from("memory")
+        .update(updatedMemory)
+        .eq("id", memoryId)
+        .eq("couple_id", coupleId)
+        .select()
+        .single();
+
+
+        if(updateError) {
+            console.error(updateError);
+            return NextResponse.json(
+                { message: "Error updating the memory" },
+                { status: 500 }
+            );
+        }
+
+
+        return NextResponse.json(
+            { message: "Memory updated successfully", updatedData },
+            { status: 200 }
+        );
+    } catch (err) {
+        console.error(err);
+        return NextResponse.json(
+            { message: "Internal Server Error" },
+            { status: 500 }
+        );
+    }
+}
