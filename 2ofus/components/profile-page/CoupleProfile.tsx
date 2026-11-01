@@ -6,6 +6,7 @@ import { SetStateAction, useState } from "react";
 import { toast } from "sonner";
 import Button from "../commons/Button";
 import DatePicker from "../commons/DatePicker";
+import PlayfulInput from "../commons/PlayfulInput";
 
 type CoupleProfileType =
     "fullname"
@@ -16,7 +17,8 @@ type CoupleProfileType =
     | "anniversary_date"
     | "first_meet_date"
     | "first_meet_location"
-    | "relationship_status";
+    | "relationship_status"
+    | "bio";
 
 const relationshipStatuses: RelationshipStatus[] = [
     "Talking",
@@ -62,7 +64,8 @@ const CoupleProfile = ({
                 "anniversary_date",
                 "first_meet_date",
                 "first_meet_location",
-                "relationship_status"
+                "relationship_status",
+                "bio"
             ];
 
             // Detect changed fields
@@ -82,7 +85,7 @@ const CoupleProfile = ({
                 }
             });
 
-            if(originalCouple.current.cover_image && !profileData.cover_image) {
+            if (originalCouple.current.cover_image && !profileData.cover_image) {
                 formData.append("removeCoverImage", "true");
             } else {
                 formData.append("removeCoverImage", "false");
@@ -107,11 +110,13 @@ const CoupleProfile = ({
                 method: "PATCH",
                 body: formData
             });
-            
+
             const result = await response.json();
-            
+
             if (!response.ok) {
                 toast.error("Error occured while updating the profile informations: " + result.message);
+                setLoading(false);
+                return;
             }
 
             toast.success("Profile Informations updated successfully.");
@@ -269,6 +274,38 @@ const CoupleProfile = ({
                             </option>
                         ))}
                     </select>
+                </>
+            )}
+
+
+            {type === "bio" && (
+                <>
+                    <h4 className="text-2xl font-rubik font-bold">
+                        Edit Couple Bio
+                    </h4>
+
+                    <PlayfulInput
+                        id="couple-bio"
+                        text={profileData.bio ?? ""}
+                        placeholder="Tell your love story..."
+                        textArea
+                        width={100}
+                        wScale="%"
+                        height={150}
+                        maxLength={500}
+                        textAlign="left"
+                        padding={1}
+                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                            setCoupleData(prev => ({
+                                ...prev,
+                                bio: e.target.value
+                            }))
+                        }
+                    />
+
+                    <p className="text-sm text-gray-500 text-right">
+                        {(profileData.bio ?? "").length}/500
+                    </p>
                 </>
             )}
 

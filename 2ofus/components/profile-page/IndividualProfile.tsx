@@ -1,6 +1,6 @@
 "use client";
 
-import { Couples, Users } from "@/types/profiles";
+import { Users } from "@/types/profiles";
 import { SetStateAction } from "react";
 import { useState } from "react";
 import { interest } from "@/data/profile";
@@ -50,7 +50,8 @@ const IndividualProfile = ({
         | "anniversary_date"
         | "first_meet_date"
         | "first_meet_location"
-        | "relationship_status";
+        | "relationship_status"
+        | "bio";
     }) => {
 
     const { profileData, setProfileData, profileType, originalProfile } = profileInfo;

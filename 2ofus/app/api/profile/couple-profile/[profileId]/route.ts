@@ -106,7 +106,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
     try {
 
-
+        const relationshipStatus = ["talking", "dating", "married", "engaged"];
         const { user } = await getCurrentUser();
 
         if (!user) {
@@ -159,62 +159,70 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
             updatedCoupleProfile.couple_name = formData.get("couple_name");
         }
 
-        if (formData.get("remove_cover_image") !== undefined && typeof formData.get("remove_cover_image") === "boolean") {
-
-            if (formData.get("remove_cover_image") === "true") {
+        if (formData.get("removeCoverImage") === "true") {
+            if (currentProfile.cover_image) {
                 const { error } = await supabaseAdmin.storage
                     .from("couple-bio-images")
                     .remove([currentProfile.cover_image]);
-                
-                if(error) {
+
+                if (error) {
+                    console.error("Image deletion error:", error);
+
                     return NextResponse.json(
-                        { message: "Error updating couple informations in server" },
+                        { message: "Error deleting cover image" },
                         { status: 500 }
                     );
                 }
-
-                updatedCoupleProfile.cover_image = null;
             }
+
+            updatedCoupleProfile.cover_image = null;
         }
 
         const coverImage = formData.get("cover_image");
-        if(coverImage && 
-        (coverImage instanceof File && coverImage.size > 0)) {
+        if (coverImage &&
+            (coverImage instanceof File && coverImage.size > 0)) {
             const { publicUrl } = await uploadBioImage(supabase, coverImage, profileId);
             updatedCoupleProfile.cover_image = publicUrl;
         }
 
-        if(formData.get("bio") && typeof formData.get("bio") === "string") {
+        if (formData.get("bio") && typeof formData.get("bio") === "string") {
             updatedCoupleProfile.bio = formData.get("bio");
         }
 
-        if(formData.get("relationship_status") as RelationshipStatus) {
-            updatedCoupleProfile.relationship_status = formData.get("relationship_status");
+        const changedRelationshipStatus = formData.get("relationship_status");
+        if (changedRelationshipStatus && typeof changedRelationshipStatus === "string") {
+            if (!relationshipStatus.includes(changedRelationshipStatus.toLowerCase())) {
+                return NextResponse.json(
+                    { message: "Relationship Status is invalid" },
+                    { status: 400 }
+                );
+            }
+            updatedCoupleProfile.relationship_status = changedRelationshipStatus.toLowerCase();
         }
 
-        if(formData.get("first_meet_date") as string) {
+        if (formData.get("first_meet_date") && typeof formData.get("first_meet_date") === "string") {
             updatedCoupleProfile.first_meet_date = formData.get("first_meet_date");
         }
 
-        if(formData.get("first_meet_location") as string) {
+        if (formData.get("first_meet_location") && typeof formData.get("first_meet_location") === "string") {
             updatedCoupleProfile.first_meet_location = formData.get("first_meet_location");
         }
 
-        if(formData.get("anniversary_date") as string) {
+        if (formData.get("anniversary_date") && typeof formData.get("anniversary_date") === "string") {
             updatedCoupleProfile.anniversary_date = formData.get("anniversary_date");
         }
 
 
         const { data: updatedProfile, error: updateError } = await supabase
-        .from("couples")
-        .update(updatedCoupleProfile)
-        .eq("id", profileId)
-        .or(`partner_1.eq.${user.id},partner_2.eq.${user.id}`)
-        .select()
-        .single();
+            .from("couples")
+            .update(updatedCoupleProfile)
+            .eq("id", profileId)
+            .or(`partner_1.eq.${user.id},partner_2.eq.${user.id}`)
+            .select()
+            .single();
 
 
-        if(updateError) {
+        if (updateError) {
             console.error(updateError);
             return NextResponse.json(
                 { message: "Error updating the profile Informations" },
@@ -223,7 +231,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
         }
 
         return NextResponse.json(
-            { message: "Profile Informations updated successfully" },
+            { message: "Profile Informations updated successfully", updatedProfile },
             { status: 200 }
         );
 

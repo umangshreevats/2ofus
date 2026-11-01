@@ -9,10 +9,18 @@ import Button from "@/components/commons/Button";
 import { Pencil, X, Heart, CalendarHeart, Clock, MapPin } from "lucide-react";
 import { Couples } from "@/types/profiles";
 import InformationHolder from "@/components/profile-page/InformationHolder";
+import { toast } from "sonner";
+import { useThemeSettings } from "@/app/theme-provider";
+import Popups from "@/components/commons/Popups";
+import ProfileEditing from "@/components/profile-page/ProfileEditing";
+
 
 
 const CoupleEdit = ({ profileData, allowEdits }: { profileData: Couples, allowEdits: boolean }) => {
 
+
+    const { theme } = useThemeSettings();
+    const [bioEditing, setBioEditing] = useState(false);
     const originalProfile = useRef<Couples>(profileData);
     const informationHolder = [
         {
@@ -56,9 +64,88 @@ const CoupleEdit = ({ profileData, allowEdits }: { profileData: Couples, allowEd
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-    const handleSubmit = async () => { };
+    const handleInfoSubmit = async () => {
+        setLoading(true);
 
-    const handleRemoveProfileImage = () => { };
+        try {
+            const formData = new FormData();
+
+            const editableFields: (keyof Couples)[] = [
+                "couple_name",
+                "anniversary_date",
+                "first_meet_date",
+                "first_meet_location",
+                "relationship_status",
+                "bio"
+            ];
+
+            // Detect changed fields
+            editableFields.forEach((field) => {
+                const originalValue = originalProfile.current[field];
+                const editedValue = profile[field];
+
+                const hasChanged =
+                    JSON.stringify(originalValue ?? null) !==
+                    JSON.stringify(editedValue ?? null);
+
+                if (hasChanged) {
+                    formData.append(
+                        field,
+                        String(editedValue ?? "")
+                    );
+                }
+            });
+
+            if (originalProfile.current.cover_image && !profile.cover_image) {
+                formData.append("removeCoverImage", "true");
+            } else {
+                formData.append("removeCoverImage", "false");
+            }
+
+            // Include selected cover image
+            if (selectedImage) {
+                formData.append("removeCoverImage", "true");
+                formData.append("cover_image", selectedImage);
+            }
+
+            // Check whether anything changed
+            if ([...formData.keys()].length === 0) {
+                toast.warning("Nothing to update");
+                return;
+            }
+
+            const response = await fetch(`/api/profile/couple-profile/${profile.id}`, {
+                method: "PATCH",
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                toast.error("Error occured while updating the profile informations: " + result.message);
+                setLoading(false);
+                return;
+            }
+
+            toast.success("Profile Informations updated successfully.");
+
+        } catch (err) {
+            if (err instanceof Error) {
+                toast.error("Error updating couple profile: " + err.message);
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleRemoveProfileImage = () => {
+        setProfile(prev => ({
+            ...prev,
+            cover_image: null
+        }));
+
+        setSelectedImage(null);
+    };
 
     return <div className="parent-box">
         <div className="child-box p-5 gap-5 flex flex-col">
@@ -133,7 +220,7 @@ const CoupleEdit = ({ profileData, allowEdits }: { profileData: Couples, allowEd
 
 
                         {(allowEdits && (selectedImage || (originalProfile.current && originalProfile.current.cover_image && !profile.cover_image))) &&
-                            <Button type="button" onClick={handleSubmit} text={loading ? "Saving..." : "Save Changes"} disabled={loading} />}
+                            <Button type="button" onClick={handleInfoSubmit} text={loading ? "Saving..." : "Save Changes"} disabled={loading} />}
                     </div>
 
                     {/*Profile Information holders*/}
@@ -156,6 +243,35 @@ const CoupleEdit = ({ profileData, allowEdits }: { profileData: Couples, allowEd
                             </div>
                         ))}
                     </div>
+
+                    {/*Bio*/}
+                    <div className={`col-span-2 ${theme === "light" ? "bg-white" : "bg-black"} text-primary-text w-full shadow-[0_0_2px_var(--primary-text)] p-5 flex flex-col gap-5`}>
+                        <div className="w-full flex items-center justify-between">
+                            <h3 className="text-primary-text font-rubik text-2xl">
+                                Bio
+                            </h3>
+
+                            {allowEdits && <div className="aspect-square p-5">
+                                <PlayfulButton backgroundColor="var(--accent)" textColor="white" padding={5} pScale="px" 
+                                width={100} height={100} wScale="%" hScale="%" icon={Pencil} onClick={() => setBioEditing(prev => !prev)} />
+                            </div>}
+                        </div>
+
+                        {(profile.bio && profile.bio.length > 0) ? <p className="w-full text-secondary-text font-comfortaa whitespace-pre-wrap break-words">
+                            {profile.bio}</p> : <div className="w-full flex justify-center items-center font-comfortaa text-secondary-text">Add a bio.</div>}
+                    </div>
+
+                    <Popups open={bioEditing} setOpen={setBioEditing}>
+                        <ProfileEditing
+                            selectedImage={selectedImage}
+                            setSelectedImage={setSelectedImage}
+                            originalCouple={originalProfile}
+                            type={"bio"}
+                            setEditing={setBioEditing}
+                            profileData={profile}
+                            setCoupleData={setProfile}
+                        />
+                    </Popups>
                 </div>
             </div>
         </div>

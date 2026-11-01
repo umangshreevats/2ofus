@@ -25,7 +25,8 @@ const ProfileEditing = ({
     | "anniversary_date"
     | "first_meet_date"
     | "first_meet_location"
-    | "relationship_status";
+    | "relationship_status"
+    | "bio";
     profileData: Users | Couples;
     setEditing: React.Dispatch<SetStateAction<boolean>>;
     setProfileData?: React.Dispatch<SetStateAction<Users>>;
