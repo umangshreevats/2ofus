@@ -4,6 +4,7 @@
 import { Couples, Users } from "@/types/profiles";
 import { SetStateAction } from "react";
 import IndividualProfile from "./IndividualProfile";
+import CoupleProfile from "./CoupleProfile";
 
 const ProfileEditing = ({
     type,
@@ -50,7 +51,19 @@ const ProfileEditing = ({
                     setSelectedImage={setSelectedImage}
                     type={type}
                 />
-            ) : null}
+            ) : (setCoupleData && originalCouple) ? <CoupleProfile
+                 profileInfo={{
+                    profileType: "couples",
+                    profileData: profileData as Couples,
+                    setCoupleData: setCoupleData,
+                    originalCouple: originalCouple
+                 }}
+                 setEditing={setEditing}
+                 selectedImage={selectedImage}
+                 setSelectedImage={setSelectedImage}
+                 type={type}
+                 />
+                : null}
         </div>
     );
 };

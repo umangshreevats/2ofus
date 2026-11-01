@@ -139,20 +139,21 @@ const CoupleEdit = ({ profileData, allowEdits }: { profileData: Couples, allowEd
                     {/*Profile Information holders*/}
                     <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-5 p-5">
                         {informationHolder.map((info) => (
-                            <InformationHolder
-                                key={info.key}
-                                heading={info.heading}
-                                icon={info.icon}
-                                iconColor={info.iconColor}
-                                information={String(profile[info.key] ?? "Not specified")}
-                                allowEdit={allowEdits}
-                                type={info.type}
-                                profileData={profile}
-                                setProfileData={setProfile}
-                                selectedImage={selectedImage}
-                                setSelectedImage={setSelectedImage}
-                                originalProfile={originalProfile}
-                            />
+                            <div key={info.key}>
+                                <InformationHolder
+                                    heading={info.heading}
+                                    icon={info.icon}
+                                    iconColor={info.iconColor}
+                                    information={String(profile[info.key] ?? "Not specified")}
+                                    allowEdit={allowEdits}
+                                    type={info.type}
+                                    profileData={profile}
+                                    setCoupleData={setProfile}
+                                    selectedImage={selectedImage}
+                                    setSelectedImage={setSelectedImage}
+                                    originalCouple={originalProfile}
+                                />
+                            </div>
                         ))}
                     </div>
                 </div>

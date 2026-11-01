@@ -28,7 +28,7 @@ export interface Users {
 
 export interface Couples {
     id: string;
-    couple_name: string;
+    couple_name: string | null;
     partner_1: string | {
         id: string;
         firstname: string;
@@ -47,12 +47,12 @@ export interface Couples {
         profile_image: string;
         interests: unknown;
     };
-    cover_image: string;
+    cover_image: string | null;
     relationship_status: string;
-    anniversary_date: string;
-    first_meet_date: string;
-    first_meet_location: string;
-    bio: string;
+    anniversary_date: string | null;
+    first_meet_date: string | null;
+    first_meet_location: string | null;
+    bio: string | null;
     created_at: string;
     updated_at: string;
     is_profile_completed: boolean;

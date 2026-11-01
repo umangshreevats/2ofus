@@ -80,7 +80,7 @@ const InformationHolder = ({
         </div>}
 
         {editing && type && (
-            setProfileData ? <Popups open={editing} setOpen={setEditing}>
+            (setProfileData && originalProfile) ? <Popups open={editing} setOpen={setEditing}>
                 <ProfileEditing
                     selectedImage={selectedImage}
                     setSelectedImage={setSelectedImage}
@@ -90,17 +90,17 @@ const InformationHolder = ({
                     profileData={profileData}
                     setProfileData={setProfileData}
                 />
-            </Popups> : <Popups open={editing} setOpen={setEditing}>
+            </Popups> :  (setCoupleData && originalCouple) ? <Popups open={editing} setOpen={setEditing}>
                 <ProfileEditing
                     selectedImage={selectedImage}
                     setSelectedImage={setSelectedImage}
-                    originalProfile={originalProfile}
+                    originalCouple={originalCouple}
                     type={type}
                     setEditing={setEditing}
                     profileData={profileData}
                     setCoupleData={setCoupleData}
                 />
-            </Popups>
+            </Popups> : null
         )}
     </div>
 }

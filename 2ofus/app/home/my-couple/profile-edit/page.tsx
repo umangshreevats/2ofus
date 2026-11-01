@@ -7,7 +7,11 @@ import { createClient } from "@/utils/supabase/server";
 
 export default async function CoupleProfileEditPage() {
 
+
+    const { coupleData } = await getCurrentUser();
+
+
     return <section className="w-full">
-        <CoupleEdit profileData={{}} allowEdits={true} />
+        <CoupleEdit profileData={coupleData} allowEdits={true} />
     </section>
 }
