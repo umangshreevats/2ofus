@@ -1,10 +1,10 @@
 "use client";
 import Pagination from "@/components/commons/Pagination";
-import Photograph from "@/components/commons/Photograph";
 import Suggestion from "@/components/couple-profile/album/Suggestion";
 import Popups from "@/components/commons/Popups";
 import MemoryHolder from "@/components/couple-profile/album/MemoryHolder";
 import { useState } from "react";
+import AlbumData from "@/components/couple-profile/album/AlbumData";
 
 const ImageMemory = ({ albumData, numberOfPages, numPage }: { albumData: unknown | null, numberOfPages: number, numPage: number }) => {
 
@@ -26,16 +26,14 @@ const ImageMemory = ({ albumData, numberOfPages, numPage }: { albumData: unknown
         setShow(true);
     }
 
-    return <section className="w-full flex flex-col gap-5 max-h-[800px]">
+    return <section className="w-full flex flex-col gap-5">
         <h3 className="w-full text-2xl font-bold">
             Memorable Images
         </h3>
 
         <div className="w-full p-5 flex gap-5 flex-wrap">
             {albumData.map((image) => (<div key={image.id} className="relative">
-                <div>
-                    <Photograph onClick={() => handleChoosenOne(image)} cursor="pointer" maxHeight={220} maxWidth={220} date={image.memory_date} url={image.media_id} alternate={`Photograph-${image.id}`} name={image.title} />
-                </div>
+                <AlbumData dataType="image" data={image} handleChoosenOne={handleChoosenOne}/>
             </div>))}
         </div>
 

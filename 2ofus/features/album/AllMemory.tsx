@@ -1,14 +1,11 @@
 "use client";
-
-import Note from "@/components/commons/Note";
-import Photograph from "@/components/commons/Photograph";
 import Suggestion from "@/components/couple-profile/album/Suggestion";
 import Button from "@/components/commons/Button";
 import { useState } from "react";
 import { useAuth } from "@/app/auth-provider";
 import Popups from "@/components/commons/Popups";
 import MemoryHolder from "@/components/couple-profile/album/MemoryHolder";
-import { Plus, Ellipsis } from "lucide-react";
+import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import AlbumData from "@/components/couple-profile/album/AlbumData";
 

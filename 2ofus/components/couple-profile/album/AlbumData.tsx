@@ -1,22 +1,29 @@
 "use client"
-import { Ellipsis, Pencil, Trash2 } from "lucide-react";
+import { Ellipsis, Heart, Pencil, Trash2 } from "lucide-react";
 import Photograph from "@/components/commons/Photograph";
 import Note from "@/components/commons/Note";
 import { Dropdown } from "@/types/dropdown";
-import { Pin } from "lucide-react";
+import { Pin, PinOff } from "lucide-react";
 import DropDown from "@/components/commons/DropDown";
 import { useState } from "react";
-
+import { toggleMemoryPin } from "@/app/services/supabase/album";
 
 const AlbumData = ({ dataType, data, handleChoosenOne, marginTop = "auto" }: { dataType: "note" | "image", data: any, handleChoosenOne: (...args: any[]) => void, marginTop?: "auto" | number }) => {
 
 
+    const [albumData, setAlbumData] = useState(data);
     const dropDownOptions: Dropdown[] = [
         {
             id: "pin",
-            name: "Pin",
-            onClick: () => { },
-            icon: Pin,
+            name: albumData.is_pinned ? "Unpin" : "Pin",
+            onClick: async () => {
+                setAlbumData((prev: any) => ({
+                    ...prev,
+                    is_pinned: !prev.is_pinned
+                }));
+                await toggleMemoryPin(data.id)
+            },
+            icon: albumData.is_pinned ? PinOff : Pin,
             danger: false
         },
 
@@ -50,7 +57,12 @@ const AlbumData = ({ dataType, data, handleChoosenOne, marginTop = "auto" }: { d
                     </button>
                 </DropDown>
             </div>
-            <Photograph onClick={() => handleChoosenOne(data)} cursor="pointer" maxHeight={220} maxWidth={220} date={data.memory_date} url={data.media_id} alternate={`Photograph-${data.id}`} name={data.title} />
+
+
+            {albumData.is_pinned && <div className="absolute top-3 left-3 z-10 bg-pink-200 text-red-500 w-8 h-8 rounded-full bg-accent flex items-center justify-center border">
+                <Heart />
+            </div>}
+            <Photograph onClick={() => handleChoosenOne(albumData)} cursor="pointer" maxHeight={220} maxWidth={220} date={albumData.memory_date} url={albumData.media_id} alternate={`Photograph-${albumData.id}`} name={albumData.title} />
         </div> : <div className="relative p-5"
             style={{
                 marginTop: marginTop === "auto" ? marginTop : `${marginTop}rem`
@@ -62,7 +74,11 @@ const AlbumData = ({ dataType, data, handleChoosenOne, marginTop = "auto" }: { d
                     </button>
                 </DropDown>
             </div>
-            <Note cursor="pointer" onClick={() => handleChoosenOne(data)} title={data.title} note={data.content} author={data.created_by} date={data.memory_date} />
+
+            {albumData.is_pinned && <div className="absolute top-3 left-3 z-10 w-8 h-8 rounded-full bg-pink-200 text-red-500 flex items-center justify-center border">
+                <Heart />
+            </div>}
+            <Note cursor="pointer" onClick={() => handleChoosenOne(albumData)} title={albumData.title} note={albumData.content} author={albumData.created_by} date={albumData.memory_date} />
         </div>}
     </>
 }

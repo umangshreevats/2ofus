@@ -1,10 +1,10 @@
 "use client";
 import Pagination from "@/components/commons/Pagination";
-import Note from "@/components/commons/Note";
 import Suggestion from "@/components/couple-profile/album/Suggestion";
 import Popups from "@/components/commons/Popups";
 import MemoryHolder from "@/components/couple-profile/album/MemoryHolder";
 import { useState } from "react";
+import AlbumData from "@/components/couple-profile/album/AlbumData";
 
 const NoteMemory = ({ albumData, numberOfPages, numPage }: { albumData: unknown | null, numberOfPages: number, numPage: number }) => {
 
@@ -26,16 +26,14 @@ const NoteMemory = ({ albumData, numberOfPages, numPage }: { albumData: unknown 
         setShow(true);
     }
 
-    return <section className="w-full flex flex-col gap-5 max-h-[800px]">
+    return <section className="w-full flex flex-col gap-5">
         <h3 className="w-full text-2xl font-bold">
             Memorable Notes
         </h3>
 
         <div className="w-full p-5 flex gap-5 flex-wrap">
             {albumData.map((note) => (<div key={note.id} className="relative">
-                <div>
-                    <Note onClick={() => handleChoosenOne(note)} title={note.title} note={note.content} author={note.created_by} date={note.memory_date} />
-                </div>
+                <AlbumData dataType="note" data={note} handleChoosenOne={handleChoosenOne} />
             </div>))}
         </div>
 
