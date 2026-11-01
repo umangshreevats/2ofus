@@ -6,20 +6,59 @@ import PhotoFrame from "@/components/commons/PhotoFrame";
 import { useState, useRef } from "react";
 import PlayfulButton from "@/components/commons/PlayfulButton";
 import Button from "@/components/commons/Button";
-import { Pencil, X } from "lucide-react";
+import { Pencil, X, Heart, CalendarHeart, Clock, MapPin } from "lucide-react";
+import { Couples } from "@/types/profiles";
+import InformationHolder from "@/components/profile-page/InformationHolder";
 
 
-const CoupleEdit = ({ profileData, allowEdits }: { profileData: any, allowEdits: boolean }) => {
-    
-    const originalProfile = useRef(profileData);
-    const [profile, setProfile] = useState(profileData);
+const CoupleEdit = ({ profileData, allowEdits }: { profileData: Couples, allowEdits: boolean }) => {
+
+    const originalProfile = useRef<Couples>(profileData);
+    const informationHolder = [
+        {
+            heading: "Couple Name",
+            key: "couple_name",
+            icon: Heart,
+            iconColor: "#ec4899",
+            type: "couple_name"
+        },
+        {
+            heading: "Anniversary Date",
+            key: "anniversary_date",
+            icon: CalendarHeart,
+            iconColor: "#a855f7",
+            type: "anniversary_date"
+        },
+        {
+            heading: "First Meet Date",
+            key: "first_meet_date",
+            icon: Clock,
+            iconColor: "#3b82f6",
+            type: "first_meet_date"
+        },
+        {
+            heading: "First Meet Location",
+            key: "first_meet_location",
+            icon: MapPin,
+            iconColor: "#14b8a6",
+            type: "first_meet_location"
+        },
+        {
+            heading: "Relationship Status",
+            key: "relationship_status",
+            icon: Heart,
+            iconColor: "#f97316",
+            type: "relationship_status"
+        }
+    ] as const;
+    const [profile, setProfile] = useState<Couples>(profileData);
     const [loading, setLoading] = useState(false);
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-    const handleSubmit = async () => {};
+    const handleSubmit = async () => { };
 
-    const handleRemoveProfileImage = () => {};
+    const handleRemoveProfileImage = () => { };
 
     return <div className="parent-box">
         <div className="child-box p-5 gap-5 flex flex-col">
@@ -95,6 +134,26 @@ const CoupleEdit = ({ profileData, allowEdits }: { profileData: any, allowEdits:
 
                         {(allowEdits && (selectedImage || (originalProfile.current && originalProfile.current.cover_image && !profile.cover_image))) &&
                             <Button type="button" onClick={handleSubmit} text={loading ? "Saving..." : "Save Changes"} disabled={loading} />}
+                    </div>
+
+                    {/*Profile Information holders*/}
+                    <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-5 p-5">
+                        {informationHolder.map((info) => (
+                            <InformationHolder
+                                key={info.key}
+                                heading={info.heading}
+                                icon={info.icon}
+                                iconColor={info.iconColor}
+                                information={String(profile[info.key] ?? "Not specified")}
+                                allowEdit={allowEdits}
+                                type={info.type}
+                                profileData={profile}
+                                setProfileData={setProfile}
+                                selectedImage={selectedImage}
+                                setSelectedImage={setSelectedImage}
+                                originalProfile={originalProfile}
+                            />
+                        ))}
                     </div>
                 </div>
             </div>

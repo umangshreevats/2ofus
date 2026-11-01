@@ -4,7 +4,7 @@ import PlayfulButton from "../commons/PlayfulButton";
 import { Pencil } from "lucide-react";
 import { SetStateAction, useState } from "react";
 import { useThemeSettings } from "@/app/theme-provider";
-import { Users } from "@/types/profiles";
+import { Couples, Users } from "@/types/profiles";
 import Popups from "../commons/Popups";
 import ProfileEditing from "./ProfileEditing";
 
@@ -13,25 +13,37 @@ const InformationHolder = ({
     icon, 
     iconColor, 
     profileData, 
-    setProfileData, 
+    setProfileData,
+    setCoupleData, 
     information, 
     allowEdit = false, 
     type,
     selectedImage,
     setSelectedImage,
-    originalProfile
+    originalProfile,
+    originalCouple
  }: {
     heading: string,
-    profileData: Users,
-    setProfileData: React.Dispatch<SetStateAction<Users>>,
+    profileData: Users | Couples,
+    setProfileData?: React.Dispatch<SetStateAction<Users>>,
+    setCoupleData?: React.Dispatch<SetStateAction<Couples>>,
     icon: LucideIcon,
     iconColor: string,
     information: string,
     allowEdit?: boolean,
-    type?: "fullname" | "dob" | "gender" | "interests",
+    type?: "fullname"
+    | "dob"
+    | "gender"
+    | "interests"
+    | "couple_name"
+    | "anniversary_date"
+    | "first_meet_date"
+    | "first_meet_location"
+    | "relationship_status",
     selectedImage: File | null;
     setSelectedImage: React.Dispatch<SetStateAction<File | null>>;
-    originalProfile: React.RefObject<Users>
+    originalProfile?: React.RefObject<Users>;
+    originalCouple?: React.RefObject<Couples>;
 }) => {
 
     const Icon = icon;
@@ -68,7 +80,7 @@ const InformationHolder = ({
         </div>}
 
         {editing && type && (
-            <Popups open={editing} setOpen={setEditing}>
+            setProfileData ? <Popups open={editing} setOpen={setEditing}>
                 <ProfileEditing
                     selectedImage={selectedImage}
                     setSelectedImage={setSelectedImage}
@@ -77,6 +89,16 @@ const InformationHolder = ({
                     setEditing={setEditing}
                     profileData={profileData}
                     setProfileData={setProfileData}
+                />
+            </Popups> : <Popups open={editing} setOpen={setEditing}>
+                <ProfileEditing
+                    selectedImage={selectedImage}
+                    setSelectedImage={setSelectedImage}
+                    originalProfile={originalProfile}
+                    type={type}
+                    setEditing={setEditing}
+                    profileData={profileData}
+                    setCoupleData={setCoupleData}
                 />
             </Popups>
         )}
