@@ -25,7 +25,7 @@ export interface Users {
 
 
 // Couple Shared profiles
-
+export type RelationshipStatus = "Talking" | "Dating" | "Engaged" | "Married";
 export interface Couples {
     id: string;
     couple_name: string | null;
@@ -48,7 +48,7 @@ export interface Couples {
         interests: unknown;
     };
     cover_image: string | null;
-    relationship_status: string;
+    relationship_status: RelationshipStatus;
     anniversary_date: string | null;
     first_meet_date: string | null;
     first_meet_location: string | null;

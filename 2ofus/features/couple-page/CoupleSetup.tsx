@@ -65,7 +65,6 @@ const CoupleSetup = ({ profileId }: { profileId: string }) => {
         }
     }
 
-
     const dropDownOptions = [
         {
             id: 1,

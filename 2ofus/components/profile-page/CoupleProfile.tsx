@@ -1,7 +1,7 @@
 
 "use client";
 
-import { Couples } from "@/types/profiles";
+import { Couples, RelationshipStatus } from "@/types/profiles";
 import { SetStateAction, useState } from "react";
 import { toast } from "sonner";
 import Button from "../commons/Button";
@@ -17,6 +17,13 @@ type CoupleProfileType =
     | "first_meet_date"
     | "first_meet_location"
     | "relationship_status";
+
+const relationshipStatuses: RelationshipStatus[] = [
+    "Talking",
+    "Dating",
+    "Engaged",
+    "Married"
+];
 
 const CoupleProfile = ({
     profileInfo,
@@ -58,7 +65,7 @@ const CoupleProfile = ({
                 "relationship_status"
             ];
 
-            // Compare original and edited couple profile
+            // Detect changed fields
             editableFields.forEach((field) => {
                 const originalValue = originalCouple.current[field];
                 const editedValue = profileData[field];
@@ -70,36 +77,44 @@ const CoupleProfile = ({
                 if (hasChanged) {
                     formData.append(
                         field,
-                        typeof editedValue === "object"
-                            ? JSON.stringify(editedValue ?? null)
-                            : String(editedValue ?? "")
+                        String(editedValue ?? "")
                     );
                 }
             });
 
-            // Check if anything changed
+            if(originalCouple.current.cover_image && !profileData.cover_image) {
+                formData.append("removeCoverImage", "true");
+            } else {
+                formData.append("removeCoverImage", "false");
+            }
+
+            // Include selected cover image
+            if (selectedImage) {
+                formData.append("removeCoverImage", "true");
+                formData.append("cover_image", selectedImage);
+            }
+
+            // Check whether anything changed
             if ([...formData.keys()].length === 0) {
                 toast.warning("Nothing to update");
                 return;
             }
 
-            // TODO: Add your couple profile API call here.
+            // TODO: Add your PATCH API call here.
             // Example:
             //
-            // const response = await fetch("/api/couple/profile", {
-            //     method: "PATCH",
-            //     body: formData
-            // });
-            //
-            // const result = await response.json();
-            //
-            // if (!response.ok) {
-            //     throw new Error(result.message || "Update failed");
-            // }
-            //
-            // originalCouple.current = structuredClone(result.couple);
+            const response = await fetch(`/api/profile/couple-profile/${profileData.id}`, {
+                method: "PATCH",
+                body: formData
+            });
+            
+            const result = await response.json();
+            
+            if (!response.ok) {
+                toast.error("Error occured while updating the profile informations: " + result.message);
+            }
 
-            toast.info("Changes are ready. API integration is pending.");
+            toast.success("Profile Informations updated successfully.");
 
         } catch (err) {
             if (err instanceof Error) {
@@ -127,6 +142,7 @@ const CoupleProfile = ({
                         className="w-full p-3 rounded-full border-2 border-accent"
                         id="couple-name"
                         type="text"
+                        placeholder="Enter couple name"
                         value={profileData.couple_name ?? ""}
                         onChange={(e) =>
                             setCoupleData(prev => ({
@@ -154,7 +170,7 @@ const CoupleProfile = ({
                                 : null
                         }
                         onChange={(date) =>
-                            setCoupleData((prev: Couples) => ({
+                            setCoupleData(prev => ({
                                 ...prev,
                                 anniversary_date: date
                                     ? date.toISOString()
@@ -236,19 +252,23 @@ const CoupleProfile = ({
                         Current Relationship Status
                     </label>
 
-                    <input
-                        className="w-full p-3 rounded-full border-2 border-accent"
+                    <select
                         id="relationship-status"
-                        type="text"
-                        placeholder="Enter your relationship status"
-                        value={profileData.relationship_status ?? ""}
+                        className="w-full p-3 rounded-full border-2 border-accent bg-background"
+                        value={profileData.relationship_status}
                         onChange={(e) =>
                             setCoupleData(prev => ({
                                 ...prev,
-                                relationship_status: e.target.value
+                                relationship_status: e.target.value as RelationshipStatus
                             }))
                         }
-                    />
+                    >
+                        {relationshipStatuses.map(status => (
+                            <option key={status} value={status}>
+                                {status}
+                            </option>
+                        ))}
+                    </select>
                 </>
             )}
 

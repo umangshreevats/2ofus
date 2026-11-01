@@ -3,6 +3,7 @@ import { createClient } from "@/utils/supabase/server";
 import { getCurrentUser } from "@/lib/auth";
 import { uploadBioImage } from "@/lib/supabase/storage";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { RelationshipStatus } from "@/types/profiles";
 
 // POST: /api/profile/couple-profile/:profileId
 export async function POST(request: NextRequest, { params }: { params: Promise<{ profileId: string }> }) {
@@ -179,10 +180,60 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
         const coverImage = formData.get("cover_image");
         if(coverImage && 
         (coverImage instanceof File && coverImage.size > 0)) {
-            const { path } = await uploadBioImage(supabase, coverImage, profileId);
-            updatedCoupleProfile.cover_image = path;
+            const { publicUrl } = await uploadBioImage(supabase, coverImage, profileId);
+            updatedCoupleProfile.cover_image = publicUrl;
         }
+
+        if(formData.get("bio") && typeof formData.get("bio") === "string") {
+            updatedCoupleProfile.bio = formData.get("bio");
+        }
+
+        if(formData.get("relationship_status") as RelationshipStatus) {
+            updatedCoupleProfile.relationship_status = formData.get("relationship_status");
+        }
+
+        if(formData.get("first_meet_date") as string) {
+            updatedCoupleProfile.first_meet_date = formData.get("first_meet_date");
+        }
+
+        if(formData.get("first_meet_location") as string) {
+            updatedCoupleProfile.first_meet_location = formData.get("first_meet_location");
+        }
+
+        if(formData.get("anniversary_date") as string) {
+            updatedCoupleProfile.anniversary_date = formData.get("anniversary_date");
+        }
+
+
+        const { data: updatedProfile, error: updateError } = await supabase
+        .from("couples")
+        .update(updatedCoupleProfile)
+        .eq("id", profileId)
+        .or(`partner_1.eq.${user.id},partner_2.eq.${user.id}`)
+        .select()
+        .single();
+
+
+        if(updateError) {
+            console.error(updateError);
+            return NextResponse.json(
+                { message: "Error updating the profile Informations" },
+                { status: 500 }
+            );
+        }
+
+        return NextResponse.json(
+            { message: "Profile Informations updated successfully" },
+            { status: 200 }
+        );
+
     } catch (err) {
 
+        console.error(err);
+
+        return NextResponse.json(
+            { message: "Internal Server Error" },
+            { status: 500 }
+        )
     }
 }
