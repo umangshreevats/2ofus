@@ -237,6 +237,7 @@ export async function DELETE(request: NextRequest,
             .select("id");
 
         if (deleteMemoryError || !data?.length) {
+            console.error(deleteMemoryError);
             return NextResponse.json(
                 { message: "Error deleting the memory, or memory not found" },
                 { status: 500 }
@@ -253,6 +254,6 @@ export async function DELETE(request: NextRequest,
         return NextResponse.json(
             { message: "Internal Server Error" },
             { status: 500 }
-        )
+        );
     }
 }

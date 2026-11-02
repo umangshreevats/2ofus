@@ -2,6 +2,7 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { getCurrentUser } from "@/lib/auth";
+import { toast } from "sonner";
 
 export async function toggleMemoryPin(memoryId: string) {
     try {
@@ -56,5 +57,31 @@ export async function toggleMemoryPin(memoryId: string) {
         throw error instanceof Error
             ? error
             : new Error("Failed to update memory");
+    }
+}
+
+
+export const deleteMemory = async (memoryId: string) => {
+
+
+    try {
+
+        const { coupleData } = await getCurrentUser();
+
+        const response = await fetch(`/api/couple/album/${coupleData.id}/${memoryId}`, {
+            method: "DELETE"
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || "Failed to delete memory");
+        }
+
+        toast.success("Memory deleted successfully");
+    } catch (err) {
+        if (err instanceof Error) {
+            console.error("An error occured: " + err.message);
+        }
     }
 }
