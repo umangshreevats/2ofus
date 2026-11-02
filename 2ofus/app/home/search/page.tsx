@@ -16,11 +16,6 @@ const SearchPage = async ({ searchParams }: Props) => {
 
     const { user, coupleData } = await getCurrentUser();
 
-
-    if (!user) {
-        redirect("/");
-    }
-
     if (coupleData) {
         redirect("/home/my-couple");
     }
@@ -55,7 +50,7 @@ const SearchPage = async ({ searchParams }: Props) => {
         .or(
             `username.ilike.%${query.trim()}%,firstname.ilike.%${query.trim()}%,lastname.ilike.%${query.trim()}%`
         )
-        .neq("id", user.id);
+        .neq("id", user?.id);
 
     if (countError || !count) {
         throw new Error("Some error occured while count" + countError?.message);
