@@ -1,7 +1,7 @@
 
 "use client";
 
-import { SetStateAction, useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState, useRef } from "react";
 import {
     Image,
     NotebookPen,
@@ -18,11 +18,13 @@ type MemoryType = "image" | "note";
 
 
 type MemoryData = {
+    id: string,
     title: string,
     content: string,
     content_type: MemoryType,
-    memoryDate: Date,
-    priority: number
+    memory_date: Date | string,
+    priority: number,
+    media_id: string
 }
 
 interface MemoryManagerProps {
@@ -34,15 +36,18 @@ interface MemoryManagerProps {
 const MemoryManager: React.FC<MemoryManagerProps> = ({
     show,
     setShow,
-    memoryData
+    memoryData = null,
 }) => {
 
+    const originalMemoryData = useRef<MemoryData | null>(memoryData);
     const { coupleData } = useAuth();
+
+    const [editMode, setEditMode] = useState<boolean>(memoryData !== null);
     const [memoryType, setMemoryType] = useState<MemoryType | null>(memoryData?.content_type ?? null);
     const [title, setTitle] = useState(memoryData?.title ?? "");
     const [note, setNote] = useState(memoryData?.content || "");
-    const [image, setImage] = useState<File | null>(null);
-    const [memoryDate, setMemoryDate] = useState<Date | null>(null);
+    const [image, setImage] = useState<File | string | null>(memoryData?.media_id ?? null);
+    const [memoryDate, setMemoryDate] = useState<Date | null>(new Date(memoryData?.memory_date as string) ?? null);
     const [priority, setPriority] = useState(memoryData?.priority ?? 0);
     const [loading, setLoading] = useState(false);
 
@@ -57,9 +62,10 @@ const MemoryManager: React.FC<MemoryManagerProps> = ({
         setLoading(true);
         try {
 
+            const apiRoute = editMode ? `/api/couple/album/${coupleData.id}/${memoryData?.id}` : `/api/couple/album/${coupleData.id}`;
             const formData = new FormData();
 
-            formData.append("title", title);
+            if (!editMode || (originalMemoryData.current?.title !== title && title.length > 0)) formData.append("title", title);
             formData.append("content_type", memoryType);
 
             if (memoryType === "image") {
@@ -67,7 +73,7 @@ const MemoryManager: React.FC<MemoryManagerProps> = ({
                     toast.warning("Choose an Image to save!");
                     return;
                 }
-                formData.append("content", image);
+                if (!editMode || (originalMemoryData.current?.media_id !== image)) formData.append("content", image);
             }
 
             if (memoryType === "note") {
@@ -75,19 +81,30 @@ const MemoryManager: React.FC<MemoryManagerProps> = ({
                     toast.warning("Write a note or something for this type!");
                     return;
                 }
-                formData.append("content", note);
+
+                if (!editMode || (originalMemoryData.current?.content !== note)) formData.append("content", note);
             }
 
             if (!memoryDate) {
                 toast.warning("Give a memory date");
                 return;
             }
-            formData.append("memory_date", memoryDate.toISOString());
+            const originalDate = originalMemoryData.current?.memory_date
+                ? new Date(originalMemoryData.current.memory_date).getTime()
+                : null;
 
-            formData.append("priority", String(priority));
+            const currentDate = memoryDate?.getTime() ?? null;
 
-            const response = await fetch(`/api/couple/album/${coupleData.id}`, {
-                method: "POST",
+            if (!editMode || originalDate !== currentDate) {
+                if (memoryDate) {
+                    formData.append("memory_date", memoryDate.toISOString());
+                }
+            }
+
+            if (!editMode || (originalMemoryData.current?.priority !== priority)) formData.append("priority", String(priority));
+
+            const response = await fetch(apiRoute, {
+                method: editMode ? "PATCH" : "POST",
                 body: formData
             });
 
@@ -161,7 +178,8 @@ const MemoryManager: React.FC<MemoryManagerProps> = ({
                             </label>
 
                             <Photograph
-                                photograph={image}
+                                photograph={image instanceof File ? image : null}
+                                url={typeof image === "string" ? image : ""}
                                 fwidth={100}
                                 fwscale="%"
                                 alternate="Your photograph goes here"

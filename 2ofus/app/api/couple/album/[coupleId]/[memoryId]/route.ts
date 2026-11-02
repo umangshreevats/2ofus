@@ -2,21 +2,21 @@ import { getCurrentUser } from "@/lib/auth";
 import { encrypt } from "@/lib/encryption";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { uploadMemoryImage } from "@/lib/supabase/storage";
-import { supabase } from "@/utils/supabase/client";
+import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
 
 
 // PATCH: /api/couple/album/:coupleId/:memoryId
-export const PATCH = async (request: NextRequest, { params }: { params: Promise<{ coupleId?: string, memoryId?: string}> }) => {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ coupleId?: string, memoryId?: string }> }) {
 
 
     try {
 
         const { user, coupleData } = await getCurrentUser();
-        
-        
-        if(!user) {
+
+
+        if (!user) {
             return NextResponse.json(
                 { message: "Unauthorized" },
                 { status: 401 }
@@ -25,21 +25,21 @@ export const PATCH = async (request: NextRequest, { params }: { params: Promise<
 
         const { coupleId, memoryId } = await params;
 
-        if(!coupleId) {
+        if (!coupleId) {
             return NextResponse.json(
                 { message: "Couple Id is required" },
                 { status: 400 }
             );
         }
 
-        if(!memoryId) {
+        if (!memoryId) {
             return NextResponse.json(
                 { message: "Memory Id is required" },
                 { status: 400 }
             );
         }
 
-        if(coupleData.id !== coupleId) {
+        if (coupleData.id !== coupleId) {
             return NextResponse.json(
                 { message: "Forbidden" },
                 { status: 403 }
@@ -47,23 +47,27 @@ export const PATCH = async (request: NextRequest, { params }: { params: Promise<
         }
 
 
+        const supabase = await createClient();
+
         const formData = await request.formData();
 
 
         const title = formData.get("title");
         const content = formData.get("content");
         const priority = formData.get("priority");
+        const memoryDate = formData.get("memory_date");
 
         const { data: contentType, error: contentTypeError } = await supabase
-        .from("memory")
-        .select("content_type, media_id")
-        .eq("id", memoryId)
-        .eq("couple_id", coupleId)
-        .single();
+            .from("memory")
+            .select("id, couple_id, content_type, media_id")
+            .eq("id", memoryId)
+            .eq("couple_id", coupleId)
+            .maybeSingle();
 
-        if(contentTypeError || !contentType) {
+        if (contentTypeError || !contentType) {
+            console.error(contentTypeError);
             return NextResponse.json(
-                { message: "Error Updating the informations" },
+                { message: "Error reading the informations" },
                 { status: 500 }
             );
         }
@@ -72,31 +76,36 @@ export const PATCH = async (request: NextRequest, { params }: { params: Promise<
         let updatedMemory: Record<string, any> = {};
 
 
-        if(title && typeof title === "string") {
+        if (title && typeof title === "string") {
             const encryptedTitle = encrypt(title);
             updatedMemory.title = encryptedTitle;
         }
 
-        if(priority) {
+        if (priority) {
             updatedMemory.priority = Number(priority);
         }
 
-        if(content && 
-        ((contentType.content_type === "note" && typeof content !== "string") || 
-        contentType.content_type === "image" && !(content instanceof File))) {
+        if (memoryDate && typeof memoryDate === "string") {
+            updatedMemory.memory_date = memoryDate;
+        }
+
+        if (content &&
+            ((contentType.content_type === "note" && typeof content !== "string") ||
+                contentType.content_type === "image" && !(content instanceof File))) {
             return NextResponse.json(
                 { message: "Bad Request: Type mismatch for content" },
                 { status: 400 }
             );
-        } else if(typeof content === "string") {
+        } else if (typeof content === "string") {
             const encryptedContent = encrypt(content as string);
             updatedMemory.content = encryptedContent;
-        } else if(content && contentType.content_type === "image") {
+        } else if (content && contentType.content_type === "image") {
 
-            if(contentType.media_id) {
+            if (contentType.media_id) {
                 const { error } = await supabaseAdmin.storage.from("couple-memories").remove([contentType.media_id]);
 
-                if(error) {
+                if (error) {
+                    console.error(error);
                     return NextResponse.json(
                         { message: "Error updating the informations" },
                         { status: 500 }
@@ -111,15 +120,15 @@ export const PATCH = async (request: NextRequest, { params }: { params: Promise<
 
 
         const { data: updatedData, error: updateError } = await supabase
-        .from("memory")
-        .update(updatedMemory)
-        .eq("id", memoryId)
-        .eq("couple_id", coupleId)
-        .select()
-        .single();
+            .from("memory")
+            .update(updatedMemory)
+            .eq("id", memoryId)
+            .eq("couple_id", coupleId)
+            .select()
+            .single();
 
 
-        if(updateError) {
+        if (updateError) {
             console.error(updateError);
             return NextResponse.json(
                 { message: "Error updating the memory" },
