@@ -149,3 +149,110 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
         );
     }
 }
+
+
+
+// DELETE: /api/couple/album/:coupleId/:memoryId
+export async function DELETE(request: NextRequest,
+    { params }: { params: Promise<{ coupleId?: string, memoryId?: string }> }
+) {
+
+
+    try {
+
+        const { user, coupleData } = await getCurrentUser();
+
+
+        if (!user) {
+
+            return NextResponse.json(
+                { message: "Unauthorized" },
+                { status: 401 }
+            );
+        }
+
+
+        if (!coupleData) {
+            return NextResponse.json(
+                { message: "Couple data is required" },
+                { status: 400 }
+            );
+        }
+
+
+        const { coupleId, memoryId } = await params;
+        if (coupleId !== coupleData.id) {
+            return NextResponse.json(
+                { message: "Forbidden" },
+                { status: 403 }
+            );
+        }
+
+
+        const supabase = await createClient();
+        const { data: memoryInfo, error: memoryInfoError } = await supabase
+            .from("memory")
+            .select("media_id, content_type, content, id, couple_id")
+            .eq("id", memoryId)
+            .eq("couple_id", coupleId)
+            .single();
+
+
+        if (memoryInfoError) {
+            console.error(memoryInfoError);
+
+            return NextResponse.json(
+                { message: "Error reading memory information" },
+                { status: 500 }
+            );
+        }
+
+
+        if (!memoryInfo) {
+            return NextResponse.json(
+                { message: "Memory Not Found" },
+                { status: 404 }
+            );
+        }
+
+
+        if (memoryInfo.media_id) {
+            const { error: deleteMedia } = await supabaseAdmin.storage.from("couple-memories").remove([memoryInfo.media_id]);
+
+            if (deleteMedia) {
+
+                return NextResponse.json(
+                    { message: "Error deleting the informations" },
+                    { status: 500 }
+                );
+            }
+        }
+
+
+        const { data, error: deleteMemoryError } = await supabase
+            .from("memory")
+            .delete()
+            .eq("id", memoryId)
+            .eq("couple_id", coupleId)
+            .select("id");
+
+        if (deleteMemoryError || !data?.length) {
+            return NextResponse.json(
+                { message: "Error deleting the memory, or memory not found" },
+                { status: 500 }
+            );
+        }
+
+
+        return NextResponse.json(
+            { message: `Memory deleted successfully` },
+            { status: 200 }
+        );
+
+    } catch (err) {
+        return NextResponse.json(
+            { message: "Internal Server Error" },
+            { status: 500 }
+        )
+    }
+}
