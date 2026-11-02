@@ -9,5 +9,6 @@ export const headerFooterMain = {
     "/home/my-couple/know-me/quiz": { show: false },
     "/home/profile": { show: false },
     "/home/my-couple/tell-and-get/history": { show: false },
-    "/home/my-couple/profile-edit": { show: false }
+    "/home/my-couple/profile-edit": { show: false },
+    "/home/settings": { show: false }
 }

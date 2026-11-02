@@ -1,6 +1,12 @@
+import Headings from "@/components/commons/Headings";
+import SettingsHolder from "@/components/settings/SettingsHolder";
+import { getCurrentUser } from "@/lib/auth"
+import Settings from "@/features/profile-page/Settings";
+
 export default async function SettingsPage() {
 
-    return <section>
-        This is settings page
-    </section>
+    const { user, coupleData } = await getCurrentUser();
+
+
+    return <Settings />
 }

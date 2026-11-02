@@ -164,6 +164,11 @@ body {
   transform-origin: center;
 }
 
+/*Common shadow*/
+.component-shadow {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary-text) 12%, transparent);
+}
+
 @keyframes heartBeat {
 
   0%,
@@ -216,62 +221,62 @@ body {
 
 /* Button animation */
 .animated-btn {
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
 
-    background: var(--base-color);
-    color: var(--base-text);
+  background: var(--base-color);
+  color: var(--base-text);
 
-    border: none;
-    padding: 12px 24px;
-    cursor: pointer;
+  border: none;
+  padding: 12px 24px;
+  cursor: pointer;
 
-    transition: color 0.4s ease;
+  transition: color 0.4s ease;
 }
 
 .animated-btn::before {
-    content: "";
-    position: absolute;
-    inset: 0;
+  content: "";
+  position: absolute;
+  inset: 0;
 
-    background: var(--hover-color);
+  background: var(--hover-color);
 
-    transform: scaleX(0);
-    transform-origin: var(--origin, left);
-    transition: transform 0.4s ease;
+  transform: scaleX(0);
+  transform-origin: var(--origin, left);
+  transition: transform 0.4s ease;
 
-    z-index: -1;
+  z-index: -1;
 }
 
 .animated-btn:hover {
-    color: var(--hover-text);
+  color: var(--hover-text);
 }
 
 .animated-btn:hover::before {
-    transform: scaleX(1);
+  transform: scaleX(1);
 }
 
 
 /*Transparent theme colored component classes*/
 .trans-accent {
-    background-color: color-mix(in srgb, var(--accent) 50%, transparent);
+  background-color: color-mix(in srgb, var(--accent) 50%, transparent);
 }
 
 .trans-background {
-    background-color: color-mix(in srgb, var(--background) 50%, transparent);
+  background-color: color-mix(in srgb, var(--background) 50%, transparent);
 }
 
 .trans-primary-text {
-    background-color: color-mix(in srgb, var(--primary-text) 50%, transparent);
+  background-color: color-mix(in srgb, var(--primary-text) 50%, transparent);
 }
 
 .trans-secondary-text {
-    background-color: color-mix(in srgb, var(--secondary-text) 50%, transparent);
+  background-color: color-mix(in srgb, var(--secondary-text) 50%, transparent);
 }
 
 .trans-surface {
-    background-color: color-mix(in srgb, var(--surface) 50%, transparent);
+  background-color: color-mix(in srgb, var(--surface) 50%, transparent);
 }
 
 
