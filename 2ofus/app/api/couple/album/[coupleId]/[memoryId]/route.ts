@@ -12,9 +12,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
 
     try {
-
         const { user, coupleData } = await getCurrentUser();
-
 
         if (!user) {
             return NextResponse.json(
