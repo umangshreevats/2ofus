@@ -3,7 +3,6 @@ import Headings from "@/components/commons/Headings";
 import RedirectButton from "@/components/commons/RedirectButton";
 import UserSettings from "../settings-page/UserSettings";
 import CoupleSettings from "../settings-page/CoupleSettings";
-import NotificationSettings from "../settings-page/NotificationSettings";
 
 const Settings = () => {
 
@@ -24,7 +23,6 @@ const Settings = () => {
             {/*Display for all the settings together*/}
             <UserSettings />
             <CoupleSettings />
-            <NotificationSettings />
         </div>
     </section>
 }
