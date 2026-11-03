@@ -117,7 +117,7 @@ const AlbumData = ({ dataType, data, handleChoosenOne, marginTop = "auto" }: { d
             <MemoryManager memoryData={albumData} show={edit} setShow={setEdit} />
         </Popups>
 
-        <Popups open={deleteOpen} setOpen={setDeleteOpen} className="rounded-md">
+        <Popups open={deleteOpen} setOpen={setDeleteOpen} className="rounded-2xl">
             <Delete
                 title="Delete Memory"
                 message="Are you sure you want to delete this memory?"

@@ -19,7 +19,6 @@ const AlbumTopSec = () => {
     const options = [
         { id: "all", name: "All", icon: LayoutGrid, route: "/home/my-couple/album?m=all" },
         { id: "photo", name: "Photos", icon: Image, route: "/home/my-couple/album?m=image" },
-        { id: "date", name: "Dates", icon: CalendarHeart, route: "/home/my-couple/album?m=date" },
         { id: "note", name: "Notes", icon: NotebookPen, route: "/home/my-couple/album?m=note" }
     ];
 

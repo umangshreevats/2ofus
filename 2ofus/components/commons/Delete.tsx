@@ -25,7 +25,7 @@ const Delete = ({ title, message, deleteFunction, setOpen }: {
         }
     }
 
-    return <div className="w-full sm:w-[200px] rounded-md background-surface p-5 flex flex-col gap-5">
+    return <div className="w-full sm:w-[400px] rounded-2xl bg-surface p-5 flex flex-col gap-5">
         <div className="w-full flex items-center justify-between">
             <h2 className="text-2xl font-rubik text-primary-text font-bold">
                 {title}

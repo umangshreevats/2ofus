@@ -2,7 +2,7 @@
 import { LucideIcon } from "lucide-react";
 import { useThemeSettings } from "@/app/theme-provider";
 import Link from "next/link";
-
+import { useState } from "react";
 
 /*
 Reusable display for the different settings, with different settings options*/
@@ -18,6 +18,10 @@ const SettingsDisplay = ({ title, paragraph, settingsOptions, icon }:
     const Icon = icon;
     const { theme } = useThemeSettings();
 
+
+    /*
+    State managment to show the popups to configure the available settings.*/
+    const [changeUsername, setChangeUsername] = useState(false);
 
     return <div className="w-full rounded-2xl bg-surface p-5 flex flex-col gap-5 component-shadow">
 

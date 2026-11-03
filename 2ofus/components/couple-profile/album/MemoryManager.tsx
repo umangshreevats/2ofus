@@ -5,7 +5,8 @@ import { SetStateAction, useEffect, useState, useRef } from "react";
 import {
     Image,
     NotebookPen,
-    Heart
+    Heart,
+    ArrowLeft
 } from "lucide-react";
 import PlayfulInput from "@/components/commons/PlayfulInput";
 import Photograph from "@/components/commons/Photograph";
@@ -42,7 +43,7 @@ const MemoryManager: React.FC<MemoryManagerProps> = ({
     const originalMemoryData = useRef<MemoryData | null>(memoryData);
     const { coupleData } = useAuth();
 
-    const [editMode, setEditMode] = useState<boolean>(memoryData !== null);
+    const [editMode] = useState<boolean>(memoryData !== null);
     const [memoryType, setMemoryType] = useState<MemoryType | null>(memoryData?.content_type ?? null);
     const [title, setTitle] = useState(memoryData?.title ?? "");
     const [note, setNote] = useState(memoryData?.content || "");
@@ -147,11 +148,11 @@ const MemoryManager: React.FC<MemoryManagerProps> = ({
         {memoryType ? (
             <div className="w-full p-5">
                 <div className="w-full flex gap-2 border-b">
-                    <button
+                    {!editMode && <button
                         onClick={() => setMemoryType(null)}
                     >
-                        ← Back
-                    </button>
+                        <ArrowLeft />
+                    </button>}
 
                     <h3 className="text-2xl font-bold capitalize">
                         Create {memoryType} memory
