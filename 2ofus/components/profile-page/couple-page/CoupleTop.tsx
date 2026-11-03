@@ -45,7 +45,7 @@ const CoupleTop = () => {
                         hoverEffect={true}
                         onClick={() => router.push("/home/my-couple/profile-edit")}
                     />
-                    <Button type="button" backgroundColor="white" text="Settings" textColor="black" icon={Settings} />
+                    <Button type="button" backgroundColor="white" onClick={() => router.push("/home/settings")} text="Settings" textColor="black" icon={Settings} />
                 </div>
             </div>
 

@@ -1,6 +1,7 @@
 "use client";
-import { LucideIcon, User } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 import { useThemeSettings } from "@/app/theme-provider";
+import Link from "next/link";
 
 
 /*
@@ -44,14 +45,15 @@ const SettingsDisplay = ({ title, paragraph, settingsOptions, icon }:
                 return <li key={option.id} className="w-full border-b border-b-secondary-text p-3">
 
                     {/*Option Display*/}
-                    <button onClick={option.onClick} className="cursor-pointer w-full text-secondary-text font-rubik flex justify-between items-center">
+
+                    {option.onClick ? <button onClick={option.onClick} className="cursor-pointer w-full text-secondary-text font-rubik flex justify-between items-center">
                         <div className="flex gap-2 items-center sm:gap-5">
                             <div className="p-2 sm:p-5 rounded-full component-shadow aspect-square">
                                 <OptionIcon />
                             </div>
 
                             <div className="flex flex-1 min-w-0 flex-col gap-2">
-                                <h4 className="text-primary-text font-rubik text-lg sm:text-xl">
+                                <h4 className={`w-full ${option.danger ? "text-red-500" : "text-primary-text"} font-rubik text-lg sm:text-xl`}>
                                     {option.title}
                                 </h4>
 
@@ -64,7 +66,27 @@ const SettingsDisplay = ({ title, paragraph, settingsOptions, icon }:
                         <div className="p-2 sm:p-5 shrink-0">
                             <SecondaryIcon />
                         </div>
-                    </button>
+                    </button> : option.link ? <Link href={option.link} className="cursor-pointer w-full text-secondary-text font-rubik flex justify-between items-center">
+                        <div className="flex gap-2 items-center sm:gap-5">
+                            <div className="p-2 sm:p-5 rounded-full component-shadow aspect-square">
+                                <OptionIcon />
+                            </div>
+
+                            <div className="flex flex-1 min-w-0 flex-col gap-2">
+                                <h4 className={`w-full ${option.danger ? "text-red-500" : "text-primary-text"} font-rubik text-lg sm:text-xl`}>
+                                    {option.title}
+                                </h4>
+
+                                <p className="font-medium text-secondary-text font-comfortaa">
+                                    {option.paragraph}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="p-2 sm:p-5 shrink-0">
+                            <SecondaryIcon />
+                        </div>
+                    </Link> : <div className="w-full p-5">Error!</div>}
                 </li>
             })}
         </ul>
