@@ -3,7 +3,8 @@ import { createClient } from "@/utils/supabase/server";
 import { getCurrentUser } from "@/lib/auth";
 import { uploadMemoryImage } from "@/lib/supabase/storage";
 import { decrypt, encrypt } from "@/lib/encryption";
-
+import { createNotification } from "@/lib/notification/sendNotification";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 // GET: /api/couple/album/:coupleId?limit=&skip=&m=
 export async function GET(request: NextRequest, { params }: { params: Promise<{ coupleId?: string }> }) {
@@ -30,7 +31,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         }
 
         // Different user who is not a part of the same couple profile try to access the informations
-        if(!coupleData || (coupleData.id !== coupleId)) {
+        if (!coupleData || (coupleData.id !== coupleId)) {
             return NextResponse.json(
                 { message: "Forbidden" },
                 { status: 403 }
@@ -137,7 +138,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         }
 
 
-        if(!coupleData || (coupleData.id !== coupleId)) {
+        if (!coupleData || (coupleData.id !== coupleId)) {
 
             return NextResponse.json(
                 { message: "Forbidden" },
@@ -226,6 +227,23 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
                 { status: 500 }
             );
         }
+
+        let url = null;
+
+        if (media_id) {
+            const { data: urlData, error: urlError } = await supabaseAdmin.storage
+                .from("liking-unliking")
+                .createSignedUrl(media_id, 60 * 60);
+
+            url = urlData;
+        }
+        /*Sending the notification with the type memory to the other user*/
+        await createNotification({
+            senderId: user.id,
+            recipientId: coupleData.partner_2.id === user.id ? coupleData.partner_1.id : coupleData.partner_2.id,
+            type: "memory",
+            image: url?.signedUrl ?? null        
+        });
 
         return NextResponse.json(
             { message: "Memory Created Successfully", memory },

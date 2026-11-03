@@ -3,14 +3,14 @@ import { getCurrentUser } from "@/lib/auth";
 import { createClient } from "@/utils/supabase/server";
 import { calculateQuizScore } from "@/lib/quiz/calculateQuizScore";
 import { encrypt } from "@/lib/encryption";
-
+import { createNotification } from "@/lib/notification/sendNotification";
 
 // PATCH: /api/couple/quiz/:coupleId/:quizId/submit
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ coupleId?: string, quizId?: string }> }) {
 
     try {
 
-        const { user } = await getCurrentUser();
+        const { user, coupleData } = await getCurrentUser();
 
         if (!user) {
             return NextResponse.json(
@@ -148,6 +148,14 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
                 quizUpdateError
             });
         }
+
+
+        await createNotification({
+            senderId: user.id,
+            recipientId: quiz.conductor_id,
+            type: "quizSubmit",
+            image: null
+        });
 
         return NextResponse.json({
             message: "Success",

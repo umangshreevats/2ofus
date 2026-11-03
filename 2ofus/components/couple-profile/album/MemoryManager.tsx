@@ -47,7 +47,7 @@ const MemoryManager: React.FC<MemoryManagerProps> = ({
     const [title, setTitle] = useState(memoryData?.title ?? "");
     const [note, setNote] = useState(memoryData?.content || "");
     const [image, setImage] = useState<File | string | null>(memoryData?.media_id ?? null);
-    const [memoryDate, setMemoryDate] = useState<Date | null>(new Date(memoryData?.memory_date as string) ?? null);
+    const [memoryDate, setMemoryDate] = useState<Date | null>(memoryData?.memory_date ? new Date(memoryData?.memory_date as string) : null);
     const [priority, setPriority] = useState(memoryData?.priority ?? 0);
     const [loading, setLoading] = useState(false);
 

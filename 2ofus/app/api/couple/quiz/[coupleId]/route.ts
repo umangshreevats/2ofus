@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { createClient } from "@/utils/supabase/server";
 import { encrypt, decrypt } from "@/lib/encryption";
+import { createNotification } from "@/lib/notification/sendNotification";
 
 
 
@@ -127,7 +128,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
 
     try {
-        const { user, userData } = await getCurrentUser();
+        const { user, userData, coupleData } = await getCurrentUser();
 
         if (!user) {
 
@@ -297,6 +298,14 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
                 );
             }
         }
+
+
+        await createNotification({
+            senderId: user.id,
+            recipientId: coupleData.partner_1.id === user.id ? coupleData.partner_2.id : coupleData.partner_1.id,
+            type: "quiz",
+            image: null
+        });
 
         return NextResponse.json(
             { message: "Quiz created successfully", quizData },
