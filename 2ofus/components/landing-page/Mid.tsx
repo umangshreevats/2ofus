@@ -17,7 +17,7 @@ const Mid = () => {
             <Image src={frontImage} className="rounded-tl-2xl sm:rounded-bl-2xl rounded-tr-2xl sm:rounded-br-none object-cover" alt="front-image" />
         </div>
 
-        <div className="w-full h-full flex flex-col items-center py-50 px-30 gap-10">
+        <div className="w-full h-full flex flex-col items-center p-10 gap-10">
             <h1 className="text-4xl font-bold text-primary-text">
                 Welcome to the <span className="text-accent">{appName}</span>, a place to be bounded love forever!
             </h1>
