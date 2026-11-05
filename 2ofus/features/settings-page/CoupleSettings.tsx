@@ -103,6 +103,7 @@ const CoupleSettings = () => {
             <Delete setOpen={setDeleteCouple} title="Delete the Couple Profile"
                 message="Are you sure you wish to delete this beautiful couple profile you set up with your partner?"
                 deleteFunction={deleteProfile}
+                loading={coupleDelLoading}
             />
         </Popups>
     </>

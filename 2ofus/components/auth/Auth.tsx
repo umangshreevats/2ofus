@@ -55,7 +55,7 @@ const Auth = ({ setOpen, signIn: si }: { signIn: boolean, setOpen: React.Dispatc
             return;
         }
 
-        if(profile.is_profile_completed) {
+        if (profile.is_profile_completed) {
             router.push("/home");
         }
 
@@ -113,7 +113,7 @@ const Auth = ({ setOpen, signIn: si }: { signIn: boolean, setOpen: React.Dispatc
             <form
                 onSubmit={handleSignInSubmit}
                 className="w-[400px] bg-background text-primary-text 
-    gap-5 h-[500px] flex flex-col items-center p-5"
+    gap-5 flex flex-col items-center p-5"
             >
                 {/*Form to handle the Sign In*/}
                 <div className="w-full flex justify-between">
@@ -139,20 +139,10 @@ const Auth = ({ setOpen, signIn: si }: { signIn: boolean, setOpen: React.Dispatc
                 <div className="w-full flex justify-center">{signIn ? "Don't have an account yet? " : "Already have an account! "} <button
                     onClick={() => setSign(!signIn)}
                     disabled={loading}
-                    type="button" className="cursor-pointer text-secondary-text inline">{signIn ? " sign-up" : " sign-in"}</button></div>
-
-                <div className="w-full flex gap-1 items-center">
-                    <div className="w-full bg-secondary-text h-0.5" />
-                    <span className="text-secondary-text">or</span>
-                    <div className="w-full bg-secondary-text h-0.5" />
-                </div>
-
-                {/*Google Oauth Button*/}
-                <Button width={100} wscale="%" type="button" backgroundColor="white" textColor="black" text="Continue with Google" icon={FcGoogle} />
+                    type="button" className="ml-2 cursor-pointer text-secondary-text inline">{signIn ? " sign-up" : " sign-in"}</button></div>
             </form> :
             <form onSubmit={handleSignUpSubmit}
-                className="w-[400px] bg-background text-primary-text gap-5 
-    h-[500px] flex flex-col items-center p-5">
+                className="w-[400px] bg-background text-primary-text gap-5 flex flex-col items-center p-5">
 
                 {/*Form to handle Sign up*/}
                 <div className="w-full flex justify-between">
@@ -180,19 +170,13 @@ const Auth = ({ setOpen, signIn: si }: { signIn: boolean, setOpen: React.Dispatc
                 {/*Submit Button*/}
                 <Button text={loading ? "Signning up..." : `Sign Up`} disabled={loading} width={100} wscale="%" />
 
-                <div className="w-full flex justify-center">{signIn ? "Don't have an account yet? " : "Already have an account! "} <button
-                    onClick={() => setSign(!signIn)}
-                    disabled={loading}
-                    type="button" className="cursor-pointer text-secondary-text inline">{signIn ? "sign-up" : "sign-in"}</button></div>
-
-                <div className="w-full flex gap-1 items-center">
-                    <div className="w-full bg-secondary-text h-0.5" />
-                    <span className="text-secondary-text">or</span>
-                    <div className="w-full bg-secondary-text h-0.5" />
+                <div className="w-full flex justify-center">{signIn ? "Don't have an account yet?" : "Already have an account!"}
+                    <button
+                        onClick={() => setSign(!signIn)}
+                        disabled={loading}
+                        type="button" className="ml-2 cursor-pointer text-secondary-text inline"> {signIn ? "sign-up" : "sign-in"}</button>
                 </div>
 
-                {/*Google Oauth Button*/}
-                <Button width={100} wscale="%" type="button" backgroundColor="white" textColor="black" text="Continue with Google" icon={FcGoogle} />
             </form>}
     </>
 }

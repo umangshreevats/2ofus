@@ -6,12 +6,14 @@ import joinUsOpen from "./../public/JoinUsOpen.png";
 import defaultUser from "./../public/defaultUser.jpg";
 import romanticMemories from "./../public/romatic-memories.png";
 import connectingHearts from "./../public/ConnectingHearts.png";
-import proposal from "./../public/Proposal.png";
+import proposal from "./../public/Proposal.jpg";
 import coupleBeach from "./../public/CoupleBeach.jpg";
 import coupleNote from "./../public/CoupleNote.jpg";
 import coupleAlbum from "./../public/CoupleAlbum.jpg";
 import question from "./../public/Question.jpg";
 import addMorePhoto from "./../public/AddMorePhoto.png";
+import footer from "../public/Footer.png";
+import footerDark from "../public/FooterDark.png";
 
 export {
     frontImage,
@@ -27,5 +29,7 @@ export {
     coupleBeach,
     coupleNote,
     question,
-    addMorePhoto
+    addMorePhoto,
+    footer,
+    footerDark
 }

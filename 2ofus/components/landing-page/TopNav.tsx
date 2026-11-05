@@ -104,7 +104,7 @@ const RightSideNavElements = ({
                                 setButton(1);
                             }}
                             type="button"
-                            text="sign-in"
+                            text="Sign In"
                             backgroundColor="background"
                             textColor={theme === "light" ? "black" : "white"}
                         />
@@ -120,7 +120,7 @@ const RightSideNavElements = ({
                             hoverTextColor={theme === "light" ? `black` : 'white'}
                             hoverEffect={true}
                             type="button"
-                            text="sign-up"
+                            text="Sign Up"
                         />
                     </li>
                 </ul>

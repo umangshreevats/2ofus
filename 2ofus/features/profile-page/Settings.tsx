@@ -4,6 +4,7 @@ import RedirectButton from "@/components/commons/RedirectButton";
 import UserSettings from "../settings-page/UserSettings";
 import CoupleSettings from "../settings-page/CoupleSettings";
 import { useAuth } from "@/app/auth-provider";
+import PrivacySetting from "../settings-page/PrivacySettings";
 
 const Settings = () => {
 
@@ -25,6 +26,7 @@ const Settings = () => {
             {/*Display for all the settings together*/}
             <UserSettings />
             {coupleData && <CoupleSettings />}
+            <PrivacySetting />
         </div>
     </section>
 }

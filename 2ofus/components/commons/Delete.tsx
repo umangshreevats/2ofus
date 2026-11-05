@@ -4,18 +4,22 @@ import { SetStateAction } from "react";
 import Button from "./Button";
 import { toast } from "sonner";
 
-const Delete = ({ title, message, deleteFunction, setOpen }: {
+const Delete = ({ title, message, deleteFunction, setOpen, loading = false }: {
     title: string,
     message: string,
     deleteFunction: (...args: any[]) => Promise<void>,
-    setOpen: React.Dispatch<SetStateAction<boolean>>
+    setOpen: React.Dispatch<SetStateAction<boolean>>,
+    loading?: boolean
 }) => {
 
 
     const handleDelete = async () => {
 
         try {
-            setOpen(false);
+
+            if (loading) {
+                setOpen(false);
+            }
             await deleteFunction();
         } catch (err) {
             console.error(err);
@@ -38,7 +42,7 @@ const Delete = ({ title, message, deleteFunction, setOpen }: {
 
         <div className="w-full gap-5 flex">
             <Button type="button" onClick={() => setOpen(false)} text="Cancel" textColor="red" backgroundColor="surface" />
-            <Button type="button" text="Delete" onClick={handleDelete} textColor="primary-text" backgroundColor="red" />
+            <Button type="button" disabled={loading} text={loading ? "Deleting..." : `Delete`} onClick={handleDelete} textColor="white" backgroundColor="red" />
         </div>
     </div>
 }
