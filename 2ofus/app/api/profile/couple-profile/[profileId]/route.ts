@@ -3,7 +3,8 @@ import { createClient } from "@/utils/supabase/server";
 import { getCurrentUser } from "@/lib/auth";
 import { uploadBioImage } from "@/lib/supabase/storage";
 import { supabaseAdmin } from "@/lib/supabase/admin";
-import { RelationshipStatus } from "@/types/profiles";
+
+
 
 // POST: /api/profile/couple-profile/:profileId
 export async function POST(request: NextRequest, { params }: { params: Promise<{ profileId: string }> }) {
@@ -101,7 +102,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
 // PATCH: /api/profile/couple-profile/:profileId
 
-export async function PATCH(request: NextRequest, { params }: { params: Promise<{ profileId: string }> }) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ profileId?: string }> }) {
 
 
     try {
@@ -243,5 +244,95 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
             { message: "Internal Server Error" },
             { status: 500 }
         )
+    }
+}
+
+
+// DELETE: /api/profile/couple-profile/:profileId
+
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ profileId?: string }> }) {
+
+
+    try {
+
+        const { user, coupleData } = await getCurrentUser();
+
+
+        /*Fetching the current user informations in the app*/
+        if (!user) {
+
+            return NextResponse.json(
+                { message: "Unauthorized" },
+                { status: 401 }
+            );
+        }
+
+        /*The couple data either not found or server error to fetch it*/
+        if (!coupleData) {
+            return NextResponse.json(
+                { message: "Error fetching couple information" },
+                { status: 400 }
+            );
+        }
+
+        const { profileId } = await params;   // couple profile id
+
+        /*Profile Id is required, for future potential to delete by admin or super admin*/
+        if (!profileId) {
+            return NextResponse.json(
+                { message: "Profile Id is required" },
+                { status: 400 }
+            );
+        }
+
+        /*Couple Id didn't matched the profile Id*/
+        if (profileId !== coupleData.id) {
+
+            return NextResponse.json(
+                { message: "Forbidden: you cannot access this profile" },
+                { status: 403 }
+            );
+        }
+
+        const supabase = await createClient();
+
+        // Delete couple profile
+        const { data, error } = await supabase
+            .from("couples")
+            .delete()
+            .eq("id", profileId)
+            .select("id");
+
+        if (error) {
+            console.error("Couple deletion error:", error);
+
+            return NextResponse.json(
+                { message: "Error deleting couple profile" },
+                { status: 500 }
+            );
+        }
+
+        // Check whether a row was actually deleted
+        if (!data || data.length === 0) {
+            return NextResponse.json(
+                { message: "Couple profile was not deleted" },
+                { status: 404 }
+            );
+        }
+
+        return NextResponse.json(
+            {
+                message: "Couple profile deleted successfully"
+            },
+            { status: 200 }
+        );
+
+    } catch (err) {
+        console.error("Unexpected couple deletion error:", err);
+
+        return NextResponse.json(
+            { message: "Internal server error" },
+            { status: 500 }
+        );
     }
 }

@@ -11,7 +11,7 @@ export default async function HomeLayout({ children }: { children: React.ReactNo
     }
 
     if (!userData) {
-        throw new Error("User profile not found");
+        redirect("/");
     }
     return <section>
         {children}

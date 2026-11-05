@@ -3,9 +3,11 @@ import Headings from "@/components/commons/Headings";
 import RedirectButton from "@/components/commons/RedirectButton";
 import UserSettings from "../settings-page/UserSettings";
 import CoupleSettings from "../settings-page/CoupleSettings";
+import { useAuth } from "@/app/auth-provider";
 
 const Settings = () => {
 
+    const { coupleData } = useAuth();
     return <section className="parent-box">
         <div className="child-box grid grid-cols-[repeat(2, minmax(0, 1fr))] gap-5 p-5">
 
@@ -22,7 +24,7 @@ const Settings = () => {
 
             {/*Display for all the settings together*/}
             <UserSettings />
-            <CoupleSettings />
+            {coupleData && <CoupleSettings />}
         </div>
     </section>
 }

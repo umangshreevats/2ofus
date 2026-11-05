@@ -7,11 +7,12 @@ import { redirect } from "next/navigation";
 
 export default async function LandingPage() {
 
-  const { user } = await getCurrentUser();
+  const { user, userData } = await getCurrentUser();
 
-  if (user) {
+  if (user && userData) {
     redirect("/home");
   }
+
   return (
     <section className="min-h-screen">
       <Mid />
