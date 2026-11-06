@@ -1,16 +1,6 @@
 import "server-only";
 import { supabaseAdmin } from "../supabase/admin";
-
-type NotificationType =
-    | "reminder"
-    | "liking"
-    | "unliking"
-    | "quiz"
-    | "quizSubmit"
-    | "memory"
-    | "request_send"
-    | "request_accepted"
-    | "request_rejected";
+import type { NotificationType } from "@/types/notifications";
 
 type CreateNotificationParams = {
     senderId: string | null;
@@ -19,6 +9,7 @@ type CreateNotificationParams = {
     type: NotificationType;
     title?: string | null;
     message?: string | null;
+    reference_id?: string | null;
 };
 
 
@@ -70,6 +61,11 @@ const notificationData: Record<NotificationType, any> = {
     request_rejected: {
         title: "The person you send request to has rejected your request.",
         message: "Too bad seems like the soulmate you were looking for is still yet to be discovered."
+    },
+
+    system: {
+        title: "Greetings from the system.",
+        message: "Thanks for joining us up."
     }
 }
 
@@ -80,6 +76,7 @@ export async function createNotification({
     image,
     title = null,
     message = null,
+    reference_id = null
 }: CreateNotificationParams) {
 
     const additional: Record<string, string> = {};
@@ -98,6 +95,8 @@ export async function createNotification({
             sender: senderId,
             receiver: recipientId,
             image,
+            type,
+            reference_id,
             ...additional
         })
         .select()

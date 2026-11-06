@@ -5,104 +5,11 @@ import { toast } from "sonner";
 import { supabase } from "@/utils/supabase/client";
 import { useState, useEffect, SetStateAction } from "react";
 import { useAuth } from "@/app/auth-provider";
+import { useNotifications } from "@/app/notification-provider";
 
 const Notifications = ({ setOpenNav }: { setOpenNav: React.Dispatch<SetStateAction<boolean>> }) => {
 
-    // states and values
-    const [notifications, setNotifications] = useState<any[]>([]);
-    const [notificationsLoading, setNotificationsLoading] = useState(false);
-    const { user } = useAuth();
-
-
-    // Function to mark the notification is_read as true
-    // call it on click
-    const markAsRead = async (notificationId: string) => {
-        const { error } = await supabase
-            .from("notifications")
-            .update({ is_read: true })
-            .eq("id", notificationId)
-            .eq("receiver", user.id);
-
-        if (error) {
-            console.error(error);
-            return;
-        }
-
-        setNotifications((prev) =>
-            prev.map((notification) =>
-                notification.id === notificationId
-                    ? { ...notification, is_read: true }
-                    : notification
-            )
-        );
-    };
-
-    // Fetching the notifications on the start
-    useEffect(() => {
-
-        let isMounted = true;
-        // Function to fetch the notifications
-        // on user demand
-        const getNotifications = async () => {
-            setNotificationsLoading(true);
-
-            const { data: notificationData, error: notificationError } = await supabase
-                .from("notifications")
-                .select("*")
-                .eq("receiver", user.id)
-                .limit(30)
-                .order("created_at", { ascending: false });
-            if (!isMounted) return;
-            if (notificationError || !notificationData) {
-                toast.error("An error occured while loading the notifications: " + notificationError.message);
-                setNotificationsLoading(false);
-                return;
-            }
-
-            setNotifications(prev => ([
-                ...prev,
-                ...notificationData
-            ]));
-            setNotificationsLoading(false);
-        }
-        getNotifications();
-
-        return () => {
-            isMounted = false;
-        }
-    }, [user.id]);
-
-
-    // Subscribe to realtime notifications
-    useEffect(() => {
-
-        const channel = supabase
-            .channel(`notifications-${user.id}`)
-            .on(
-                "postgres_changes",
-                {
-                    event: "INSERT",
-                    schema: "public",
-                    table: "notifications",
-                    filter: `receiver=eq.${user.id}`,
-                },
-                (payload) => {
-                    const newNotification =
-                        payload.new as Notification;
-
-                    setNotifications((prev) => {
-                        return [newNotification, ...prev];
-                    });
-                }
-            )
-            .subscribe((status) => {
-                console.log("Notification channel:", status);
-            });
-
-        return () => {
-            supabase.removeChannel(channel);
-        };
-    }, []);
+    const { notifications, markAsRead } = useNotifications();
 
 
 

@@ -124,7 +124,8 @@ export async function POST(request: NextRequest) {
             image: userData.profile_image ?? null, 
             type: "request_send", 
             title: `${userData.username} has send you a couple request.`,
-            message: `You got an invitation from ${userData.username}, to make a couple profile together.`
+            message: `You got an invitation from ${userData.username}, to make a couple profile together.`,
+            reference_id: sendRequest.id
         });
 
 

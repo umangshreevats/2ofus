@@ -15,6 +15,7 @@ import ProfileIcon from "../profile-page/nav-bar/ProfileIcon";
 import DropDown from "../commons/DropDown";
 import Notifications from "../profile-page/nav-bar/Notifications";
 import CoupleNav from "../profile-page/couple-page/CoupleNav";
+import NotificationIcon from "../profile-page/nav-bar/NotificationIcon";
 
 
 type NavLocations = {
@@ -142,7 +143,7 @@ const RightSideNavElements = ({
                 innerHTML={<Notifications setOpenNav={setOpenNav} />}
                 innerHTMLPortalRef={isMobileWidth ? bodyRef : undefined}
             >
-                <Bell />
+                <NotificationIcon />
             </DropDown>
 
             {!coupleData && <div className="hidden md:block"><SearchBar /></div>}

@@ -12,17 +12,7 @@ import {
 import { toast } from "sonner";
 import { supabase } from "@/utils/supabase/client";
 import { useAuth } from "@/app/auth-provider";
-
-type Notification = {
-    id: string;
-    sender: string;
-    receiver: string;
-    title: string;
-    message: string;
-    image: string | null;
-    is_read: boolean;
-    created_at: string;
-};
+import type { Notification } from "@/types/notifications";
 
 type NotificationContextType = {
     notifications: Notification[];

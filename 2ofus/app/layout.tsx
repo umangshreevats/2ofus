@@ -8,6 +8,7 @@ import Footer from "@/components/landing-page/Footer";
 import { getCurrentUser } from "@/lib/auth";
 import { AuthProvider } from "./auth-provider";
 import { Toaster } from "sonner";
+import { NotificationProvider } from "./notification-provider";
 
 
 export const instant = false;
@@ -40,29 +41,31 @@ export default async function RootLayout({
         <html className={`${rubik.variable} ${comfortaa.variable}`} lang="en" data-palette="ember" data-theme="light">
             <body className="font-rubik">
                 <AuthProvider initialAuth={auth}>
-                    <ThemeProvider>
-                        <Toaster
-                            position="top-center"
-                            closeButton
-                            duration={3000}
-                            toastOptions={{
-                                classNames: {
-                                    toast: "font-rubik rounded-xl shadow-lg",
-                                    title: "font-semibold text-primary-text",
-                                    description: "text-sm font-comfortaa text-secondary-text",
-                                },
-                            }}
-                        />
-                        <header>
-                            <TopNav display={true} navLocations={navLocations} />
-                        </header>
+                    <NotificationProvider>
+                        <ThemeProvider>
+                            <Toaster
+                                position="top-center"
+                                closeButton
+                                duration={3000}
+                                toastOptions={{
+                                    classNames: {
+                                        toast: "font-rubik rounded-xl shadow-lg",
+                                        title: "font-semibold text-primary-text",
+                                        description: "text-sm font-comfortaa text-secondary-text",
+                                    },
+                                }}
+                            />
+                            <header>
+                                <TopNav display={true} navLocations={navLocations} />
+                            </header>
 
-                        <main>{children}</main>
+                            <main>{children}</main>
 
-                        <footer>
-                            <Footer />
-                        </footer>
-                    </ThemeProvider>
+                            <footer>
+                                <Footer />
+                            </footer>
+                        </ThemeProvider>
+                    </NotificationProvider>
                 </AuthProvider>
             </body>
         </html>
