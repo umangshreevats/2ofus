@@ -112,7 +112,7 @@ const Auth = ({ setOpen, signIn: si }: { signIn: boolean, setOpen: React.Dispatc
 
             <form
                 onSubmit={handleSignInSubmit}
-                className="w-[400px] bg-background text-primary-text 
+                className="w-full sm:w-[400px] bg-background text-primary-text 
     gap-5 flex flex-col items-center p-5"
             >
                 {/*Form to handle the Sign In*/}
@@ -142,7 +142,7 @@ const Auth = ({ setOpen, signIn: si }: { signIn: boolean, setOpen: React.Dispatc
                     type="button" className="ml-2 cursor-pointer text-secondary-text inline">{signIn ? " sign-up" : " sign-in"}</button></div>
             </form> :
             <form onSubmit={handleSignUpSubmit}
-                className="w-[400px] bg-background text-primary-text gap-5 flex flex-col items-center p-5">
+                className="w-full sm:w-[400px] bg-background text-primary-text gap-5 flex flex-col items-center p-5">
 
                 {/*Form to handle Sign up*/}
                 <div className="w-full flex justify-between">

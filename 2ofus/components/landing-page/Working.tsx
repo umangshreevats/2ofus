@@ -10,26 +10,32 @@ const functionalities = [
         step: 1,
         left: 80,
         top: 40,
-        text: "Create an account, to be a part of this community",
+        text: "Create your account and join our little world of love and togetherness."
     },
     {
         step: 2,
-        left: 730,
+        left: 750,
         top: 40,
-        text: "Find your love ❤️, and create a profile together"
+        text: "Find your partner and send them an invitation to join you."
     },
     {
         step: 3,
-        left: 670,
+        left: 820,
+        top: 420,
+        text: "Create your own personal couple space to share memories and cherish your journey together."
+    },
+    {
+        step: 4,
+        left: 80,
         top: 320,
-        text: "Enjoy, being together forever along"
+        text: "Share your feelings, appreciate each other, and celebrate all the little things that make your relationship special."
     }
 ];
 
 const Functionality = ({ functionality, theme }: { theme: "light" | "dark", functionality: { left: number, top: number, step: number, text: string } }) => {
 
     return (
-        <div className={`lg:w-[250px] w-full hover:scale-110 transition-all duration-300 ease-in-out lg:h-[190px] lg:absolute`}
+        <div className={`xl:w-[250px] w-full hover:scale-110 transition-all duration-300 ease-in-out xl:h-[190px] xl:absolute xl:mt-auto mt-5`}
             style={{
                 left: `${functionality.left}px`,
                 top: `${functionality.top}px`
@@ -57,7 +63,7 @@ const Working = () => {
             </h4>
 
             <div className="w-full h-full relative">
-                <Image src={theme === "light" ? workingLight : workingDark} alt="working-background image" className="hidden lg:block object-cover" />
+                <Image src={theme === "light" ? workingLight : workingDark} alt="working-background image" className="hidden xl:block object-cover" />
                 {functionalities.map((f, i) => (
                     <div key={i}>
                         <Functionality theme={theme} functionality={f} />

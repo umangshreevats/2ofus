@@ -80,20 +80,19 @@ const Footer = () => {
             </div>
 
             {/* Main footer */}
-            <div className="parent-box bg-surface">
+            <div className="parent-box bg-surface bg-cover bg-center bg-no-repeat"
+            >
 
                 <div
-                    className="child-box relative w-full min-h-[480px] px-5 sm:px-8 lg:px-10 py-10 sm:py-12 bg-surface bg-cover bg-center bg-no-repeat"
-                    style={{
-                        backgroundImage: `url("${footerImage.src}")`,
-                    }}
+                    className="child-box relative w-full min-h-[480px] px-5 sm:px-8 lg:px-10 py-10 sm:py-12"
                 >
 
                     {/* Navigation */}
                     <div className="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-10 sm:gap-6 lg:gap-10">
 
-                        {/* Empty space for 2ofus artwork */}
-                        <div className="hidden sm:block" />
+                        <div className="w-full max-sm:col-span-2 text-primary-text font-rubik text-5xl font-bold">
+                            {appName}
+                        </div>
 
                         <FooterLinks
                             title="Explore"
@@ -113,7 +112,7 @@ const Footer = () => {
                     </div>
 
                     {/* Bottom section */}
-                    <div className="relative z-10 mt-24 sm:mt-32 lg:mt-36 border-t border-primary-text/20 pt-5">
+                    <div className="relative z-10 mt-24 sm:mt-32 lg:mt-36 pt-5">
 
                         <p className="text-center text-xs sm:text-sm text-primary-text/75">
                             Your memories are yours. Always.

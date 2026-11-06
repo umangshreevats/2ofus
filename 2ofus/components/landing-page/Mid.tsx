@@ -19,22 +19,22 @@ const Mid = () => {
 
         <div className="w-full h-full flex flex-col items-center p-10 gap-10">
             <h1 className="text-4xl font-bold text-primary-text">
-                Welcome to the <span className="text-accent">{appName}</span>, a place to be bounded love forever!
+                Welcome to <span className="text-accent">{appName}</span>, your little space for love, laughter, and togetherness!
             </h1>
 
             <p className="text-md font-medium text-secondary-text">
-                This website is made for you and your partner, to understand each other better, notice what's wrong and be together forever!
+                A special space made just for you and your partner to share beautiful memories, express your feelings, appreciate the little things, and understand each other better. Celebrate your bond, cherish every moment, and make your journey together even more meaningful!
             </p>
 
-            <Button 
-            onClick={() => setSignIn(true)} 
-            type="button" 
-            text="Get Started"
-            textSize={"large"} 
-            padding={1}  
-            hoverEffect={true}
-            hoverBackgroundColor={theme === "light" ? "white" : "black"}
-            hoverTextColor={theme === "light" ? "black" : "white"}
+            <Button
+                onClick={() => setSignIn(true)}
+                type="button"
+                text="Get Started"
+                textSize={"large"}
+                padding={1}
+                hoverEffect={true}
+                hoverBackgroundColor={theme === "light" ? "white" : "black"}
+                hoverTextColor={theme === "light" ? "black" : "white"}
             />
         </div>
 
