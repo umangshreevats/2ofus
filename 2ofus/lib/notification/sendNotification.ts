@@ -7,13 +7,18 @@ type NotificationType =
     | "unliking"
     | "quiz"
     | "quizSubmit"
-    | "memory";
+    | "memory"
+    | "request_send"
+    | "request_accepted"
+    | "request_rejected";
 
 type CreateNotificationParams = {
     senderId: string | null;
     recipientId: string;
     image: string | null;
     type: NotificationType;
+    title?: string | null;
+    message?: string | null;
 };
 
 
@@ -50,6 +55,21 @@ const notificationData: Record<NotificationType, any> = {
     quizSubmit: {
         title: "Your partner has submitted their response.",
         message: "Your partner just submitted a quiz created by you, check the scores and see how much they care about you."
+    },
+
+    request_send: {
+        title: "Someone send you a coupling request.",
+        message: "Someone shown interest in coupling with you."
+    },
+
+    request_accepted: {
+        title: "The person you send request to has accepted your request.",
+        message: "Congratulations you are couple now, check and create your couple profile together."
+    },
+
+    request_rejected: {
+        title: "The person you send request to has rejected your request.",
+        message: "Too bad seems like the soulmate you were looking for is still yet to be discovered."
     }
 }
 
@@ -57,15 +77,28 @@ export async function createNotification({
     senderId,
     recipientId,
     type,
-    image
+    image,
+    title = null,
+    message = null,
 }: CreateNotificationParams) {
+
+    const additional: Record<string, string> = {};
+    
+    if(title && title.trim().length > 0) {
+        additional.title = title;
+    }
+
+    if(message && message.trim().length > 0) {
+        additional.message = message;
+    }
     const { data: notification, error } = await supabaseAdmin
         .from("notifications")
         .insert({
             ...notificationData[type],
             sender: senderId,
             receiver: recipientId,
-            image
+            image,
+            ...additional
         })
         .select()
         .single();

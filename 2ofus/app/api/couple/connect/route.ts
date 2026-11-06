@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { createClient } from "@/utils/supabase/server";
+import { createNotification } from "@/lib/notification/sendNotification";
+
+
 
 export async function POST(request: NextRequest) {
 
     try {
         const supabase = await createClient();
-        const { user } = await getCurrentUser();
+        const { user, userData } = await getCurrentUser();
 
         if (!user) {
             return NextResponse.json(
@@ -113,6 +116,16 @@ export async function POST(request: NextRequest) {
                 { status: 500 }
             );
         };
+
+
+        await createNotification({ 
+            senderId: user.id, 
+            recipientId: requestedId, 
+            image: userData.profile_image ?? null, 
+            type: "request_send", 
+            title: `${userData.username} has send you a couple request.`,
+            message: `You got an invitation from ${userData.username}, to make a couple profile together.`
+        });
 
 
         return NextResponse.json({

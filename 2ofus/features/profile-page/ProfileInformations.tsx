@@ -187,7 +187,8 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
                         </h4>
                         <PhotoFrame width={300} height={300} round={true}>
                             {profile.profile_image && profile.profile_image.length > 0 ?
-                                <Image src={profile.profile_image} alt="profile-image" width={300} height={300} className="object-cover rounded-full" />
+                                <Image src={profile.profile_image} alt="profile-image" fill
+                                    sizes="(max-width: 640px) 85px, (max-width: 768px) 120px, (max-width: 1024px) 160px, 185px" />
                                 : <div className="w-full h-full font-bold background-accent flex justify-center items-center">
                                     <span className="text-2xl text-white">{profile.username ? profile.username[0].toUpperCase() : "S"} </span>
                                 </div>}

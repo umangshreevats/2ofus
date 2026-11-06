@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
+import { getCurrentUser } from "@/lib/auth";
+import { createNotification } from "@/lib/notification/sendNotification";
 
 
 // PATCH: /api/couple/coupling-request/:requestId/reject
@@ -10,16 +12,31 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
         const supabase = await createClient();
 
-        const { data: { user }, error } = await supabase.auth.getUser();
+        const { user, userData } = await getCurrentUser();
 
-        if (error || !user) {
+        if (!user || !userData) {
             return NextResponse.json(
                 { message: "Unauthorized" },
                 { status: 401 }
             );
         }
 
+
         const { requestId } = await params;
+
+        const { data: requestInfo, error: requestInfoError } = await supabase
+            .from("coupling_requests")
+            .select("sender_id, receiver_id, id")
+            .eq("id", requestId)
+            .single();
+
+        if (requestInfoError || !requestInfo) {
+
+            return NextResponse.json(
+                { message: "Error reading the request informations" },
+                { status: 500 }
+            );
+        }
 
         const { data: couplingRequest, error: crError } = await supabase
             .from("coupling_requests")
@@ -50,6 +67,16 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
                 { status: 500 }
             );
         }
+
+        await createNotification({
+            senderId: user.id,
+            recipientId: requestInfo?.sender_id,
+            image: userData.profile_image ?? null,
+            type: "request_accepted",
+            title: `${userData.username} has rejected your couple request.`,
+            message: `Sorry, it seems like ${userData.username},
+                    wasn't the one you were looking for, try another one, or invite your soulmate.`
+        });
 
         return NextResponse.json(
             {

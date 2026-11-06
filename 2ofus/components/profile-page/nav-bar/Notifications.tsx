@@ -123,7 +123,7 @@ const Notifications = ({ setOpenNav }: { setOpenNav: React.Dispatch<SetStateActi
         {notifications.length === 0 ? <div className="w-full h-50 sm:h-64 flex flex-col justify-center items-center">
             No notifications currently!
         </div> : <ul className="w-full flex flex-col gap-2 max-h-auto sm:max-h-[500px] rounded-b-sm overflow-scroll" style={{ scrollbarWidth: "none" }}>
-            {notifications.map((notification) => (<>
+            {notifications.map((notification) => (<div key={notification.id}>
                 {/*Notification display*/}
                 <div onClick={() => markAsRead(notification.id)} className={`w-full cursor-pointer flex items-start gap-2 p-2 transition-all duration-200 ${notification.is_read
                     ? "bg-surface"
@@ -174,7 +174,7 @@ const Notifications = ({ setOpenNav }: { setOpenNav: React.Dispatch<SetStateActi
                     </div>
                 </div>
 
-            </>))}
+            </div>))}
         </ul>}
     </div>
 }
