@@ -2,11 +2,24 @@
 import Button from "@/components/commons/Button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
 
+
+/*
+This component is to display current user's requests received and the requests
+send to connect with another user, right now it only shows the past current 3 users within the two categories
+rather than showing all the requests*/
 const Requests = ({ requestsSend, requestsReceived }: { requestsSend: any, requestsReceived: any }) => {
 
     const router = useRouter();
+
+    const [reqSend, setReqSend] = useState(requestsSend);
+    const [reqReceived, setReqReceived] = useState(requestsReceived);
+
+    /*
+    Function to do operations on the requests send or received by the user, they can be either accepting
+    the request, rejecting or canceling the send request.*/
     const handleRequest = async (request: "accept" | "reject" | "cancel", requestId: string) => {
 
         try {
@@ -27,6 +40,11 @@ const Requests = ({ requestsSend, requestsReceived }: { requestsSend: any, reque
             if (request === "accept") {
                 router.push(`/home/couple-setup/${result?.couplingRequest?.couple_id}`);
                 toast.success(`You have accepted to be the couple with someone!`);
+            } else if(request === "reject") {
+
+                setReqReceived((prev: any[]) => prev.filter((req) => req.id !== requestId));
+            } else {
+                setReqSend((prev: any[]) => prev.filter((req) => req.id !== requestId));
             }
         } catch (err) {
 
@@ -42,16 +60,17 @@ const Requests = ({ requestsSend, requestsReceived }: { requestsSend: any, reque
             Check your requests status
         </h3>
 
+        {/*Requests send to which users*/}
         <div className="w-full h-full p-2 flex gap-1 flex-col">
             <h3 className="text-md font-bold text-lg font-comfortaa">
                 Requests Send
             </h3>
 
-            {!requestsSend || requestsSend.length === 0 ? <div className="w-full rounded-md p-10 border-2 border-dashed
+            {!reqSend || reqSend.length === 0 ? <div className="w-full rounded-md p-10 border-2 border-dashed
              border-primary-text flex justify-center items-center">
                 You haven't send requests to anyone yet.</div> :
                 <div className="w-full p-2">
-                    {requestsSend.map((req: any) => {
+                    {reqSend.map((req: any) => {
 
                         let finalProfileName = req.receiver.firstname && req.receiver.firstname.length > 0 ? req.receiver.firstname : "Someone Special";
 
@@ -83,15 +102,16 @@ const Requests = ({ requestsSend, requestsReceived }: { requestsSend: any, reque
                 </div>}
         </div>
 
+        {/*Requests received from which user*/}
         <div className="w-full h-full p-2 gap-1 flex-col">
             <h3 className="text-md font-bold text-lg font-comfortaa">
                 Requests Received
             </h3>
 
-            {!requestsReceived || requestsReceived.length === 0 ? <div className="w-full p-10 rounded-md border-2 border-dashed
+            {!reqReceived || reqReceived.length === 0 ? <div className="w-full p-10 rounded-md border-2 border-dashed
              border-primary-text flex justify-center items-center">
                 You haven't received requests from anyone yet.</div> : <div className="w-full p-2">
-                {requestsReceived.map((req: any) => {
+                {reqReceived.map((req: any) => {
 
                     let finalProfileName = req.sender.firstname && req.sender.firstname.length > 0 ? req.sender.firstname : "Someone Special";
 

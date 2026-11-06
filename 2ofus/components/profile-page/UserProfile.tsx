@@ -1,15 +1,17 @@
 "use client";
 import Image from "next/image";
-import { Mars, Venus, VenusAndMars } from "lucide-react";
+import { Check, Mars, Venus, VenusAndMars } from "lucide-react";
 import Button from "../commons/Button";
 import { useState } from "react";
 import Link from "next/link";
 import PhotoFrame from "../commons/PhotoFrame";
+import { toast } from "sonner";
 
 
 const UserProfile = ({ profileInfo }: { profileInfo: any }) => {
 
     const [requestLoading, setRequestLoading] = useState(false);
+    const [requestSend, setRequestSend] = useState(false);
     const sendCoupleRequest = async () => {
 
         setRequestLoading(true);
@@ -25,10 +27,18 @@ const UserProfile = ({ profileInfo }: { profileInfo: any }) => {
             const result = await response.json();
 
             if (!response.ok) {
-                alert("An Error occured" + result.message);
+                toast.error("An Error occured" + result.message);
+                setRequestLoading(false);
+                return;
             }
+
+            toast.success("Request to connect send successfully!");
+            setRequestSend(true);
         } catch (err) {
-            alert("An Error Occured");
+
+            if(err instanceof Error) {
+                toast.error("An Error Occured: " + err.message);
+            }
         } finally {
             setRequestLoading(false);
         }
@@ -90,12 +100,14 @@ const UserProfile = ({ profileInfo }: { profileInfo: any }) => {
                 </Link>
 
                 <div className="relative shrink-0 sm:absolute sm:right-10">
-                    <Button
+                    {requestSend ? <div className="flex gap-2 items-center w-full h-10 rounded full p-5 bg-green-500/70 text-white">
+                    <Check /> Request Send
+                    </div> : <Button
                         hoverEffect={true}
                         onClick={sendCoupleRequest}
                         text={requestLoading ? "Sending..." : "Send Request"}
                         disabled={requestLoading}
-                    />
+                    />}
                 </div>
             </div>
 

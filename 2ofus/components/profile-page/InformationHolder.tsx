@@ -8,21 +8,21 @@ import { Couples, Users } from "@/types/profiles";
 import Popups from "../commons/Popups";
 import ProfileEditing from "./ProfileEditing";
 
-const InformationHolder = ({ 
-    heading, 
-    icon, 
-    iconColor, 
-    profileData, 
+const InformationHolder = ({
+    heading,
+    icon,
+    iconColor,
+    profileData,
     setProfileData,
-    setCoupleData, 
-    information, 
-    allowEdit = false, 
+    setCoupleData,
+    information,
+    allowEdit = false,
     type,
     selectedImage,
     setSelectedImage,
     originalProfile,
     originalCouple
- }: {
+}: {
     heading: string,
     profileData: Users | Couples,
     setProfileData?: React.Dispatch<SetStateAction<Users>>,
@@ -65,19 +65,19 @@ const InformationHolder = ({
             />
         </div>
 
-        <div className="w-full h-full flex flex-col gap-2">
+        <div className="w-full min-w-0 flex-1 flex flex-col gap-2">
             <h5 className="text-md font-medium text-primary-text font-rubik">
                 {heading}
             </h5>
 
-            <p className="text-md font-medium text-secondary-text font-comfortaa">
+            <p className="text-md font-medium text-secondary-text font-comfortaa break-words [overflow-wrap:anywhere]">
                 {information}
             </p>
         </div>
 
 
         {allowEdit && <div className="aspect-square p-5">
-            <PlayfulButton backgroundColor="var(--accent)" textColor="white" padding={5} pScale="px" width={100} height={100} wScale="%" hScale="%" icon={Pencil} onClick={() => setEditing(prev => !prev)} />
+            <PlayfulButton backgroundColor="var(--accent)" textColor="white" padding={1} pScale="px" width={100} height={100} wScale="%" hScale="%" icon={Pencil} onClick={() => setEditing(prev => !prev)} />
         </div>}
 
         {editing && type && (
@@ -91,7 +91,7 @@ const InformationHolder = ({
                     profileData={profileData}
                     setProfileData={setProfileData}
                 />
-            </Popups> :  (setCoupleData && originalCouple) ? <Popups open={editing} setOpen={setEditing}>
+            </Popups> : (setCoupleData && originalCouple) ? <Popups open={editing} setOpen={setEditing}>
                 <ProfileEditing
                     selectedImage={selectedImage}
                     setSelectedImage={setSelectedImage}

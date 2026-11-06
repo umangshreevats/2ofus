@@ -12,7 +12,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
         const { data: { user }, error } = await supabase.auth.getUser();
 
-        if(error || !user) {
+        if (error || !user) {
             return NextResponse.json(
                 { message: "Unauthorized" },
                 { status: 401 }
@@ -22,11 +22,12 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
         const { requestId } = await params;
 
         const { data: couplingRequest, error: crError } = await supabase
-        .from("coupling_requests")
-        .update({ status: "rejected" })
-        .eq("id", requestId)
-        .select()
-        .maybeSingle();
+            .from("coupling_requests")
+            .update({ status: "rejected" })
+            .eq("id", requestId)
+            .select()
+            .maybeSingle();
+
 
         if (crError) {
             return NextResponse.json(
@@ -35,16 +36,32 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
             );
         }
 
+        const { data: couplingRequestDelete, error: crDeleteError } = await supabase
+            .from("coupling_requests")
+            .delete()
+            .eq("id", requestId)
+            .select("id")
+            .maybeSingle();
+
+
+        if (crDeleteError) {
+            return NextResponse.json(
+                { message: "Error deleting the coupling request" },
+                { status: 500 }
+            );
+        }
+
         return NextResponse.json(
             {
                 message: "Request updated successfully",
-                couplingRequest
+                couplingRequest,
+                couplingRequestDelete
             },
             { status: 200 }
         );
 
     } catch (err) {
-        
+
         return NextResponse.json(
             { error: "Internal server error" },
             { status: 500 }

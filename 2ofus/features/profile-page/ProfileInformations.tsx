@@ -20,6 +20,7 @@ import Popups from "@/components/commons/Popups";
 import ProfileEditing from "@/components/profile-page/ProfileEditing";
 import Button from "@/components/commons/Button";
 import { toast } from "sonner";
+import Image from "next/image";
 
 
 const ProfileInformations = ({ userInfo, allowEdits }: {
@@ -111,7 +112,7 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
 
             // Profile image comparison
             if (selectedImage) {
-                if(originalProfile.current.profile_image !== null) formData.append("removeProfileImage", "true");
+                if (originalProfile.current.profile_image !== null) formData.append("removeProfileImage", "true");
                 else formData.append("removeProfileImage", "false");
                 formData.append("profile_image", selectedImage);
             } else if (
@@ -150,8 +151,8 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
 
         } catch (err) {
 
-            if(err instanceof Error) {
-            toast.error("Error updating profile:" + err.message);
+            if (err instanceof Error) {
+                toast.error("Error updating profile:" + err.message);
             } else toast.error("Error updating profile");
         } finally {
             setLoading(false);
@@ -176,130 +177,132 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
             </div>
 
             {/*Profile Information and alteration section*/}
-            <div className="flex max-md:flex-col max-md:items-center md:grid md:grid-cols-[1fr_2fr] md:grid-rows-[1fr_5fr] min-h-[500px]">
+            <div className="flex flex-col items-center min-h-[500px]">
 
-                {/*Profile Image*/}
-                <div className="relative w-full h-full gap-5 flex flex-col justify-center items-center p-5">
-                    <h4 className="w-full font-rubik text-primary-text text-2xl border-b border-b-primary-text border-dashed font-bold">
-                        Profile Image
-                    </h4>
-                    <PhotoFrame width={300} height={300} round={true}>
-                        {profile.profile_image && profile.profile_image.length > 0 ?
-                            <img src={profile.profile_image} alt="profile Image" width={300} height={300} className="object-cover rounded-full" />
-                            : <div className="w-full h-full font-bold background-accent flex justify-center items-center">
-                                <span className="text-2xl text-white">{profile.username ? profile.username[0].toUpperCase() : "S"} </span>
-                            </div>}
-                    </PhotoFrame>
+                <div className="w-full flex flex-col md:flex-row gap-5">
+                    {/*Profile Image*/}
+                    <div className="relative w-full h-full gap-5 flex flex-col justify-center items-center p-5">
+                        <h4 className="w-full font-rubik text-primary-text text-2xl border-b border-b-primary-text border-dashed font-bold">
+                            Profile Image
+                        </h4>
+                        <PhotoFrame width={300} height={300} round={true}>
+                            {profile.profile_image && profile.profile_image.length > 0 ?
+                                <Image src={profile.profile_image} alt="profile-image" width={300} height={300} className="object-cover rounded-full" />
+                                : <div className="w-full h-full font-bold background-accent flex justify-center items-center">
+                                    <span className="text-2xl text-white">{profile.username ? profile.username[0].toUpperCase() : "S"} </span>
+                                </div>}
+                        </PhotoFrame>
 
-                    <input
-                        ref={fileInputRef}
-                        onChange={(e) => {
-                            const file = e.target.files?.[0];
+                        <input
+                            ref={fileInputRef}
+                            onChange={(e) => {
+                                const file = e.target.files?.[0];
 
-                            if (!file) return;
+                                if (!file) return;
 
-                            setSelectedImage(file);
+                                setSelectedImage(file);
 
-                            const url = URL.createObjectURL(file);
+                                const url = URL.createObjectURL(file);
 
-                            setProfile(prev => ({
-                                ...prev,
-                                profile_image: url
-                            }));
-                        }}
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        id="profile-image"
-                    />
+                                setProfile(prev => ({
+                                    ...prev,
+                                    profile_image: url
+                                }));
+                            }}
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            id="profile-image"
+                        />
 
-                    
-                    {allowEdits && <label htmlFor="profile-image" className="absolute left-5 top-40 sm:left-10 sm:top-16 flex gap-2">
-                        <div>
-                            <PlayfulButton
-                                onClick={() => fileInputRef.current?.click()}
-                                icon={Pencil}
+
+                        {allowEdits && <label htmlFor="profile-image" className="absolute left-5 top-40 sm:left-10 sm:top-16 flex gap-2">
+                            <div>
+                                <PlayfulButton
+                                    onClick={() => fileInputRef.current?.click()}
+                                    icon={Pencil}
+                                />
+
+                                {profile.profile_image && (
+                                    <PlayfulButton
+                                        onClick={handleRemoveProfileImage}
+                                        icon={X}
+                                    />
+                                )}
+                            </div>
+                        </label>
+                        }
+
+
+                        {(allowEdits && (selectedImage || (originalProfile.current && originalProfile.current.profile_image && !profile.profile_image))) &&
+                            <Button type="button" onClick={handleSubmit} text={loading ? "Saving..." : "Save Changes"} disabled={loading} />}
+                    </div>
+
+                    {/*Informations*/}
+                    <div className="w-full h-full flex flex-col p-5 gap-5">
+                        <div className="w-full flex flex-col md:flex-row gap-5 items-center items-center">
+                            <InformationHolder
+                                selectedImage={selectedImage} setSelectedImage={setSelectedImage} originalProfile={originalProfile}
+                                profileData={profile}
+                                setProfileData={setProfile}
+                                heading="Username"
+                                information={profile.username ?? "Special Someone"}
+                                icon={AtSign}
+                                iconColor="#E8DFFF"
+                                allowEdit={false}
                             />
 
-                            {profile.profile_image && (
-                                <PlayfulButton
-                                    onClick={handleRemoveProfileImage}
-                                    icon={X}
-                                />
-                            )}
+                            <InformationHolder
+                                selectedImage={selectedImage} setSelectedImage={setSelectedImage} originalProfile={originalProfile}
+                                profileData={profile}
+                                setProfileData={setProfile}
+                                heading="Email"
+                                information={profile.email ?? "Someone@example.com"}
+                                icon={Mail}
+                                iconColor="#DCEBFF"
+                                allowEdit={false}
+                            />
                         </div>
-                    </label>
-                    }
+                        <div className="w-full flex-col md:flex-row flex gap-5 items-center items-center">
+                            <InformationHolder
+                                selectedImage={selectedImage} setSelectedImage={setSelectedImage} originalProfile={originalProfile}
+                                type="fullname"
+                                profileData={profile}
+                                setProfileData={setProfile}
+                                heading="Full Name"
+                                information={fullName}
+                                icon={UserRound}
+                                iconColor="#FFE1EA"
+                                allowEdit={allowEdits}
+                            />
 
+                            <InformationHolder
+                                selectedImage={selectedImage}
+                                setSelectedImage={setSelectedImage} originalProfile={originalProfile}
+                                type="dob"
+                                profileData={profile}
+                                setProfileData={setProfile}
+                                heading="Date of Birth"
+                                information={profile.dob ?? "Some date"}
+                                icon={CalendarDays}
+                                iconColor="#FFF0C9"
+                                allowEdit={allowEdits}
+                            />
+                        </div>
 
-                    {(allowEdits && (selectedImage || (originalProfile.current && originalProfile.current.profile_image && !profile.profile_image))) &&
-                    <Button type="button" onClick={handleSubmit} text={loading ? "Saving..." : "Save Changes"} disabled={loading} />}
-                </div>
-
-                {/*Informations*/}
-                <div className="w-full h-full flex flex-col p-5 gap-5">
-                    <div className="w-full flex flex-col md:flex-row gap-5 items-center items-center">
-                        <InformationHolder
-                            selectedImage={selectedImage} setSelectedImage={setSelectedImage} originalProfile={originalProfile}
-                            profileData={profile}
-                            setProfileData={setProfile}
-                            heading="Username"
-                            information={profile.username ?? "Special Someone"}
-                            icon={AtSign}
-                            iconColor="#E8DFFF"
-                            allowEdit={false}
-                        />
-
-                        <InformationHolder
-                            selectedImage={selectedImage} setSelectedImage={setSelectedImage} originalProfile={originalProfile}
-                            profileData={profile}
-                            setProfileData={setProfile}
-                            heading="Email"
-                            information={profile.email ?? "Someone@example.com"}
-                            icon={Mail}
-                            iconColor="#DCEBFF"
-                            allowEdit={false}
-                        />
-                    </div>
-                    <div className="w-full flex-col md:flex-row flex gap-5 items-center items-center">
-                        <InformationHolder
-                            selectedImage={selectedImage} setSelectedImage={setSelectedImage} originalProfile={originalProfile}
-                            type="fullname"
-                            profileData={profile}
-                            setProfileData={setProfile}
-                            heading="Full Name"
-                            information={fullName}
-                            icon={UserRound}
-                            iconColor="#FFE1EA"
-                            allowEdit={allowEdits}
-                        />
-
-                        <InformationHolder
-                            selectedImage={selectedImage} 
-                            setSelectedImage={setSelectedImage} originalProfile={originalProfile}
-                            type="dob"
-                            profileData={profile}
-                            setProfileData={setProfile}
-                            heading="Date of Birth"
-                            information={profile.dob ?? "Some date"}
-                            icon={CalendarDays}
-                            iconColor="#FFF0C9"
-                            allowEdit={allowEdits}
-                        />
-                    </div>
-
-                    <div className="w-full md:w-1/2 flex flex-col md:flex-row gap-5 items-center items-center">
-                        <InformationHolder
-                            selectedImage={selectedImage} setSelectedImage={setSelectedImage} originalProfile={originalProfile}
-                            type="gender"
-                            profileData={profile}
-                            setProfileData={setProfile}
-                            heading="Gender"
-                            information={profile.gender ?? "Some kind"}
-                            icon={VenusAndMars}
-                            iconColor="#DDF5E5"
-                            allowEdit={allowEdits}
-                        />
+                        <div className="w-full md:w-1/2 flex flex-col md:flex-row gap-5 items-center items-center">
+                            <InformationHolder
+                                selectedImage={selectedImage} setSelectedImage={setSelectedImage} originalProfile={originalProfile}
+                                type="gender"
+                                profileData={profile}
+                                setProfileData={setProfile}
+                                heading="Gender"
+                                information={profile.gender ?? "Some kind"}
+                                icon={VenusAndMars}
+                                iconColor="#DDF5E5"
+                                allowEdit={allowEdits}
+                            />
+                        </div>
                     </div>
                 </div>
 

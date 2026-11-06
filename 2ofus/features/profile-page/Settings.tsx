@@ -10,7 +10,7 @@ const Settings = () => {
 
     const { coupleData } = useAuth();
     return <section className="parent-box">
-        <div className="child-box grid grid-cols-[repeat(2, minmax(0, 1fr))] gap-5 p-5">
+        <div className="child-box md:grid flex flex-col md:grid-cols-[repeat(2, minmax(0, 1fr))] gap-5 p-5">
 
             {/*Top Heading section with redirect button*/}
             <div className="col-span-2 border-b-2 border-b-primary-text border-dashed">
