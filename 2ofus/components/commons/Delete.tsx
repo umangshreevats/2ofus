@@ -4,7 +4,7 @@ import { SetStateAction } from "react";
 import Button from "./Button";
 import { toast } from "sonner";
 
-const Delete = ({ title, message, deleteFunction, setOpen, loading = false }: {
+const Delete = ({ title, message, deleteFunction, setOpen, loading }: {
     title: string,
     message: string,
     deleteFunction: (...args: any[]) => Promise<void>,
@@ -17,7 +17,7 @@ const Delete = ({ title, message, deleteFunction, setOpen, loading = false }: {
 
         try {
 
-            if (loading) {
+            if (loading === undefined) {
                 setOpen(false);
             }
             await deleteFunction();

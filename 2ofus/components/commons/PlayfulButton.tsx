@@ -26,6 +26,7 @@ interface PlayfulButtonProps {
     pressed?: boolean;
     noRight?: boolean;
     type?: "button" | "submit" | "reset";
+    className?: string;
 }
 const PlayfulButton: React.FC<PlayfulButtonProps> = ({
     onlyOnce = false,
@@ -49,7 +50,8 @@ const PlayfulButton: React.FC<PlayfulButtonProps> = ({
     pressUp = false,
     pressed = false,
     noRight = false,
-    type = "button"
+    type = "button",
+    className = ""
 }) => {
 
     const [clicked, setClicked] = useState(pressed);
@@ -131,7 +133,7 @@ const PlayfulButton: React.FC<PlayfulButtonProps> = ({
         onPointerDown={onTap}
         onPointerUp={onRelease}
         onPointerCancel={onRelease}
-        className={`flex gap-4 cursor-pointer border-4 border-solid font-bold ${noRight ? "rounded-l-full" : "rounded-full"}`}
+        className={`flex gap-4 cursor-pointer border-4 border-solid font-bold ${noRight ? "rounded-l-full" : "rounded-full"} ${className}`}
         style={{
             backgroundColor: clicked
                 ? (clickBackColor || backgroundColor || "var(--background)")

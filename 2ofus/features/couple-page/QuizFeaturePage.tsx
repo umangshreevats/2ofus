@@ -8,6 +8,7 @@ import Button from "@/components/commons/Button";
 import { useRouter } from "next/navigation";
 import Headings from "@/components/commons/Headings";
 import { toast } from "sonner";
+import XScaleScroller from "@/components/commons/XScaleScroller";
 
 
 const QuizfeaturePage = ({ quizes }: { quizes: QuizInfoProps[] }) => {
@@ -83,9 +84,9 @@ const QuizfeaturePage = ({ quizes }: { quizes: QuizInfoProps[] }) => {
             }
         } catch (err) {
 
-            if(err instanceof Error) {
+            if (err instanceof Error) {
                 toast.error("Something went wrong: " + err.message);
-            }else toast.error("Somethign went wrong");
+            } else toast.error("Somethign went wrong");
         } finally {
             if (category === "pending") {
                 setPendingLoading(false);
@@ -102,10 +103,10 @@ const QuizfeaturePage = ({ quizes }: { quizes: QuizInfoProps[] }) => {
 
             <div className="w-full flex border-dashed border-b-2 border-b-primary-text">
 
-                <Headings 
-                className="w-[70%]"
-                heading="Testing your partner knowledge"
-                paragraph="Tests written by you and your partners for each other get to know each other" />
+                <Headings
+                    className="w-[70%]"
+                    heading="Testing your partner knowledge"
+                    paragraph="Tests written by you and your partners for each other get to know each other" />
 
                 <div className="flex-1 flex flex-col gap-1 justify-center items-center p-5">
                     <span>Create Quiz for your partner: </span>
@@ -121,24 +122,26 @@ const QuizfeaturePage = ({ quizes }: { quizes: QuizInfoProps[] }) => {
 
                     {pendingQuiz.length === 0 ? <div className="w-full h-40 p-10 flex justify-center items-center rounded-md border border-dashed border-primary-text">
                         There is no pending quiz by your partner
-                    </div> : <div className="w-full flex gap-5 overflow-x-scroll" style={{ scrollbarWidth: "none" }}>
-                        {pendingQuiz.map((quiz) => (
-                            <div key={quiz.id}>
-                                <QuizInfo quizInfo={quiz} />
-                            </div>
-                        ))}
+                    </div> :
+                        <XScaleScroller>
+                            <div className="w-full flex gap-5">
+                                {pendingQuiz.map((quiz) => (
+                                    <div key={quiz.id}>
+                                        <QuizInfo quizInfo={quiz} />
+                                    </div>
+                                ))}
 
-                        {pendingNoMore ? <div className="flex-grow-0 font-light text-sm">Quiz End!</div>
-                            : <div className="flex-grow-0 mt-20">
-                                <Button
-                                    className={pendingLoading ? "animate-spin" : ""}
-                                    icon={Plus}
-                                    text=""
-                                    type="button"
-                                    onClick={async () => await getMoreQuizes("pending")}
-                                    disabled={pendingLoading} />
-                            </div>}
-                    </div>}
+                                {pendingNoMore ? <div className="flex-grow-0 font-light text-sm">Quiz End!</div>
+                                    : <div className="flex-grow-0 mt-20">
+                                        <Button
+                                            className={pendingLoading ? "animate-spin" : ""}
+                                            icon={Plus}
+                                            text=""
+                                            type="button"
+                                            onClick={async () => await getMoreQuizes("pending")}
+                                            disabled={pendingLoading} />
+                                    </div>}
+                            </div></XScaleScroller>}
                 </div>
 
                 <div className="w-full flex flex-col gap-5">
@@ -148,23 +151,25 @@ const QuizfeaturePage = ({ quizes }: { quizes: QuizInfoProps[] }) => {
 
                     {attemptedQuiz.length === 0 ? <div className="w-full h-40 p-10 flex justify-center items-center rounded-md border border-dashed border-primary-text">
                         You haven't attempted any quiz assigned by your beloved yet!!
-                    </div> : <div className="w-full flex gap-5 overflow-x-scroll" style={{ scrollbarWidth: "none" }}>
-                        {attemptedQuiz.map((quiz) => (
-                            <div key={quiz.id}>
-                                <QuizInfo quizInfo={quiz} />
-                            </div>
-                        ))}
-                        {attemptedNoMore ? <div className="flex-grow-0 font-light text-sm">Quiz End!</div>
-                            : <div className="flex-grow-0 mt-20">
-                                <Button
-                                    className={attemptedLoading ? "animate-spin" : ""}
-                                    icon={Plus}
-                                    text=""
-                                    type="button"
-                                    onClick={async () => await getMoreQuizes("attempted")}
-                                    disabled={attemptedLoading} />
-                            </div>}
-                    </div>}
+                    </div> :
+                        <XScaleScroller>
+                            <div className="w-full flex gap-5">
+                                {attemptedQuiz.map((quiz) => (
+                                    <div key={quiz.id}>
+                                        <QuizInfo quizInfo={quiz} />
+                                    </div>
+                                ))}
+                                {attemptedNoMore ? <div className="flex-grow-0 font-light text-sm">Quiz End!</div>
+                                    : <div className="flex-grow-0 mt-20">
+                                        <Button
+                                            className={attemptedLoading ? "animate-spin" : ""}
+                                            icon={Plus}
+                                            text=""
+                                            type="button"
+                                            onClick={async () => await getMoreQuizes("attempted")}
+                                            disabled={attemptedLoading} />
+                                    </div>}
+                            </div></XScaleScroller>}
                 </div>
 
                 <div className="border-t mt-5 border-t-primary-text w-full flex flex-col gap-5" style={{ borderTopStyle: "dashed" }}>
@@ -175,7 +180,7 @@ const QuizfeaturePage = ({ quizes }: { quizes: QuizInfoProps[] }) => {
                     {userQuiz.length === 0 ? <div className="w-full h-40 p-10 flex flex-col justify-center items-center rounded-md border border-dashed border-primary-text">
                         <span>Give your partner some challenging questions, to find how much love is for you</span>
                         <Button text="Create Quizes" onClick={() => router.push("/home/my-couple/know-me/create-quiz")} type="button" />
-                    </div> : <div className="w-full flex gap-5 overflow-x-scroll" style={{ scrollbarWidth: "none" }}>
+                    </div> : <XScaleScroller><div className="w-full flex gap-5">
                         {userQuiz.map((quiz) => (
                             <div key={quiz.id}>
                                 <QuizInfo quizInfo={quiz} />
@@ -191,7 +196,7 @@ const QuizfeaturePage = ({ quizes }: { quizes: QuizInfoProps[] }) => {
                                     onClick={async () => await getMoreQuizes("user")}
                                     disabled={userLoading} />
                             </div>}
-                    </div>}
+                    </div></XScaleScroller>}
                 </div>
             </div>
         </div>

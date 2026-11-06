@@ -7,11 +7,13 @@ import { decrypt } from "@/lib/encryption";
 export default async function QuizPage() {
 
     const { user, coupleData } = await getCurrentUser();
-    const quizCategory: ("user" | "created" | "attempted")[] = ["user", "created", "attempted"];
+    const quizCategory: ("user" | "created" | "attempted")[] = ["created", "attempted"];
     const supabase = await createClient();
 
     let quizes = null;
 
+    /*Fetching the quizes from 10 different category and later dividing them on the basis of which
+    are for whome.*/
     const fetchData = async (category: "user" | "created" | "attempted") => {
 
 
@@ -39,12 +41,14 @@ export default async function QuizPage() {
             .order("created_at", { ascending: false });
 
         if (quizesError) {
-            throw new Error ("Failed to load the quiz: " + quizesError.message);
+            throw new Error("Failed to load the quiz: " + quizesError.message);
         }
         return quizes ?? [];
     }
 
 
+    /*Fetching all the quizes based on the catoegory, pending, attempted and the current
+    user made quizes*/
     const allQuizes = await Promise.all(
         quizCategory.map(async (category) => {
             const quizData = await fetchData(category);

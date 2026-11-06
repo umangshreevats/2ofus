@@ -1,5 +1,3 @@
-import Headings from "@/components/commons/Headings";
-import SettingsHolder from "@/components/settings/SettingsDisplay";
 import { getCurrentUser } from "@/lib/auth"
 import Settings from "@/features/profile-page/Settings";
 

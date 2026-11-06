@@ -8,16 +8,16 @@ import MemoryHolder from "@/components/couple-profile/album/MemoryHolder";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import AlbumData from "@/components/couple-profile/album/AlbumData";
+import XScaleScroller from "@/components/commons/XScaleScroller";
 
 const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
-
-    const { coupleData } = useAuth();
-    if (!albumData || !Array.isArray(albumData)) {
+    if (!albumData || !Array.isArray(albumData) || albumData.length === 0) {
 
         return <Suggestion />;
     }
 
 
+    const { coupleData } = useAuth();
     const [albumImages, setAlbumImages] = useState(albumData.filter(d => d.content_type === "image"));
     const [imgLoading, setImgLoading] = useState(false);
     const [imgSkip, setImgSkip] = useState(albumImages.length);
@@ -27,8 +27,9 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
     const [noteSkip, setNoteSkip] = useState(albumNotes.length);
     const [noMoreNotes, setNoMoreNotes] = useState(false);
 
-    const[choosenOne, setChoosenOne] = useState<any>(null);
+    const [choosenOne, setChoosenOne] = useState<any>(null);
     const [show, setShow] = useState(false);
+
 
     const getMoreMemory = async (m: string) => {
         if (m === "image") {
@@ -58,7 +59,7 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
             }
         } catch (err) {
 
-            if(err instanceof Error) {
+            if (err instanceof Error) {
                 toast.error("Something went wrong" + err.message);
             } else {
                 toast.error("Something went wrong");
@@ -84,17 +85,47 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
                 Photos
             </h4>
             <div className="w-full">
-                <div className="w-full h-0 border-b-2 border-b-secondary-text" style={{ borderBottomStyle: "solid" }} />
-                <div className="w-full min-w-0 overflow-x-scroll flex flex-row gap-3" style={{ scrollbarWidth: "none" }}>
-                    {albumImages.map((image) => (<div key={image.id} className="relative">
-                        <div className="h-10 absolute left-10 border-l-2 border-l-secondary-text" style={{ borderBottomStyle: "solid" }} />
-                        <AlbumData data={image} dataType="image" marginTop={1} handleChoosenOne={handleChoosenOne} />
-                    </div>))}
-                    {noMoreImages ? <div className="flex-grow-0 mt-20 font-light text-sm">Memory End!</div>
-                        : <div className="flex-grow-0 mt-20">
-                            <Button onClick={async () => await getMoreMemory("image")} className={imgLoading ? "animate-spin" : ""} icon={Plus} text="" type="button" disabled={imgLoading} />
-                        </div>}
-                </div>
+                {albumImages.length === 0 ? <div className="w-full rounded-md p-10 border-2 border-dashed border-primary-text flex items-center justify-center">
+                    You haven't uploaded any images yet.</div> :
+                    <XScaleScroller>
+                        <div className="relative w-max min-w-full pt-10">
+
+                            {/* Timeline */}
+                            <div className="absolute top-10 left-0 right-0 border-t-2 border-secondary-text" />
+
+                            <div className="flex flex-nowrap gap-3 w-max">
+                                {albumImages.map((image) => (
+                                    <div key={image.id} className="relative shrink-0">
+                                        <div className="h-10 absolute left-10 top-0 border-l-2 border-secondary-text" />
+
+                                        <AlbumData
+                                            data={image}
+                                            dataType="image"
+                                            marginTop={1}
+                                            handleChoosenOne={handleChoosenOne}
+                                        />
+                                    </div>
+                                ))}
+
+                                {noMoreImages ? (
+                                    <div className="shrink-0 mt-20 font-light text-sm">
+                                        Memory End!
+                                    </div>
+                                ) : (
+                                    <div className="shrink-0 mt-20">
+                                        <Button
+                                            onClick={() => getMoreMemory("image")}
+                                            className={imgLoading ? "animate-spin" : ""}
+                                            icon={Plus}
+                                            text=""
+                                            type="button"
+                                            disabled={imgLoading}
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </XScaleScroller>}
             </div>
         </section>
 
@@ -105,17 +136,47 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
             </h4>
 
             <div className="w-full">
-                <div className="w-full h-0 border-b-2 border-b-secondary-text" style={{ borderBottomStyle: "solid" }} />
-                <div className="max-w-full overflow-x-scroll flex flex-row gap-3" style={{ scrollbarWidth: "none" }}>
-                    {albumNotes.map((note) => (<div key={note.id} className="relative">
-                        <div className="h-10 absolute left-10 border-l-2 border-l-secondary-text" style={{ borderBottomStyle: "solid" }} />
-                        <AlbumData dataType="note" data={note} marginTop={1} handleChoosenOne={handleChoosenOne} />
-                    </div>))}
-                    {noMoreNotes ? <div className="flex-grow-0 mt-20 font-light text-sm">Memory End!</div>
-                        : <div className="flex-grow-0 mt-20">
-                            <Button onClick={async () => await getMoreMemory("note")} className={noteLoading ? "animate-spin" : ""} icon={Plus} text="" type="button" disabled={noteLoading} />
-                        </div>}
-                </div>
+                {albumNotes.length === 0 ? <div className="w-full rounded-md border-2 p-10 border-dashed border-primary-text flex items-center justify-center">
+                    You haven't uploaded any notes yet.</div> :
+                    <XScaleScroller>
+                        <div className="relative w-max min-w-full pt-10">
+
+                            {/* Timeline */}
+                            <div className="absolute top-10 left-0 right-0 border-t-2 border-secondary-text" />
+
+                            <div className="flex flex-nowrap gap-3 w-max">
+                                {albumNotes.map((note) => (
+                                    <div key={note.id} className="relative shrink-0">
+                                        <div className="h-10 absolute left-10 top-0 border-l-2 border-secondary-text" />
+
+                                        <AlbumData
+                                            data={note}
+                                            dataType="image"
+                                            marginTop={1}
+                                            handleChoosenOne={handleChoosenOne}
+                                        />
+                                    </div>
+                                ))}
+
+                                {noMoreNotes ? (
+                                    <div className="shrink-0 mt-20 font-light text-sm">
+                                        Memory End!
+                                    </div>
+                                ) : (
+                                    <div className="shrink-0 mt-20">
+                                        <Button
+                                            onClick={() => getMoreMemory("note")}
+                                            className={noteLoading ? "animate-spin" : ""}
+                                            icon={Plus}
+                                            text=""
+                                            type="button"
+                                            disabled={noteLoading}
+                                        />
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </XScaleScroller>}
             </div>
         </section>
 

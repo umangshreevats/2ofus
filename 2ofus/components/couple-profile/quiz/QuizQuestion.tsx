@@ -2,7 +2,7 @@
 import Button from "@/components/commons/Button";
 import DropDown from "@/components/commons/DropDown";
 import type { Question } from "@/features/quiz/QuizForm";
-import { SetStateAction, useState, ChangeEvent, useEffect } from "react";
+import { SetStateAction, useState, ChangeEvent } from "react";
 import PlayfulInput from "@/components/commons/PlayfulInput";
 import { useThemeSettings } from "@/app/theme-provider";
 

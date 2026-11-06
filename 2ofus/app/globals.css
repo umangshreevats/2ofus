@@ -293,13 +293,13 @@ body {
 }
 
 
-@media (max-width: 960px) {
+@media (max-width: 1280px) {
   .child-box {
-    width: 880px;
+    width: 80%;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .child-box {
     width: 100%;
   }

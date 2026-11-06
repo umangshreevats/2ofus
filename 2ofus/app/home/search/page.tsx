@@ -38,6 +38,7 @@ const SearchPage = async ({ searchParams }: Props) => {
         .from("users")
         .select("id, username, firstname, lastname, gender, profile_image, interests")
         .or(`username.ilike.%${query.trim()}%,firstname.ilike.%${query.trim()}%,lastname.ilike.%${query.trim()}%`)
+        .neq("id", user?.id)
         .range((numPage - 1) * 20, 20);
 
     if (error) {
@@ -52,8 +53,8 @@ const SearchPage = async ({ searchParams }: Props) => {
         )
         .neq("id", user?.id);
 
-    if (countError || !count) {
-        throw new Error("Some error occured while count" + countError?.message);
+    if (countError) {
+        throw new Error("Some error occured while counting: " + (countError?.message ?? `${count}`));
     }
 
 

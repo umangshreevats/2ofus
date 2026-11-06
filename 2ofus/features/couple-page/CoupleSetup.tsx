@@ -52,8 +52,8 @@ const CoupleSetup = ({ profileId }: { profileId: string }) => {
                 return;
             }
 
-            router.push("/home/my-couple");
-
+            router.replace("/home/my-couple");
+            router.refresh();
         } catch (err) {
             if (err instanceof Error) {
                 toast.error("Something went wrong: " + err.message);
@@ -217,7 +217,7 @@ const CoupleSetup = ({ profileId }: { profileId: string }) => {
                     </label>
 
 
-                    <Button text={loading ? "Processing.." : "Continue"} disabled={loading} width={100} wscale="%" />
+                    <Button text={loading ? "Processing..." : "Continue"} disabled={loading} width={100} wscale="%" />
 
                 </form>
             </div>
