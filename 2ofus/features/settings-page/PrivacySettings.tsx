@@ -5,9 +5,11 @@ import Delete from "@/components/commons/Delete";
 import { FileText, ArrowRight, ShieldCheck, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const PrivacySetting = () => {
 
+    const router = useRouter();
     const [profileDelete, setProfileDelete] = useState(false);
     const [profileLoading, setProfileLoading] = useState(false);
     /*
@@ -30,6 +32,8 @@ const PrivacySetting = () => {
             }
 
             toast.success("Profile Deleted successfully!");
+            router.replace("/");
+            router.refresh();
         } catch (err) {
 
             if (err instanceof Error) {
@@ -46,9 +50,9 @@ const PrivacySetting = () => {
     const privacySettings = [
         {
             id: "terms-and-conditions",
-            title: "Terms and Conditions",
+            title: "Terms of service",
             paragraph: "The terms for 2ofus.",
-            link: "/terms-and-conditions",
+            link: "/terms-of-service",
             onClick: null,
             icon: FileText,
             secondaryIcon: ArrowRight,
@@ -58,7 +62,7 @@ const PrivacySetting = () => {
             id: "privacy",
             title: "Privacy and Policy",
             paragraph: "How 2ofus handles your data.",
-            link: "/privacy",
+            link: "/privac-policsy",
             onClick: null,
             icon: ShieldCheck,
             secondaryIcon: ArrowRight,

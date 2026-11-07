@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { DayPicker } from "react-day-picker";
 import { format } from "date-fns";
 import "react-day-picker/style.css";
 import PlayfulInput from "./PlayfulInput";
+import { createPortal } from "react-dom";
 
 interface DatePickerProps {
     value: Date | null;
@@ -20,27 +21,63 @@ export default function DatePicker({
     placeholder
 }: DatePickerProps) {
     const [isOpen, setIsOpen] = useState(false);
-    const [today, setToday] = useState<Date | undefined>(undefined);
+    const [today, setToday] = useState<Date | undefined>();
+    const [position, setPosition] = useState({ top: 0, left: 0 });
+
+    const inputRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         setToday(new Date());
     }, []);
 
-    return (
-        <div className="relative">
-            <PlayfulInput
-                placeholder={placeholder || "Enter Something"}
-                id={id}
-                width={100}
-                textAlign="start"
-                wScale="%"
-                text={value ? format(value, "dd MMMM yyyy") : ""}
-                onClick={() => setIsOpen(prev => !prev)}
-                onChange={() => { }}
-            />
+    const updatePosition = () => {
+        if (!inputRef.current) return;
 
-            {isOpen && today && (
-                <div className="absolute z-50 mt-2 bg-background rounded-xl p-3 shadow-lg">
+        const rect = inputRef.current.getBoundingClientRect();
+
+        setPosition({
+            top: rect.bottom + 8,
+            left: rect.left
+        });
+    };
+
+    useEffect(() => {
+        if (!isOpen) return;
+
+        updatePosition();
+
+        window.addEventListener("resize", updatePosition);
+        window.addEventListener("scroll", updatePosition, true);
+
+        return () => {
+            window.removeEventListener("resize", updatePosition);
+            window.removeEventListener("scroll", updatePosition, true);
+        };
+    }, [isOpen]);
+
+    return (
+        <>
+            <div ref={inputRef}>
+                <PlayfulInput
+                    placeholder={placeholder || "Enter Something"}
+                    id={id}
+                    width={100}
+                    textAlign="start"
+                    wScale="%"
+                    text={value ? format(value, "dd MMMM yyyy") : ""}
+                    onClick={() => setIsOpen(prev => !prev)}
+                    onChange={() => { }}
+                />
+            </div>
+
+            {isOpen && today && createPortal(
+                <div
+                    className="z-[9999] fixed bg-background rounded-xl p-3 shadow-lg"
+                    style={{
+                        top: position.top,
+                        left: position.left
+                    }}
+                >
                     <DayPicker
                         mode="single"
                         selected={value ?? undefined}
@@ -53,8 +90,9 @@ export default function DatePicker({
                         endMonth={today}
                         disabled={{ after: today }}
                     />
-                </div>
+                </div>,
+                document.body
             )}
-        </div>
+        </>
     );
 }
