@@ -218,7 +218,10 @@ const CoupleSetup = ({ profileId }: { profileId: string }) => {
 
 
                     <Button text={loading ? "Processing..." : "Continue"} disabled={loading} width={100} wscale="%" />
-
+                    <Button text="Skip" onClick={() => {
+                        router.replace("/home/my-couple");
+                        router.refresh();
+                    }} type="button" backgroundColor="background" textColor="primary-text" width={100} wscale="%" />
                 </form>
             </div>
         </div>
