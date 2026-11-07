@@ -15,7 +15,7 @@ const Settings = () => {
             {/*Top Heading section with redirect button*/}
             <div className="col-span-2 border-b-2 border-b-primary-text border-dashed">
                 <RedirectButton 
-                redirectLink="/home/my-couple"
+                redirectLink="/home"
                 />
                 <Headings
                     heading="Settings"

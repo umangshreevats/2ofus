@@ -31,7 +31,7 @@ const CoupleTop = () => {
             <div className="flex flex-col gap-2">
                 <Headings
                     heading={`${finalHeading} ❤️`}
-                    subheading={finalHeading === coupleData.couple_name ? `${finalCoupleOne} & ${finalCoupleTwo}` : ""}
+                    subheading={finalHeading === coupleData.couple_name ? `${finalCoupleOne} & ${finalCoupleTwo} | Status: ${coupleData.relationship_status ?? "(Add status)"}` : `Status: ${coupleData.relationship_status ?? "(Add status)"}`}
                     paragraph="A place for our memories, thoughts, and everything that makes us, us"
                 />
 

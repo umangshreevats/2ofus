@@ -5,6 +5,7 @@ import { useAuth } from "@/app/auth-provider";
 import PhotoFrame from "@/components/commons/PhotoFrame";
 import Image from "next/image";
 import { connectingHearts } from "@/data/images";
+import { Mars, Venus, VenusAndMars } from "lucide-react";
 
 const BioPicture = () => {
     const { coupleData } = useAuth();
@@ -43,8 +44,8 @@ const BioPicture = () => {
                         </div>
 
                         <div className="text-center">
-                            <h3 className="font-bold text-primary-text text-sm sm:text-base md:text-lg">
-                                {partner1?.firstname || partner1?.username}
+                            <h3 className="font-bold text-primary-text text-sm sm:text-base md:text-lg flex justify-center">
+                                {partner1?.firstname || partner1?.username} {partner1.gender === "male" ? <Mars color="green" /> : partner1.gender === "female" ? <Venus color="pink" /> : <VenusAndMars color="orange" />}
                             </h3>
                             <p className="text-[10px] sm:text-xs md:text-sm text-secondary-text">
                                 The better half
@@ -119,8 +120,8 @@ const BioPicture = () => {
                         </div>
 
                         <div className="text-center">
-                            <h3 className="font-bold text-primary-text text-sm sm:text-base md:text-lg">
-                                {partner2?.firstname || partner2?.username}
+                            <h3 className="font-bold text-primary-text text-sm sm:text-base md:text-lg flex justify-center">
+                                {partner2?.firstname || partner2?.username} {partner2.gender === "male" ? <Mars color="green" /> : partner2.gender === "female" ? <Venus color="pink" /> : <VenusAndMars color="orange" />}
                             </h3>
                             <p className="text-[10px] sm:text-xs md:text-sm text-secondary-text">
                                 The brighter half
