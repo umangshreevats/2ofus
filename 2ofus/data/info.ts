@@ -1,10 +1,14 @@
 export const appName = "2ofus"
 
 
+export const version = `1.0.0`;
 
-export const  navLocations = [
-    { name: "Home", path: "/", icon: null },
-    { name: "About", path: "/about", icon: null },
-    { name: "Couples", path: "/couples", icon: null },
-    { name: "Informations", path: "/informations", icon: null }
-];
+
+// Add informations about the application
+export const about = `App for couples`;
+
+// Add own terms of service
+export const termsOfService = ``;
+
+// Add own privacy policy
+export const privacyPolicy = ``;

@@ -17,16 +17,8 @@ import Notifications from "../profile-page/nav-bar/Notifications";
 import CoupleNav from "../profile-page/couple-page/CoupleNav";
 import NotificationIcon from "../profile-page/nav-bar/NotificationIcon";
 
-
-type NavLocations = {
-    name: string;
-    path: string;
-    icon: any;
-}
-
 interface TopNavProps {
     display: boolean;
-    navLocations: NavLocations[];
 }
 
 
@@ -166,7 +158,7 @@ const RightSideNavElements = ({
 
 
 // Main nav bar for the page
-const TopNav: React.FC<TopNavProps> = ({ display, navLocations }) => {
+const TopNav: React.FC<TopNavProps> = ({ display }) => {
 
     const pathname = usePathname();
     const { userData, coupleData } = useAuth();

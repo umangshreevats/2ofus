@@ -10,5 +10,8 @@ export const headerFooterMain = {
     "/home/profile": { show: false },
     "/home/my-couple/tell-and-get/history": { show: false },
     "/home/my-couple/profile-edit": { show: false },
-    "/home/settings": { show: false }
+    "/home/settings": { show: false },
+    "/about": { show: false },
+    "/terms-of-service": { show: false },
+    "/privacy-policy": { show: false }
 }

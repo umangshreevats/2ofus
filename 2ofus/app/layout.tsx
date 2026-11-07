@@ -3,7 +3,6 @@ import { Rubik, Comfortaa } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./theme-provider";
 import TopNav from "@/components/landing-page/TopNav";
-import { navLocations } from "@/data/info";
 import Footer from "@/components/landing-page/Footer";
 import { getCurrentUser } from "@/lib/auth";
 import { AuthProvider } from "./auth-provider";
@@ -56,7 +55,7 @@ export default async function RootLayout({
                                 }}
                             />
                             <header>
-                                <TopNav display={true} navLocations={navLocations} />
+                                <TopNav display={true} />
                             </header>
 
                             <main>{children}</main>

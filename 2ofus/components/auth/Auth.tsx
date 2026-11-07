@@ -100,7 +100,7 @@ const Auth = ({ setOpen, signIn: si }: { signIn: boolean, setOpen: React.Dispatc
             router.push(`/profile/@${username}`);
         } else {
             // Email confirmation is enabled.
-            toast("Please check your email to verify your account.");
+            toast("Please check your email to verify your account, then sign in with same credentials.");
         }
 
         router.refresh();

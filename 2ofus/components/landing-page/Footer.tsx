@@ -40,8 +40,7 @@ const Footer = () => {
     const informationLinks = [
         { title: "About 2ofus", href: "/about" },
         { title: "Privacy Policy", href: "/privacy-policy" },
-        { title: "Terms of Service", href: "/terms" },
-        { title: "Contact Us", href: "/contact" },
+        { title: "Terms of Service", href: "/terms-of-service" },
     ];
 
     const FooterLinks = ({
