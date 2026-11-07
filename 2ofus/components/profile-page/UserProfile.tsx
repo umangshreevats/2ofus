@@ -73,7 +73,7 @@ const UserProfile = ({ profileInfo }: { profileInfo: any }) => {
                     <div className="w-16 h-16 rounded-full shrink-0">
                         <PhotoFrame width={70} height={70} round={true}>
                             {profileInfo.profile_image ? (
-                                <img src={profileInfo.profile_image} alt="profile Image" width={70} height={70} className="object-cover rounded-full" />
+                                <Image src={profileInfo.profile_image} alt="profile-Image" sizes="(max-width: 640px) 85px, (max-width: 768px) 120px, (max-width: 1024px) 160px, 185px" fill className="object-cover rounded-full" />
                             ) : (
                                 <div className="w-full h-full flex justify-center rounded-full items-center bg-accent text-2xl font-bold text-white">
                                     {profileInfo.username[0]}

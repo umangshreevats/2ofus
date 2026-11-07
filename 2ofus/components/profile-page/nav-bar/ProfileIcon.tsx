@@ -142,8 +142,7 @@ const ProfileIcon = () => {
             <PhotoFrame width={100} height={100} wscale="%" hscale="%" round={true}>
                 {(userData.profile_image && userData.profile_image.length > 0) ?
                     <Image src={userData.profile_image}
-                        width={150}
-                        height={150} alt="profile-Image" className="object-cover rounded-full" /> :
+                        sizes="(max-width: 640px) 85px, (max-width: 768px) 120px, (max-width: 1024px) 160px, 185px" fill alt="profile-Image" className="object-cover rounded-full" /> :
                     <div className="w-full h-full rounded-full bg-accent text-white flex items-center justify-center">
                         {userData.username[0].toUpperCase() ?? "U"}
                     </div>}

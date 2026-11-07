@@ -3,6 +3,7 @@
 
 import {
     createContext,
+    SetStateAction,
     useContext,
     useEffect,
     useState,
@@ -19,6 +20,10 @@ type NotificationContextType = {
     notificationsLoading: boolean;
     markAsRead: (notificationId: string) => Promise<void>;
     unRead: number;
+    newRequest: any;
+    setNewRequest: React.Dispatch<SetStateAction<any>>;
+    newCouple: boolean;
+    setNewCouple: React.Dispatch<SetStateAction<boolean>>;
 };
 
 const NotificationContext =
@@ -33,7 +38,44 @@ export function NotificationProvider({
 
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [notificationsLoading, setNotificationsLoading] = useState(false);
+    const [newCouple, setNewCouple] = useState<boolean>(false);
+    const [newRequest, setNewRequest] = useState<any>(null);
     const [unRead, setUnRead] = useState(0);
+
+
+    /*
+    Function to handle the new couple request whenever the notification
+    is about a user sending a coupling notification to the current user id.*/
+    const handleNewRequest = async (requestId: string) => {
+
+        try {
+            const { data: requestInfo, error: requestError } = await supabase
+                .from("coupling_requests")
+                .select(`*,
+                sender:users!coupling_requests_sender_id_fkey (
+                    id,
+                    username,
+                    firstname,
+                    lastname,
+                    profile_image
+                )
+            `)
+                .eq("id", requestId)
+                .single();
+
+            if (requestError) {
+                console.error("Error occured while reading the new request: " + requestError.message);
+                return;
+            }
+
+            setNewRequest(requestInfo);
+        } catch (err) {
+
+            if (err instanceof Error) {
+                console.error("Error occured while reading the new request: " + err.message);
+            }
+        }
+    }
 
     // Fetch notifications
     useEffect(() => {
@@ -92,14 +134,27 @@ export function NotificationProvider({
                     table: "notifications",
                     filter: `receiver=eq.${user.id}`,
                 },
-                (payload) => {
+                async (payload) => {
                     const newNotification =
                         payload.new as Notification;
+
 
                     setNotifications((prev) => [
                         newNotification,
                         ...prev,
                     ]);
+
+                    // new notification is about a request send
+                    if (newNotification.type === "request_send" &&
+                        newNotification.reference_id && newNotification.reference_id.length > 0) {
+                        await handleNewRequest(newNotification.reference_id);
+                    }
+
+                    // new notification is about a request accepted
+                    if(newNotification.type === "request_accepted") {
+                        setNewCouple(true);   // this shall be set to null once the user is redirected to the couple page
+                    }
+
                     setUnRead(prev => prev + 1);
                 }
             )
@@ -144,7 +199,11 @@ export function NotificationProvider({
                 notifications,
                 notificationsLoading,
                 markAsRead,
-                unRead
+                unRead,
+                newRequest,
+                setNewRequest,
+                newCouple,
+                setNewCouple
             }}
         >
             {children}

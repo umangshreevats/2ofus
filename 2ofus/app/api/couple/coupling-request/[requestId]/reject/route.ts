@@ -4,8 +4,8 @@ import { getCurrentUser } from "@/lib/auth";
 import { createNotification } from "@/lib/notification/sendNotification";
 
 
-// PATCH: /api/couple/coupling-request/:requestId/reject
-export async function PATCH(request: NextRequest, { params }: { params: Promise<{ requestId: string }> }) {
+// DELETE: /api/couple/coupling-request/:requestId/reject
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ requestId: string }> }) {
 
 
     try {

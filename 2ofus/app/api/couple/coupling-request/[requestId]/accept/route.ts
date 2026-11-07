@@ -55,7 +55,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
         await createNotification({
             senderId: user.id,
-            recipientId: requestInfo?.sender_id,
+            recipientId: requestInfo.sender_id,
             image: userData.profile_image ?? null,
             type: "request_accepted",
             title: `${userData.username} has accepted your couple request.`,

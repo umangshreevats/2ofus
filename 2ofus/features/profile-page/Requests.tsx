@@ -2,9 +2,10 @@
 import Button from "@/components/commons/Button";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
-
+import { useNotifications } from "@/app/notification-provider";
+import PhotoFrame from "@/components/commons/PhotoFrame";
 
 /*
 This component is to display current user's requests received and the requests
@@ -14,6 +15,7 @@ const Requests = ({ requestsSend, requestsReceived }: { requestsSend: any, reque
 
     const router = useRouter();
 
+    const { newRequest, setNewRequest } = useNotifications();
     const [reqSend, setReqSend] = useState(requestsSend);
     const [reqReceived, setReqReceived] = useState(requestsReceived);
 
@@ -25,7 +27,7 @@ const Requests = ({ requestsSend, requestsReceived }: { requestsSend: any, reque
         try {
 
             const response = await fetch(`/api/couple/coupling-request/${requestId}/${request}`, {
-                method: request === "cancel" ? "DELETE" : "PATCH",
+                method: request === "accept" ? "PATCH" : "DELETE",
                 headers: {
                     "Content-type": "applications/json"
                 }
@@ -40,7 +42,7 @@ const Requests = ({ requestsSend, requestsReceived }: { requestsSend: any, reque
             if (request === "accept") {
                 router.push(`/home/couple-setup/${result?.couplingRequest?.couple_id}`);
                 toast.success(`You have accepted to be the couple with someone!`);
-            } else if(request === "reject") {
+            } else if (request === "reject") {
 
                 setReqReceived((prev: any[]) => prev.filter((req) => req.id !== requestId));
             } else {
@@ -53,6 +55,17 @@ const Requests = ({ requestsSend, requestsReceived }: { requestsSend: any, reque
             } else toast.error("An error occured!");
         }
     }
+
+
+    useEffect(() => {
+
+        if (newRequest) {
+            if (reqReceived.length === 3) setReqReceived((prev: any[]) => prev.slice(0, -1));
+            setReqReceived((prev: any[]) => [newRequest, ...prev]);
+            setNewRequest(null);
+        }
+
+    }, [newRequest]);
 
     return <div className="w-full grid grid-cols-1 grid-rows-[1fr_repeat(2, 2fr)] md:grid-rows-[1fr_2fr] md:grid-cols-2">
 
@@ -81,13 +94,14 @@ const Requests = ({ requestsSend, requestsReceived }: { requestsSend: any, reque
                         }
                         return <div className="relative w-full p-2 rounded-sm flex flex-wrap items-center gap-2 hover:shadow-[0px_0px_6px_var(--accent)]" key={req.id}>
 
-                            <div className="w-10 h-10 rounded-full">
-                                {(req.receiver.profile_image && req.receiver.profile_image.length > 0) ?
-                                    <Image width={150}
-                                        height={150} src={req.sender.profile_image} alt={`User-${req.sender_id}`} className="object-cover rounded-full" /> :
-                                    <div className="w-full h-full rounded-full bg-accent text-white flex items-center justify-center">
-                                        {req.receiver.username[0]}
-                                    </div>}
+                            <div className="w-16 h-16 rounded-full">
+                                <PhotoFrame width={70} height={70} round={true}>
+                                    {(req.receiver.profile_image && req.receiver.profile_image.length > 0) ?
+                                        <Image sizes="(max-width: 640px) 85px, (max-width: 768px) 120px, (max-width: 1024px) 160px, 185px" fill src={req.receiver.profile_image} alt={`User-${req.receiver_id}`} className="object-cover rounded-full" /> :
+                                        <div className="w-full h-full rounded-full bg-accent text-white flex items-center justify-center">
+                                            {req.receiver.username[0]}
+                                        </div>}
+                                </PhotoFrame>
                             </div>
                             <div className="h-full flex-flex-col">
                                 <p className="font-medium">{finalProfileName}</p>
@@ -122,13 +136,14 @@ const Requests = ({ requestsSend, requestsReceived }: { requestsSend: any, reque
                     }
                     return <div className="relative w-full p-2 rounded-sm flex flex-wrap items-center gap-2 hover:shadow-[0px_0px_6px_var(--accent)]" key={req.id}>
 
-                        <div className="w-10 h-10 rounded-full">
-                            {(req.sender.profile_image && req.sender.profile_image.length > 0) ?
-                                <Image width={150}
-                                    height={150} src={req.sender.profile_image} alt={`User-${req.sender_id}`} className="object-cover rounded-full" /> :
-                                <div className="w-full h-full rounded-full bg-accent text-white flex items-center justify-center">
-                                    {req.sender.username[0]}
-                                </div>}
+                        <div className="w-16 h-16 rounded-full">
+                            <PhotoFrame width={70} height={70} round={true}>
+                                {(req.sender.profile_image && req.sender.profile_image.length > 0) ?
+                                    <Image sizes="(max-width: 640px) 85px, (max-width: 768px) 120px, (max-width: 1024px) 160px, 185px" fill src={req.sender.profile_image} alt={`User-${req.sender_id}`} className="object-cover rounded-full" /> :
+                                    <div className="w-full h-full rounded-full bg-accent text-white flex items-center justify-center">
+                                        {req.sender.username[0]}
+                                    </div>}
+                            </PhotoFrame>
                         </div>
                         <div className="h-full flex-flex-col">
                             <p className="font-medium">{finalProfileName}</p>
