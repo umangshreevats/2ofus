@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import Button from "./Button";
 
 
-const RedirectButton = ({ text = "", redirectLink }: { text?: string, redirectLink: string }) => {
+const RedirectButton = ({ text = "", redirectLink }: { text?: string, redirectLink?: string }) => {
 
     const router = useRouter();
 
@@ -12,7 +12,10 @@ const RedirectButton = ({ text = "", redirectLink }: { text?: string, redirectLi
         type="button"
         text={text}
         icon={ArrowLeft}
-        onClick={() => router.replace(redirectLink)}
+        onClick={() => {
+            redirectLink && redirectLink.length > 0 ? router.replace(redirectLink) : router.back();
+            router.refresh();
+        }}
     />
 }
 

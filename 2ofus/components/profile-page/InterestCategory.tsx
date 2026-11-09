@@ -3,9 +3,11 @@ import { SetStateAction, useState } from "react";
 import Button from "../commons/Button";
 import { useThemeSettings } from "@/app/theme-provider";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const InterestCategory = ({ username, setPage, setOption, interestsList }: { username: string, interestsList: any, setPage: React.Dispatch<SetStateAction<number>>, setOption: React.Dispatch<SetStateAction<any>> }) => {
 
+    const router = useRouter();
     const { theme } = useThemeSettings();
 
     const [loading, setLoading] = useState(false);
@@ -81,7 +83,8 @@ const InterestCategory = ({ username, setPage, setOption, interestsList }: { use
 
                 <Button type="button" onClick={handleInterestSelection} text={loading ? "Please Wait..." : "Continue"} disabled={loading} width={100} wscale="%" />
                 <Button type="button" onClick={() => {
-
+                    router.replace("/home");
+                    router.refresh();
                 }} text="Skip" backgroundColor="background" textColor={theme === "light" ? "black" : "white"} />
             </div>
         </div>

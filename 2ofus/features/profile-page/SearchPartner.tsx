@@ -23,7 +23,7 @@ const SearchPartner = ({ requestsSend, requestsReceived }: { requestsSend: any, 
         router.refresh();
         setNewCouple(false);
 
-    }, [newCouple, router, setNewCouple]);
+    }, [newCouple]);
 
 
     return <div className="parent-box">

@@ -3,6 +3,7 @@ import UserProfile from "@/components/profile-page/UserProfile";
 import { getCurrentUser } from "@/lib/auth";
 import Pagination from "@/components/commons/Pagination";
 import { redirect } from "next/navigation";
+import RedirectButton from "@/components/commons/RedirectButton";
 
 
 interface Props {
@@ -16,7 +17,7 @@ const SearchPage = async ({ searchParams }: Props) => {
 
     const { user, coupleData } = await getCurrentUser();
 
-    if(!user) {
+    if (!user) {
         redirect("/");
     }
 
@@ -115,7 +116,11 @@ const SearchPage = async ({ searchParams }: Props) => {
     return (
         <div className="parent-box">
             <div className="child-box flex flex-col justify-start gap-5 min-h-screen">
-                <h1>Search results for "{query}"</h1>
+                <div>
+                    <RedirectButton
+                    />
+                </div>
+                <h1>Search results for <strong>{query}</strong></h1>
 
                 {users?.length ? (
                     users.map(user => (

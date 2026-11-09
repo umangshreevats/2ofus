@@ -24,6 +24,8 @@ type NotificationContextType = {
     setNewRequest: React.Dispatch<SetStateAction<any>>;
     newCouple: boolean;
     setNewCouple: React.Dispatch<SetStateAction<boolean>>;
+    requestRejected: string | null;
+    setRequestRejected: React.Dispatch<SetStateAction<string | null>>;
 };
 
 const NotificationContext =
@@ -40,6 +42,7 @@ export function NotificationProvider({
     const [notificationsLoading, setNotificationsLoading] = useState(false);
     const [newCouple, setNewCouple] = useState<boolean>(false);
     const [newRequest, setNewRequest] = useState<any>(null);
+    const [requestRejected, setRequestRejected] = useState<string | null>(null);
     const [unRead, setUnRead] = useState(0);
 
 
@@ -148,11 +151,12 @@ export function NotificationProvider({
                     if (newNotification.type === "request_send" &&
                         newNotification.reference_id && newNotification.reference_id.length > 0) {
                         await handleNewRequest(newNotification.reference_id);
-                    }
-
-                    // new notification is about a request accepted
-                    if(newNotification.type === "request_accepted") {
+                    }else if(newNotification.type === "request_accepted") {
                         setNewCouple(true);   // this shall be set to null once the user is redirected to the couple page
+                    }else if(newNotification.type === "request_rejected" &&
+                        newNotification.reference_id && newNotification.reference_id.length > 0
+                    ) {
+                        setRequestRejected(newNotification.reference_id);
                     }
 
                     setUnRead(prev => prev + 1);
@@ -203,7 +207,9 @@ export function NotificationProvider({
                 newRequest,
                 setNewRequest,
                 newCouple,
-                setNewCouple
+                setNewCouple,
+                requestRejected,
+                setRequestRejected            
             }}
         >
             {children}

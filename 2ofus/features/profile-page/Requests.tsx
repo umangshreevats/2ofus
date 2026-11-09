@@ -15,7 +15,7 @@ const Requests = ({ requestsSend, requestsReceived }: { requestsSend: any, reque
 
     const router = useRouter();
 
-    const { newRequest, setNewRequest } = useNotifications();
+    const { newRequest, setNewRequest, requestRejected, setRequestRejected } = useNotifications();
     const [reqSend, setReqSend] = useState(requestsSend);
     const [reqReceived, setReqReceived] = useState(requestsReceived);
 
@@ -66,6 +66,16 @@ const Requests = ({ requestsSend, requestsReceived }: { requestsSend: any, reque
         }
 
     }, [newRequest]);
+
+
+    useEffect(() => {
+
+        if(requestRejected && requestRejected.length > 0) {
+            toast.info("Your coupling request have been rejected!");
+            setReqSend((prev: any[]) => prev.filter(req => req.id !== requestRejected));
+            setRequestRejected(null);
+        }
+    }, [requestRejected]);
 
     return <div className="w-full grid grid-cols-1 grid-rows-[1fr_repeat(2, 2fr)] md:grid-rows-[1fr_2fr] md:grid-cols-2">
 

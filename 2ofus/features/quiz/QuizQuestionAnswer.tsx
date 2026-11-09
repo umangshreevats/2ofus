@@ -47,6 +47,10 @@ const QuizQuestionAnswer: React.FC<QuizQuestionAnswerProps> = ({ quizInfo, quizQ
                 setSubmitLoading(false);
                 return;
             }
+
+            toast.success("Your quiz have been submitted!");
+            router.replace("/home/my-couple/know-me");
+            router.refresh();
         } catch (err) {
 
             if(err instanceof Error) toast.error("An error occured: " + err.message);

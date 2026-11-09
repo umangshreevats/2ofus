@@ -157,7 +157,8 @@ const QuizForm = () => {
             }
 
             toast.success("Success creating the quiz");
-            router.push("/home/my-couple/know-me");
+            router.replace("/home/my-couple/know-me");
+            router.refresh();
         } catch (err) {
 
             console.error(err);

@@ -72,10 +72,11 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
             senderId: user.id,
             recipientId: requestInfo?.sender_id,
             image: userData.profile_image ?? null,
-            type: "request_accepted",
+            type: "request_rejected",
             title: `${userData.username} has rejected your couple request.`,
             message: `Sorry, it seems like ${userData.username},
-                    wasn't the one you were looking for, try another one, or invite your soulmate.`
+                    wasn't the one you were looking for, try another one, or invite your soulmate.`,
+            reference_id: requestId
         });
 
         return NextResponse.json(

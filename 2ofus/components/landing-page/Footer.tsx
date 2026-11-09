@@ -1,4 +1,3 @@
-
 'use client';
 
 import Link from "next/link";
@@ -73,7 +72,6 @@ const Footer = () => {
     return (
         <footer className="w-full overflow-hidden">
 
-            {/* Curved top */}
             <div className="w-full h-16 sm:h-20 bg-surface">
                 <div className="w-full h-full bg-background rounded-b-[50%]" />
             </div>
