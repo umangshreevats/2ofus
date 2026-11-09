@@ -11,12 +11,13 @@ import { addMorePhoto } from "@/data/images";
 import PlayfulButton from "@/components/commons/PlayfulButton";
 import { useThemeSettings } from "@/app/theme-provider";
 import { toast } from "sonner";
-
+import { useRouter } from "next/navigation";
 
 const Liking = () => {
 
     // States and values
     const { theme } = useThemeSettings();
+    const router = useRouter();
 
     const [submitLoading, setSubmitLoading] = useState(false);
     const [messagesLoading, setMessagesLoading] = useState(false);
@@ -77,6 +78,8 @@ const Liking = () => {
                 return;
             }
 
+            toast.success("Liking created successfully!");
+            router.refresh();
 
         } catch (err) {
 

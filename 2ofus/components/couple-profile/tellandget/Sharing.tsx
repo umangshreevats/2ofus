@@ -42,7 +42,7 @@ const Sharing = ({ sharingInfo }: { sharingInfo: any }) => {
         { addSuffix: false }
     );
 
-    return <div className="w-full flex flex-col md:flex-row justify-between md:items-center gap-5 rounded-sm shadow-md p-5">
+    return <div className="w-full flex flex-col md:flex-row justify-between md:items-start gap-10 rounded-sm shadow-md p-5">
         <div className="flex gap-5">
 
             {/*User Image in photoframe*/}
