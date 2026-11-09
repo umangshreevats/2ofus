@@ -97,6 +97,8 @@ export default async function QuizScoreLoading({ params }: { params: Promise<{ q
         }
     });
 
+    console.log(updatedQuizQuestions);
+
 
     return (
         <section className="parent-box">
@@ -160,11 +162,20 @@ export default async function QuizScoreLoading({ params }: { params: Promise<{ q
                             question.question_type === "short-answer"
                                 ? question.written_answer?.trim().toLowerCase() ===
                                 question.given_answer?.trim().toLowerCase()
-                                : question.correct_options?.length ===
-                                question.answered_options?.length &&
-                                question.correct_options?.every((option: any) =>
-                                    question.answered_options?.includes(option)
-                                );
+
+                                : question.question_type === "multi-choice"
+                                    ? question.answered_options?.some(
+                                        (option: string) =>
+                                            option.trim() === question.correct_options?.trim()
+                                    )
+
+                                    : question.question_type === "multi-select"
+                                        ? question.correct_options?.length ===
+                                        question.answered_options?.length &&
+                                        question.correct_options?.every((option: string) =>
+                                            question.answered_options?.includes(option)
+                                        )
+                                        : false;
 
                         return (
                             <div

@@ -66,6 +66,8 @@ export default async function QuizSolvePage({ params }: { params: Promise<{ quiz
         }
     });
 
+    console.log(updatedQuizQuestions);
+
 
     return <section>
         <QuizQuestionAnswer quizInfo={quizInfo} quizQuestions={updatedQuizQuestions} />
