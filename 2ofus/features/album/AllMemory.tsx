@@ -21,11 +21,11 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
     const [pinnedData, setPinnedData] = useState(albumData.filter(d => d.is_pinned));
     const [albumImages, setAlbumImages] = useState(albumData.filter(d => d.content_type === "image" && !d.is_pinned));
     const [imgLoading, setImgLoading] = useState(false);
-    const [imgSkip, setImgSkip] = useState(albumImages.length);
+    const [imgSkip, setImgSkip] = useState(albumImages.length + pinnedData.filter(prev => prev.content_type === "image").length);
     const [noMoreImages, setNoMoreImages] = useState(false);
     const [albumNotes, setAlbumNotes] = useState(albumData.filter(d => d.content_type === "note" && !d.is_pinned));
     const [noteLoading, setNoteLoading] = useState(false);
-    const [noteSkip, setNoteSkip] = useState(albumNotes.length);
+    const [noteSkip, setNoteSkip] = useState(albumNotes.length + pinnedData.filter(prev => prev.content_type === "note").length);
     const [noMoreNotes, setNoMoreNotes] = useState(false);
 
     const [choosenOne, setChoosenOne] = useState<any>(null);
@@ -50,11 +50,13 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
             }
 
             if (m === "image") {
-                setAlbumImages(prev => [...prev, ...result.memoryData]);
+                setAlbumImages(prev => [...prev, ...result.memoryData.filter((d: any) => !d.is_pinned)]);
+                setPinnedData(prev => [...prev, ...result.memoryData.filter((d: any) => d.is_pinned)]);
                 setImgSkip(result.skip);
                 setNoMoreImages(result.memoryData.length === 0);
             } else if (m === "note") {
-                setAlbumNotes(prev => [...prev, ...result.memoryData]);
+                setAlbumNotes(prev => [...prev, ...result.memoryData.filter((d: any) => !d.is_pinned)]);
+                setPinnedData(prev => [...prev, ...result.memoryData.filter((d: any) => d.is_pinned)]);
                 setNoteSkip(result.skip);
                 setNoMoreNotes(result.memoryData.length === 0);
             }
