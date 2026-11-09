@@ -1,6 +1,8 @@
 "use client";
 import { useThemeSettings } from "@/app/theme-provider";
 import { useEffect, useState, useRef } from "react";
+import Popups from "./Popups";
+import MemoryHolder from "../couple-profile/album/MemoryHolder";
 
 const Photograph = ({
     photograph = null,
@@ -36,6 +38,7 @@ const Photograph = ({
     cursor?: string;
 }) => {
     const { theme } = useThemeSettings();
+    const [show, setShow] = useState(false);
     const [imageURL, setImageURL] = useState<string | null>(null);
     const imageRef = useRef<HTMLImageElement>(null);
     const [cardWidth, setCardWidth] = useState<number | null>(null);

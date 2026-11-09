@@ -76,8 +76,10 @@ const PlayfulInput: React.FC<PlayfulInputProps> = ({
         maxLength={maxLength}
         onClick={() => onClick()}
         disabled={disabled}
-        className={`disabled:cursor-not-allowed border-4 border-solid flex font-bold outline-none ${noLeft ? "rounded-r-2xl" : "rounded-2xl"}`}
+        className={`disabled:cursor-not-allowed resize-none border-4 border-solid flex font-bold outline-none ${noLeft ? "rounded-r-2xl" : "rounded-2xl"}`}
         style={{
+            scrollbarWidth: "thin",
+            scrollbarColor: "var(--primary-text) transparent",
             boxShadow: `
         inset 3px -3px 5px rgba(0,0,0,0.08),
         inset -6px 6px 0px 0px var(--${borderColor}, ${borderColor})

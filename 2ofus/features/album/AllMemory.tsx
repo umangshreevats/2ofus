@@ -211,11 +211,10 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
                         </div>
                     </XScaleScroller>}
             </div>
+            <Popups open={show} setOpen={setShow}>
+                <MemoryHolder memoryInfo={choosenOne} />
+            </Popups>
         </section>
-
-        <Popups open={show} setOpen={setShow}>
-            <MemoryHolder memoryInfo={choosenOne} />
-        </Popups>
     </section>
 }
 

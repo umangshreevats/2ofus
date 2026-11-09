@@ -20,7 +20,7 @@ const MemoryHolder = ({ memoryInfo }: { memoryInfo: any }) => {
     }
 
     return <div className="w-full max-w-[calc(100vw-2rem)] max-h-[calc(100dvh-2rem)] overflow-auto mx-auto" style={{ scrollbarWidth: "none" }}>
-        <Photograph maxHeight={700} maxWidth={700} date={memoryInfo.memory_date} url={memoryInfo.media_id} alternate={`Photograph-${memoryInfo.id}`} name={memoryInfo.title} />
+        <Photograph maxHeight={700} maxWidth={700} date={memoryInfo.memory_date} url={memoryInfo.media_id} alternate={`Photograph-${memoryInfo.id}`} name={memoryInfo.title} showTitle={memoryInfo.showTitle} />
     </div>
 }
 
