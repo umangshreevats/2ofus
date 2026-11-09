@@ -1,7 +1,10 @@
 import AlbumTopSec from "@/components/couple-profile/album/AlbumTopSec";
 
-export default async function AlbumLayout({ children }: { children: React.ReactNode }) {
+interface PageProps {
+    children: React.ReactNode;
+}
 
+export default async function AlbumLayout({ children }: PageProps) {
 
     return <section className="w-full">
         <AlbumTopSec />

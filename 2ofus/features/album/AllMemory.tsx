@@ -151,7 +151,7 @@ const AllMemory = ({ albumData }: { albumData: unknown | null }) => {
 
                                         <AlbumData
                                             data={note}
-                                            dataType="image"
+                                            dataType="note"
                                             marginTop={1}
                                             handleChoosenOne={handleChoosenOne}
                                         />

@@ -14,6 +14,7 @@ import Button from "@/components/commons/Button";
 import DatePicker from "@/components/commons/DatePicker";
 import { toast } from "sonner";
 import { useAuth } from "@/app/auth-provider";
+import { useRouter } from "next/navigation";
 
 type MemoryType = "image" | "note";
 
@@ -40,6 +41,7 @@ const MemoryManager: React.FC<MemoryManagerProps> = ({
     memoryData = null,
 }) => {
 
+    const router = useRouter();
     const originalMemoryData = useRef<MemoryData | null>(memoryData);
     const { coupleData } = useAuth();
 
@@ -116,8 +118,13 @@ const MemoryManager: React.FC<MemoryManagerProps> = ({
                 return;
             }
             setShow(false);
+            toast.success(
+                editMode
+                    ? "Memory updated successfully!"
+                    : "Memory created successfully!"
+            );
 
-            toast.success("Memory created successfully!");
+            router.refresh();
         } catch (err) {
 
             if (err instanceof Error) {
@@ -167,6 +174,14 @@ const MemoryManager: React.FC<MemoryManagerProps> = ({
                         </label>
                         <PlayfulInput text={title} placeholder="Enter a title" onChange={(e) => setTitle(e.target.value)} textAlign="start" />
 
+                        <label className="w-full text-lg font-bold">The date for this memory: </label>
+                        <DatePicker
+                            placeholder="Pick the date for this memory"
+                            id="aniversary"
+                            value={memoryDate}
+                            onChange={(date: any) =>
+                                setMemoryDate(date)}
+                        />
                         {memoryType === "note" && <><label className="w-full font-medium text-primary-text">
                             Write a note:
                         </label>
@@ -207,15 +222,6 @@ const MemoryManager: React.FC<MemoryManagerProps> = ({
                             <Button type="button" className={`${!image && "hidden"}`} onClick={() => setImage(null)} text={"Remove Image"} backgroundColor="background" textColor="red" />
 
                         </>}
-
-                        <label className="w-full text-lg font-bold">The date for this memory: </label>
-                        <DatePicker
-                            placeholder="Pick the date for this memory"
-                            id="aniversary"
-                            value={memoryDate}
-                            onChange={(date: any) =>
-                                setMemoryDate(date)}
-                        />
 
                         <label className="w-full text-lg font-bold">How much is this memory close to your heart?: </label>
                         <div className="flex flex-wrap gap-2">

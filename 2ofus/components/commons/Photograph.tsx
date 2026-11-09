@@ -46,7 +46,7 @@ const Photograph = ({
 
     useEffect(() => {
 
-        if (!photograph && url.length === 0) {
+        if (!photograph && url && url.length === 0) {
             setImageURL(null);
             return;
         }

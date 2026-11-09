@@ -4,7 +4,6 @@ import Button from "@/components/commons/Button";
 import {
     LayoutGrid,
     Image,
-    CalendarHeart,
     NotebookPen
 } from "lucide-react";
 import { useState } from "react";
@@ -12,17 +11,20 @@ import Link from "next/link";
 import MemoryManager from "./MemoryManager";
 import Popups from "@/components/commons/Popups";
 import Headings from "@/components/commons/Headings";
+import { useSearchParams } from "next/navigation";
+
 
 const AlbumTopSec = () => {
 
     const [show, setShow] = useState(false);
     const options = [
         { id: "all", name: "All", icon: LayoutGrid, route: "/home/my-couple/album?m=all" },
-        { id: "photo", name: "Photos", icon: Image, route: "/home/my-couple/album?m=image" },
+        { id: "image", name: "Photos", icon: Image, route: "/home/my-couple/album?m=image" },
         { id: "note", name: "Notes", icon: NotebookPen, route: "/home/my-couple/album?m=note" }
     ];
 
-    const [selected, setSelected] = useState<string | null>(null);
+    const searchParams = useSearchParams();
+    const m = searchParams.get("m") ?? "all";
 
 
     return <div className="parent-box">
@@ -57,12 +59,16 @@ const AlbumTopSec = () => {
                 {options.map((opt) => {
                     const Icon = opt.icon;
 
-                    return <div key={opt.id}>
-                        <Link href={opt.route} className={`p-2 flex cursor-pointer text-white ${selected && selected === opt.id ? "bg-black" : "bg-accent"} 
-                        rounded-full gap-2`} onClick={() => setSelected(opt.id)}>
-                            {Icon && <Icon />} {opt.name}
+                    return (
+                        <Link
+                            key={opt.id}
+                            href={opt.route}
+                            className={`p-2 flex cursor-pointer text-white ${m === opt.id ? "bg-black" : "bg-accent"} rounded-full gap-2`}
+                        >
+                            <Icon />
+                            {opt.name}
                         </Link>
-                    </div>
+                    );
                 })}
             </nav>
         </div>
