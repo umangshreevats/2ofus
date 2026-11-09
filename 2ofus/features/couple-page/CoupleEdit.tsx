@@ -12,6 +12,7 @@ import InformationHolder from "@/components/profile-page/InformationHolder";
 import { toast } from "sonner";
 import { useThemeSettings } from "@/app/theme-provider";
 import Popups from "@/components/commons/Popups";
+import Image from "next/image";
 import ProfileEditing from "@/components/profile-page/ProfileEditing";
 
 
@@ -172,9 +173,10 @@ const CoupleEdit = ({ profileData, allowEdits }: { profileData: Couples, allowEd
                         </h4>
                         <PhotoFrame width={300} height={300} round={true}>
                             {profile.cover_image && profile.cover_image.length > 0 ?
-                                <img src={profile.cover_image} alt="profile Image" width={300} height={300} className="object-cover rounded-full" />
-                                : <div className="w-full h-full font-bold background-accent flex justify-center items-center">
-                                    <span className="text-2xl text-white">{profile.couple_name ? profile.couple_name[0].toUpperCase() : "S"} </span>
+                                <Image src={profile.cover_image} alt="profile Image" fill
+                                    sizes="(max-width: 640px) 85px, (max-width: 768px) 120px, (max-width: 1024px) 160px, 185px" className="object-cover rounded-full" />
+                                : <div className="w-full h-full font-bold bg-accent flex justify-center items-center">
+                                    <span className="text-7xl text-white">{profile.couple_name ? profile.couple_name[0].toUpperCase() : "S"} </span>
                                 </div>}
                         </PhotoFrame>
 
