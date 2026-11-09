@@ -19,6 +19,7 @@ const AlbumData = ({ dataType, data, handleChoosenOne, marginTop = "auto" }: { d
     const [albumData, setAlbumData] = useState(data);
     const { coupleData } = useAuth();
     const [edit, setEdit] = useState(false);
+    const [deleted, setDeleted] = useState(false);
     const dropDownOptions: Dropdown[] = [
         {
             id: "pin",
@@ -70,13 +71,14 @@ const AlbumData = ({ dataType, data, handleChoosenOne, marginTop = "auto" }: { d
             }
 
             toast.success("Memory deleted successfully");
+            setDeleted(true);
         } catch (err) {
             if (err instanceof Error) {
                 toast.error("An error occured: " + err.message);
             }
         }
     }
-
+    if (deleted) return null;
     return <>
         {dataType === "image" ? <div className="relative p-5"
             style={{
