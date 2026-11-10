@@ -89,7 +89,7 @@ const CoupleSettings = () => {
 
     ];
 
-    return <>
+    return <div>
 
         {/*Main settings display for the couple settings*/}
         <SettingsDisplay
@@ -106,7 +106,7 @@ const CoupleSettings = () => {
                 loading={coupleDelLoading}
             />
         </Popups>
-    </>
+    </div>
 }
 
 

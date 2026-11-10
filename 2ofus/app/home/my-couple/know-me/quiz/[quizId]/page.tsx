@@ -1,11 +1,12 @@
 import { createClient } from "@/utils/supabase/server";
 import QuizQuestionAnswer from "@/features/quiz/QuizQuestionAnswer";
 import { decrypt } from "@/lib/encryption";
+import { getCurrentUser } from "@/lib/auth";
 
 
 export default async function QuizSolvePage({ params }: { params: Promise<{ quizId?: string }>}) {
 
-
+    const { user } = await getCurrentUser();
     const { quizId } = await params;
 
     if(!quizId) {
@@ -23,6 +24,14 @@ export default async function QuizSolvePage({ params }: { params: Promise<{ quiz
     .single();
 
     if(quizInfoError || !quizInfo) throw quizInfoError;
+
+    if(quizInfo.conductor_id === user?.id) {
+        throw new Error("You cannot attempt the quiz created by you, the quiz is designed to be solved and attempted by your partner!");
+    }
+
+    if(quizInfo.status === "attempted") {
+        throw new Error("Seems like the quiz has already been attempted!");
+    }
 
     const decryptedTitle = decrypt(quizInfo.title);
 
@@ -65,8 +74,6 @@ export default async function QuizSolvePage({ params }: { params: Promise<{ quiz
             correct_options: decryptedCorrectOptions ? JSON.parse(decryptedCorrectOptions) : null,
         }
     });
-
-    console.log(updatedQuizQuestions);
 
 
     return <section>

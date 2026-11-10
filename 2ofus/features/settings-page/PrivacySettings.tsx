@@ -79,7 +79,7 @@ const PrivacySetting = () => {
             danger: true
         }
     ];
-    return <>
+    return <div>
         {/*Main settings display for the privacy and security settings*/}
         <SettingsDisplay
             title="Privacy & Security"
@@ -97,7 +97,7 @@ const PrivacySetting = () => {
             loading={profileLoading}
             />
         </Popups>
-    </>
+    </div>
 
 }
 

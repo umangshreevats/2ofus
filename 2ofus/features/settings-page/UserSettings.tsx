@@ -213,7 +213,7 @@ const UserSettings = () => {
         },
 
     ];
-    return <>
+    return <div className="w-full min-w-0 flex-1">
 
         {/*Main settings display for the app with all the user settings displayed*/}
         <SettingsDisplay title="User Settings" paragraph="Manage your personal account"
@@ -285,7 +285,7 @@ const UserSettings = () => {
 
             </SettingPopup>
         </Popups>
-    </>
+    </div>
 }
 
 

@@ -18,7 +18,13 @@ const SettingsDisplay = ({ title, paragraph, settingsOptions, icon }:
     const { theme } = useThemeSettings();
 
 
-    return <div className="w-full rounded-2xl bg-surface p-5 flex flex-col gap-5 component-shadow">
+    return <div className="w-full
+    rounded-2xl
+    bg-surface
+    p-5
+    flex flex-col
+    gap-5
+    component-shadow">
 
         {/*Headings part for the settings display*/}
         <div className="flex gap-5 items-center">
@@ -45,13 +51,13 @@ const SettingsDisplay = ({ title, paragraph, settingsOptions, icon }:
 
                     {/*Option Display*/}
 
-                    {option.onClick ? <button onClick={option.onClick} className="cursor-pointer w-full text-secondary-text font-rubik flex justify-between items-center">
-                        <div className="flex gap-2 items-center sm:gap-5">
-                            <div className="p-2 sm:p-5 rounded-full component-shadow aspect-square">
+                    {option.onClick ? <button onClick={option.onClick} className="cursor-pointer w-full text-secondary-text text-start font-rubik flex items-center">
+                        <div className="flex gap-2 items-start sm:gap-5">
+                            <div className="p-2 sm:p-5 rounded-full component-shadow aspect-square shrink-0">
                                 <OptionIcon />
                             </div>
 
-                            <div className="flex flex-1 min-w-0 flex-col gap-2">
+                            <div className="flex flex-1 min-w-0 flex-col items-start gap-2">
                                 <h4 className={`w-full ${option.danger ? "text-red-500" : "text-primary-text"} font-rubik text-lg sm:text-xl`}>
                                     {option.title}
                                 </h4>
@@ -61,7 +67,6 @@ const SettingsDisplay = ({ title, paragraph, settingsOptions, icon }:
                                 </p>
                             </div>
                         </div>
-
                         <div className="p-2 sm:p-5 shrink-0">
                             <SecondaryIcon />
                         </div>

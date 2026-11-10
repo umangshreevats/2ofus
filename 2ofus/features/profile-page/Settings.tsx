@@ -10,12 +10,13 @@ const Settings = () => {
 
     const { coupleData } = useAuth();
     return <section className="parent-box">
-        <div className="child-box md:grid flex flex-col md:grid-cols-[repeat(2, minmax(0, 1fr))] gap-5 p-5">
+        <div className="child-box
+    flex flex-col gap-5 p-5">
 
             {/*Top Heading section with redirect button*/}
             <div className="col-span-2 border-b-2 border-b-primary-text border-dashed">
-                <RedirectButton 
-                redirectLink="/home"
+                <RedirectButton
+                    redirectLink="/home"
                 />
                 <Headings
                     heading="Settings"
@@ -24,9 +25,11 @@ const Settings = () => {
             </div>
 
             {/*Display for all the settings together*/}
-            <UserSettings />
-            {coupleData && <CoupleSettings />}
-            <PrivacySetting />
+            <div className="w-full flex flex-col gap-5 xl:flex-row flex-wrap">
+                <UserSettings />
+                {coupleData && <CoupleSettings />}
+                <PrivacySetting />
+            </div>
         </div>
     </section>
 }
