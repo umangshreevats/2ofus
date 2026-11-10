@@ -18,6 +18,7 @@ export interface Users {
         hobbies?: string[];
         entertainment?: string[];
     } | null;
+    profile_image_path?: string | null;
     created_at?: string;
     updated_at?: string;
 }
@@ -47,6 +48,7 @@ export interface Couples {
         profile_image: string;
         interests: unknown;
     };
+    cover_image_path?: string | null;
     cover_image: string | null;
     relationship_status: RelationshipStatus;
     anniversary_date: string | null;

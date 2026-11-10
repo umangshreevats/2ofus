@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
-import { uploadProfileImage, getStoragePath } from "@/lib/supabase/storage";
+import { uploadProfileImage } from "@/lib/supabase/storage";
 import { getCurrentUser } from "@/lib/auth";
 
 
@@ -74,6 +74,7 @@ export const POST = async (request: NextRequest, { params }: { params: Promise<{
 
         if (uploadedImage) {
             updateData.profile_image = uploadedImage.publicUrl;
+            updateData.profile_image_path = uploadedImage.path;
         }
 
         const { data, error } = await supabase.from("users").update(updateData).eq("id", user.id).select().single();
@@ -180,14 +181,19 @@ export const PATCH = async (request: NextRequest, { params }: { params: Promise<
         }
 
         if (removeProfileImage === "true") {
-            const savedProfilePath = getStoragePath(userData.profile_image, "profile-images");
-
-            console.log(savedProfilePath);
-            await supabase.storage
+            const { data, error } = await supabase.storage
                 .from("profile-images")
-                .remove([savedProfilePath]);
+                .remove([userData.profile_image_path]);
+
+            console.log("Deletion response:", data);
+            console.log("Deletion error:", error);
+
+            if (error) {
+                throw new Error(`Storage deletion failed: ${error.message}`);
+            }
 
             updatedData.profile_image = null;
+            updatedData.profile_image_path = null;
         }
         if (profileImg instanceof File && profileImg.size > 0) {
 
@@ -196,6 +202,7 @@ export const PATCH = async (request: NextRequest, { params }: { params: Promise<
 
             if (uploadedImage) {
                 updatedData.profile_image = uploadedImage.publicUrl;
+                updatedData.profile_image_path = uploadedImage.path;
             }
         }
 

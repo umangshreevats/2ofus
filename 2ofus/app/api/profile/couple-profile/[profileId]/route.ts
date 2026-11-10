@@ -67,6 +67,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
                 relationship_status: status,
                 anniversary_date: aniversaryDate,
                 cover_image: uploadedImage?.publicUrl ?? null,
+                cover_image_path: uploadedImage?.path ?? null,
                 bio: description
             }).eq("id", profileId).select().single();
 
@@ -161,10 +162,10 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
         }
 
         if (formData.get("removeCoverImage") === "true") {
-            if (currentProfile.cover_image) {
+            if (currentProfile.cover_image && currentProfile.cover_image_path) {
                 const { error } = await supabaseAdmin.storage
                     .from("couple-bio-images")
-                    .remove([currentProfile.cover_image]);
+                    .remove([currentProfile.cover_image_path]);
 
                 if (error) {
                     console.error("Image deletion error:", error);
@@ -177,13 +178,15 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
             }
 
             updatedCoupleProfile.cover_image = null;
+            updatedCoupleProfile.cover_image_path = null;
         }
 
         const coverImage = formData.get("cover_image");
         if (coverImage &&
             (coverImage instanceof File && coverImage.size > 0)) {
-            const { publicUrl } = await uploadBioImage(supabase, coverImage, profileId);
+            const { path, publicUrl } = await uploadBioImage(supabase, coverImage, profileId);
             updatedCoupleProfile.cover_image = publicUrl;
+            updatedCoupleProfile.cover_image_path = path;
         }
 
         if (formData.get("bio") && typeof formData.get("bio") === "string") {
