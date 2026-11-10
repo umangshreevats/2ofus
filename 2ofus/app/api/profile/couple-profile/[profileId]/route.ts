@@ -169,11 +169,6 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
                 if (error) {
                     console.error("Image deletion error:", error);
-
-                    return NextResponse.json(
-                        { message: "Error deleting cover image" },
-                        { status: 500 }
-                    );
                 }
             }
 
@@ -298,6 +293,12 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
         }
 
         const supabase = await createClient();
+
+        const { error: coupleProfileImageError } = await supabase.storage.from("profile-images").remove([coupleData.cover_image_path]);
+
+        if (coupleProfileImageError) {
+            console.error("Error deleting the cover Image: ", coupleProfileImageError);
+        }
 
         // Delete couple profile
         const { data, error } = await supabase

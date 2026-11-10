@@ -135,7 +135,7 @@ const DropDown = ({
                         const commonClass = `
                             w-full p-2 cursor-pointer flex items-center gap-2
                             rounded-sm hover:bg-accent/10 transition-colors
-                            ${opt.danger ? "text-red-600" : ""}
+                            ${opt.danger ? "text-red-600" : "text-primary-text"}
                         `;
 
                         const menuItem = opt.href ? (

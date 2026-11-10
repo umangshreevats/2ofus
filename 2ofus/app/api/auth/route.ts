@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { getCurrentUser } from "@/lib/auth";
 
@@ -8,7 +7,7 @@ import { getCurrentUser } from "@/lib/auth";
 export async function DELETE() {
   try {
     // Verify the currently authenticated user
-    const { user } = await getCurrentUser();
+    const { user, userData } = await getCurrentUser();
 
     if (!user) {
       return NextResponse.json(
@@ -17,13 +16,17 @@ export async function DELETE() {
       );
     }
 
-    // Optional: collect storage paths before deletion.
-    // Database cascades do not delete Supabase Storage objects.
+
+    const { error } = await supabaseAdmin.storage.from("profile-images").remove([userData.profile_image_path]);
+
+    if(error) {
+      console.error("Error deleting the profile Image: ", error);
+    }
 
     // Delete the authenticated user using the Admin API
-    const { error } = await supabaseAdmin.auth.admin.deleteUser(user.id);
+    const { error: deleteUserError } = await supabaseAdmin.auth.admin.deleteUser(user.id);
 
-    if (error) {
+    if (deleteUserError) {
       console.error("Account deletion error:", error);
 
       return NextResponse.json(

@@ -61,7 +61,6 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
         .select("*")
         .eq("id", quizId)
         .eq("couple_id", coupleId)
-        .eq("conductor_id", user.id)
         .single();
 
         if(quizError) {
@@ -78,13 +77,22 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
             );
         }
 
-        const { data: deleteQuizQuestions, error: deleteQuizQuestionsError } = await supabase
+
+        if(quiz.conductor_id !== user.id) {
+
+            return NextResponse.json(
+                { message: "Forbidden" },
+                { status: 403 }
+            );
+        }
+
+        const { error: deleteQuizQuestionsError } = await supabase
         .from("quiz_questions")
         .delete()
         .eq("quiz_id", quizId);
 
 
-        if(deleteQuizQuestionsError || !deleteQuizQuestions) {
+        if(deleteQuizQuestionsError) {
 
             return NextResponse.json(
                 { message: "Error deleting quiz questions" },
@@ -99,7 +107,6 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
         .eq("id", quizId)
         .eq("couple_id", coupleId)
         .select("id")
-        .eq("conductor_id", user.id);
 
         if(deleteQuizError || !deleteQuiz) {
 

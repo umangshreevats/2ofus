@@ -189,7 +189,7 @@ export const PATCH = async (request: NextRequest, { params }: { params: Promise<
             console.log("Deletion error:", error);
 
             if (error) {
-                throw new Error(`Storage deletion failed: ${error.message}`);
+                console.error(`Storage deletion failed: ${error.message}`);
             }
 
             updatedData.profile_image = null;
