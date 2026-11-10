@@ -235,15 +235,20 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
                 .from("liking-unliking")
                 .createSignedUrl(media_id, 60 * 60);
 
+            if(urlError) {
+                console.error("Error occured while creating signed Url: ", urlError);
+            }
             url = urlData;
         }
         /*Sending the notification with the type memory to the other user*/
-        await createNotification({
+        const notification = await createNotification({
             senderId: user.id,
             recipientId: coupleData.partner_2.id === user.id ? coupleData.partner_1.id : coupleData.partner_2.id,
             type: "memory",
             image: url?.signedUrl ?? null        
         });
+
+        console.log("Notification: " + notification);
 
         return NextResponse.json(
             { message: "Memory Created Successfully", memory },

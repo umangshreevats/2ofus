@@ -107,5 +107,7 @@ export async function createNotification({
         return null;
     }
 
+    console.log("Notification created");
+
     return notification;
 }
