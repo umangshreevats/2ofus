@@ -3,7 +3,6 @@ import { createClient } from "@/utils/supabase/server";
 import { getCurrentUser } from "@/lib/auth";
 import { uploadMemoryImage } from "@/lib/supabase/storage";
 import { decrypt, encrypt } from "@/lib/encryption";
-import { createNotification } from "@/lib/notification/sendNotification";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 
 // GET: /api/couple/album/:coupleId?limit=&skip=&m=
@@ -228,27 +227,24 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
             );
         }
 
-        let url = null;
-
-        if (media_id) {
-            const { data: urlData, error: urlError } = await supabaseAdmin.storage
-                .from("liking-unliking")
-                .createSignedUrl(media_id, 60 * 60);
-
-            if(urlError) {
-                console.error("Error occured while creating signed Url: ", urlError);
-            }
-            url = urlData;
-        }
         /*Sending the notification with the type memory to the other user*/
-        const notification = await createNotification({
-            senderId: user.id,
-            recipientId: coupleData.partner_2.id === user.id ? coupleData.partner_1.id : coupleData.partner_2.id,
-            type: "memory",
-            image: url?.signedUrl ?? null        
-        });
+        const { data: notification, error: notificationError } = await supabaseAdmin
+            .from("notifications")
+            .insert({
+                sender: user.id,
+                type: "memory",
+                receiver: user.id === coupleData.partner_1.id ? coupleData.partner_2.id : coupleData.partner_1.id,
+                title: "Your partner has put a memory",
+                message: "Your partner has added something inside the album, you might be pleased about it."
+            })
+            .select()
+            .single();
 
-        console.log("Notification: " + notification);
+        if (notificationError) {
+            console.error(notificationError);
+        }
+
+        console.log("Notification: ", notification);
 
         return NextResponse.json(
             { message: "Memory Created Successfully", memory },
