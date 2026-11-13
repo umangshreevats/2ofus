@@ -1,15 +1,20 @@
 "use client";
 
-import { X } from "lucide-react";
+import { Bell, X } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/utils/supabase/client";
 import { useState, useEffect, SetStateAction } from "react";
 import { useAuth } from "@/app/auth-provider";
+import type { Notification } from "@/types/notifications";
 import { useNotifications } from "@/app/notification-provider";
+import { supabaseAdmin } from "@/lib/supabase/admin";
+import { updateNotifications } from "@/app/services/supabase/notifications";
 
 const Notifications = ({ setOpenNav }: { setOpenNav: React.Dispatch<SetStateAction<boolean>> }) => {
 
     const { notifications, markAsRead } = useNotifications();
+
+    const [notificationsClient, setNotificationsClient] = useState<Notification[]>([]);
 
 
 
@@ -20,9 +25,9 @@ const Notifications = ({ setOpenNav }: { setOpenNav: React.Dispatch<SetStateActi
                 Recent Notifications
             </h3>
 
-            <button type="button" 
-            onClick={() => setOpenNav(false)}
-            className="sm:hidden cursor-pointer">
+            <button type="button"
+                onClick={() => setOpenNav(false)}
+                className="sm:hidden cursor-pointer">
                 <X />
             </button>
         </div>
@@ -46,7 +51,7 @@ const Notifications = ({ setOpenNav }: { setOpenNav: React.Dispatch<SetStateActi
                             />
                         ) : (
                             <span className="text-primary-text text-lg">
-                                🔔
+                                <Bell color="#B8860B" />
                             </span>
                         )}
                     </div>

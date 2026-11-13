@@ -233,6 +233,10 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
             .insert({
                 sender: user.id,
                 type: "memory",
+                image_path: media_id,
+                metadata: {
+                    image_bucket: "couple-memories",
+                },
                 receiver: user.id === coupleData.partner_1.id ? coupleData.partner_2.id : coupleData.partner_1.id,
                 title: "Your partner has put a memory",
                 message: "Your partner has added something inside the album, you might be pleased about it."

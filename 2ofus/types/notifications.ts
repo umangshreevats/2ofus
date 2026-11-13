@@ -18,6 +18,8 @@ export type Notification = {
     title: string;
     message: string;
     image: string | null;
+    image_path: string | null;
+    metadata: any;
     is_read: boolean;
     created_at: string;
     type: NotificationType;

@@ -51,13 +51,9 @@ export const POST = async (request: NextRequest) => {
         }
 
         const image = formData.get("image");
-        let imageUrl = null;
         if (image && image instanceof File) {
-            const { url, path } = await uploadTellAndGetImage(supabase, image, coupleData.id, "liking");
+            const { path } = await uploadTellAndGetImage(supabase, image, coupleData.id, "liking");
             insertValues.image_id = path;
-
-            // image url extraction for notification
-            imageUrl = url;
         }
 
         const { data, error } = await supabase
@@ -82,8 +78,12 @@ export const POST = async (request: NextRequest) => {
                 sender: user.id,
                 receiver: coupleData.partner_1.id === user.id ? coupleData.partner_2.id : coupleData.partner_1.id,
                 title: "Your partner shared an liking for you",
-                image: imageUrl,
-                message: "Check what your partner has shared for you"
+                image_path: insertValues.image_id,
+                metadata: {
+                    image_bucket: "liking-unliking",
+                },
+                message: "Check what your partner has shared for you",
+                type: "liking"
             });
 
         if (notificationError) {

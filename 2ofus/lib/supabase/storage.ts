@@ -155,17 +155,7 @@ export async function uploadTellAndGetImage(
         throw new Error(error.message);
     }
 
-    const { data: urlData, error: urlError } = await supabaseAdmin.storage
-        .from("liking-unliking")
-        .createSignedUrl(data.path, 60 * 60);
-
-    if (urlError) {
-        console.error("Signed URL Error:", urlError);
-        throw new Error(urlError.message);
-    }
-
     return {
-        url: urlData.signedUrl,
         path: data.path
     };
 }

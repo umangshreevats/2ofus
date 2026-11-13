@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { encrypt } from "@/lib/encryption";
 import { uploadTellAndGetImage } from "@/lib/supabase/storage";
+import Unliking from "@/features/tell-and-get/Unliking";
 
 
 
@@ -51,14 +52,9 @@ export const POST = async (request: NextRequest) => {
         }
 
         const image = formData.get("image");
-        let imageUrl = null;
         if (image && image instanceof File) {
-            const { url, path } = await uploadTellAndGetImage(supabase, image, coupleData.id, "unliking");
+            const { path } = await uploadTellAndGetImage(supabase, image, coupleData.id, "unliking");
             insertValues.image_id = path;
-
-            // image url extraction for notification
-
-            imageUrl = url;
         }
 
         const { data, error } = await supabase
@@ -83,7 +79,10 @@ export const POST = async (request: NextRequest) => {
                 sender: user.id,
                 receiver: coupleData.partner_1.id === user.id ? coupleData.partner_2.id : coupleData.partner_1.id,
                 title: "Your partner shared a un-liking for you",
-                image: imageUrl,
+                image_path: insertValues.image_id,
+                metadata: {
+                    image_bucket: "liking-unliking",
+                },
                 message: "See what your partner has to say about you!"
             });
 
