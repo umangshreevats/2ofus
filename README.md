@@ -186,20 +186,17 @@ The final part included some improvements throughout the platform, fixing minor 
 
 # Screenshots
 
+![Landing](/screenshots/Landing_1.png)
+
 ![Working](/screenshots/Landing_2.png)
 
 ![Login](/screenshots/Landing_3.png)
 
 ![Search/Home](/screenshots/Search.png)
 
-![Couple/Home](/screenshots/Home_1.png)
 
 ![Couple/Home/Down](/screenshots/Home_2.png)
-
-![Album](/screenshots/Album.png)
 
 ![Quiz](/screenshots/Quiz.png)
 
 ![Liking](/screenshots/Liking.png)
-
-![Profile](/screenshots/Profile.png)
