@@ -48,6 +48,8 @@ const InterestCategory = ({ username, setPage, setOption, interestsList }: { use
             }
 
             toast.success("Interests saved successfully:", result);
+            router.replace("/home");
+            router.refresh();
         } catch (err: unknown) {
 
             if (err instanceof Error) {
@@ -69,9 +71,9 @@ const InterestCategory = ({ username, setPage, setOption, interestsList }: { use
             <div className="w-full p-5 flex flex-col items-center gap-5">
                 <h3 className="w-full text-2xl">Select Interest From Each Category: </h3>
 
-                <div className="w-2/3 grid grid-cols-2 gap-1">
+                <div className="w-2/3 flex flex-wrap gap-1">
                     {interests.map((interest, _) => (
-                        <div onClick={() => handleInterest(interest.id)} key={interest.id} className="w-full cursor-pointer h-full border-2 border-solid border-accent rounded-sm p-5 gap-5 flex flex-col justify-center items-start">
+                        <div onClick={() => handleInterest(interest.id)} key={interest.id} className="cursor-pointer border-2 border-solid border-accent rounded-sm p-5 gap-5 flex flex-col justify-center items-start">
                             <span className="text-2xl">{interest.emoji}</span>
                             <span>{interest.name}</span>
                             {interest.status ? <span className="p-1 rounded-full text-sm font-light bg-green-500/40 text-green-500">Completed</span> :

@@ -72,6 +72,8 @@ const ProfileForm: React.FC<ProfileFormProps> = ({ username, profileData, setPro
             const result = await response.json();
             if (!response.ok) {
                 toast.error(result.message || "Profile creation failed");
+                setLoading(false);
+                return;
             }
 
             toast.success("Profile informations stored successfully");
