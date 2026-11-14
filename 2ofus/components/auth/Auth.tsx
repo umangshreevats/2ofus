@@ -84,8 +84,7 @@ const Auth = ({ setOpen, signIn: si }: { signIn: boolean, setOpen: React.Dispatc
             options: {
                 data: {
                     username
-                },
-                emailRedirectTo: 'https://2ofus-drab.vercel.app/'
+                }
             }
         });
 
