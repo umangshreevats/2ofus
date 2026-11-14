@@ -2,10 +2,10 @@
 import React, { useState, SetStateAction, FormEvent } from "react";
 import Button from "../commons/Button";
 import { X } from 'lucide-react';
-import { FcGoogle } from "react-icons/fc";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { validateSignup } from "@/utils/auth/verifications";
 
 
 // This component is very complicated, rather than dividing the sign in, and sign up pages in two different component,
@@ -73,8 +73,37 @@ const Auth = ({ setOpen, signIn: si }: { signIn: boolean, setOpen: React.Dispatc
 
         setLoading(true);
 
-        if (username.length === 0 || email.length === 0 || password.length === 0) {
+        if (username.trim().length === 0 || email.trim().length === 0 || password.trim().length === 0) {
             toast.error("Some or all entries are empty");
+            setLoading(false);
+            return;
+        }
+
+        const validationFailed = validateSignup(username, email, password);
+        if (validationFailed) {
+            toast.error(validationFailed);
+            setLoading(false);
+            return;
+        }
+
+        // Username availability
+
+        const { data: existingUsername, error: existingUsernameError } = await supabase.rpc(
+            "check_username_exists",
+            {
+                input_username: username
+            }
+        );
+
+        if (existingUsernameError) {
+            toast.error("Unable to verify the username");
+            setLoading(false);
+            return;
+        }
+
+        if (existingUsername) {
+            toast.error("Username already exists");
+            setLoading(false);
             return;
         }
 
@@ -92,6 +121,11 @@ const Auth = ({ setOpen, signIn: si }: { signIn: boolean, setOpen: React.Dispatc
 
         if (error) {
             toast.error("Something went wrong: " + error.message);
+            return;
+        }
+
+        if (data.user?.identities?.length === 0) {
+            toast.error("An account with this email may already exist.");
             return;
         }
 
