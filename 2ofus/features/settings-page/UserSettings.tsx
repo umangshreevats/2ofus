@@ -107,8 +107,9 @@ const UserSettings = () => {
             toast.error("Invalid or expired OTP.");
             return false;
         }
-
+        toast.success("OTP verified successfully!");
         setForgotPassword(false);
+        setOtpVerified(true);
 
         return true;
     };
