@@ -8,12 +8,14 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/utils/supabase/client";
 import { toast } from "sonner";
 import { verifyClient } from "@/utils/supabase/verify-client";
+import { useRouter } from "next/navigation";
 
 
 const UserSettings = () => {
 
 
     const { userData } = useAuth();
+    const router = useRouter();
 
     /*
     State managment to show the popups to configure the available settings.*/
@@ -169,6 +171,17 @@ const UserSettings = () => {
         setChangePassword(false);
     };
 
+    const handleSignOut = async () => {
+        const { error } = await supabase.auth.signOut();
+
+        if (error) {
+            console.error("Sign out failed:", error.message);
+            return;
+        }
+        router.replace("/");
+        router.refresh();
+    };
+
     /*Display of all the users settings
     including the username changing and the password changing along with logging-out*/
     const userSettings = [
@@ -206,7 +219,7 @@ const UserSettings = () => {
             id: "loggout",
             title: "Logout",
             paragraph: "Sign out from this website.",
-            onClick: () => { },
+            onClick: handleSignOut,
             link: null,
             icon: LogOut,
             secondaryIcon: ArrowRight,

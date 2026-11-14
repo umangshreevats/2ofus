@@ -39,7 +39,7 @@ const ProfileIcon = () => {
             console.error("Sign out failed:", error.message);
             return;
         }
-        router.push("/");
+        router.replace("/");
         router.refresh();
     };
 
