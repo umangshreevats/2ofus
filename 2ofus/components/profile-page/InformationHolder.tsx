@@ -43,7 +43,7 @@ const InformationHolder = ({
     | "bio",
     selectedImage: File | null;
     setSelectedImage: React.Dispatch<SetStateAction<File | null>>;
-    originalProfile?: React.RefObject<Users>;
+    originalProfile?: React.RefObject<Users | null>;
     originalCouple?: React.RefObject<Couples>;
 }) => {
 

@@ -3,7 +3,7 @@
 import Headings from "@/components/commons/Headings";
 import PlayfulButton from "@/components/commons/PlayfulButton";
 import type { Users } from "@/types/profiles";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
     Pencil, AtSign,
     Mail,
@@ -36,8 +36,8 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
 
     const { theme } = useThemeSettings();
 
-    const originalProfile = useRef<Users>(
-        structuredClone(userInfo)
+    const originalProfile = useRef<Users | null>(
+        null
     );
 
     const [loading, setLoading] = useState(false);
@@ -48,9 +48,16 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
     let fullName = profile.firstname ? profile.firstname : "";
 
     if (fullName === profile.firstname) {
-        fullName = fullName + " " + profile.lastname;
+        fullName = fullName + " " + (profile.lastname ? profile.lastname : "");
     }
 
+    useEffect(() => {
+
+        if (userInfo && Object.keys(userInfo).length > 0) {
+            setProfile(userInfo);
+            originalProfile.current = userInfo;
+        }
+    }, [userInfo]);
 
     // Refs
     const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -84,9 +91,15 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
                 "interests"
             ];
 
+            const original = originalProfile.current;
+
+            if (!original) {
+                toast.error("There seems to be some failure retrieving your profile information.");
+                return;
+            }
             // Compare original and edited profile
             editableFields.forEach((field) => {
-                const originalValue = originalProfile.current[field];
+                const originalValue = original[field];
                 const editedValue = profile[field];
 
                 const hasChanged =
@@ -112,11 +125,11 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
 
             // Profile image comparison
             if (selectedImage) {
-                if (originalProfile.current.profile_image !== null) formData.append("removeProfileImage", "true");
+                if (original.profile_image !== null) formData.append("removeProfileImage", "true");
                 else formData.append("removeProfileImage", "false");
                 formData.append("profile_image", selectedImage);
             } else if (
-                originalProfile.current.profile_image &&
+                original.profile_image &&
                 !profile.profile_image
             ) {
                 formData.append("removeProfileImage", "true");
@@ -144,8 +157,10 @@ const ProfileInformations = ({ userInfo, allowEdits }: {
             }
             setSelectedImage(null);
 
+            setProfile(result.profileUpdateData);
+            
             // Update original snapshot
-            originalProfile.current = structuredClone(result.user);
+            originalProfile.current = structuredClone(result.profileUpdateData);
 
             toast.success("Profile updated!");
 

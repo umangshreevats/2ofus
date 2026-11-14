@@ -35,7 +35,7 @@ const ProfileEditing = ({
     setCoupleData?: React.Dispatch<SetStateAction<Couples>>;
     selectedImage: File | null;
     setSelectedImage: React.Dispatch<SetStateAction<File | null>>;
-    originalProfile?: React.RefObject<Users>;
+    originalProfile?: React.RefObject<Users | null>;
     originalCouple?: React.RefObject<Couples>;
 }) => {
 

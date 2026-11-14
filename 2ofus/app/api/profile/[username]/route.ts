@@ -157,14 +157,22 @@ export const PATCH = async (request: NextRequest, { params }: { params: Promise<
 
 
         const editableFields = ["firstname", "lastname", "dob", "gender"] as const;
-
+        let lastnameNot = false;
         editableFields.forEach((field) => {
+
             if (formData.has(field)) {
+                if (field === "firstname" && formData.get(field) === "") {
+                    lastnameNot = true;
+                }
                 const value = formData.get(field);
                 updatedData[field] = value === "" ? null : String(value);
             }
         });
 
+        if(lastnameNot) {
+            updatedData.lastname = "";
+        }
+        
         if (interests) {
 
             try {

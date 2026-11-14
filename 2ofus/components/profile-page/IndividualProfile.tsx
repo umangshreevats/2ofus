@@ -24,7 +24,7 @@ const interestCategories: {
     )
 }));
 
-const genders = ["male", "female", "other"];
+const genders = ["male", "female", "others"];
 const IndividualProfile = ({
     profileInfo,
     setSelectedImage,
@@ -37,7 +37,7 @@ const IndividualProfile = ({
             profileType: "users",
             profileData: Users,
             setProfileData: React.Dispatch<SetStateAction<Users>>,
-            originalProfile: React.RefObject<Users>
+            originalProfile: React.RefObject<Users | null>
         },
         selectedImage: File | null,
         setSelectedImage: React.Dispatch<SetStateAction<File | null>>,
@@ -98,10 +98,20 @@ const IndividualProfile = ({
                     "interests"
                 ];
 
+                const original = originalProfile.current;
+
+                if (!original) {
+                    toast.error("There seems to be some failure retrieving your profile information.");
+                    return;
+                }
+
                 // Compare original and edited profile
                 editableFields.forEach((field) => {
-                    const originalValue = originalProfile.current[field];
+
+                    
+                    const originalValue = original[field];
                     const editedValue = profileData[field];
+
 
                     const hasChanged =
                         JSON.stringify(originalValue ?? null) !==
@@ -129,7 +139,7 @@ const IndividualProfile = ({
                     formData.append("removeProfileImage", "true");
                     formData.append("profile_image", selectedImage);
                 } else if (
-                    originalProfile.current.profile_image &&
+                    original.profile_image &&
                     !profileData.profile_image
                 ) {
                     formData.append("removeProfileImage", "true");
@@ -156,8 +166,10 @@ const IndividualProfile = ({
 
                 setSelectedImage(null);
 
+
+                setProfileData(result.profileUpdateData);
                 // Update original snapshot
-                originalProfile.current = structuredClone(result.user);
+                originalProfile.current = structuredClone(result.profileUpdateData);
 
                 toast.success("Profile updated!");
 
@@ -306,7 +318,7 @@ const IndividualProfile = ({
                             </h5>
 
                             <div className="flex flex-wrap gap-2">
-                                {category.options.map(option => {
+                                {category.options.map((option, i) => {
                                     const selected = isSelected(
                                         category.key,
                                         option
@@ -314,7 +326,7 @@ const IndividualProfile = ({
 
                                     return (
                                         <button
-                                            key={option}
+                                            key={i}
                                             type="button"
                                             onClick={() =>
                                                 toggleInterest(
