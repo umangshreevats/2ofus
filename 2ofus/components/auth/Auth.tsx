@@ -173,7 +173,7 @@ const Auth = ({ setOpen, signIn: si }: { signIn: boolean, setOpen: React.Dispatc
                 <div className="w-full flex justify-center">{signIn ? "Don't have an account yet? " : "Already have an account! "} <button
                     onClick={() => setSign(!signIn)}
                     disabled={loading}
-                    type="button" className="ml-2 cursor-pointer text-secondary-text inline">{signIn ? " sign-up" : " sign-in"}</button></div>
+                    type="button" className="ml-2 cursor-pointer text-secondary-text inline">{signIn ? "Sign Up" : "Sign In"}</button></div>
             </form> :
             <form onSubmit={handleSignUpSubmit}
                 className="w-full sm:w-[400px] bg-background text-primary-text gap-5 flex flex-col items-center p-5">
@@ -208,7 +208,7 @@ const Auth = ({ setOpen, signIn: si }: { signIn: boolean, setOpen: React.Dispatc
                     <button
                         onClick={() => setSign(!signIn)}
                         disabled={loading}
-                        type="button" className="ml-2 cursor-pointer text-secondary-text inline"> {signIn ? "sign-up" : "sign-in"}</button>
+                        type="button" className="ml-2 cursor-pointer text-secondary-text inline"> {signIn ? "Sign Up" : "Sign In"}</button>
                 </div>
 
             </form>}

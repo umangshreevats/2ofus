@@ -186,14 +186,6 @@ export function NotificationProvider({
             console.error(error);
             return;
         }
-
-        setNotifications((prev) =>
-            prev.map((notification) =>
-                notification.id === notificationId
-                    ? { ...notification, is_read: true }
-                    : notification
-            )
-        );
     };
 
 

@@ -118,6 +118,7 @@ const SearchPage = async ({ searchParams }: Props) => {
             <div className="child-box flex flex-col justify-start gap-5 min-h-screen">
                 <div>
                     <RedirectButton
+                    redirectLink="/home"
                     />
                 </div>
                 <h1>Search results for <strong>{query}</strong></h1>

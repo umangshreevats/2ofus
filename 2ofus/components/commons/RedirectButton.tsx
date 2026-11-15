@@ -7,15 +7,20 @@ import Button from "./Button";
 const RedirectButton = ({ text = "", redirectLink }: { text?: string, redirectLink?: string }) => {
 
     const router = useRouter();
-
+    const handleClick = () => {
+        if (redirectLink) {
+            router.replace(redirectLink);
+            router.refresh();
+        } else {
+            router.back();
+            router.refresh();
+        }
+    };
     return <Button
         type="button"
         text={text}
         icon={ArrowLeft}
-        onClick={() => {
-            redirectLink && redirectLink.length > 0 ? router.replace(redirectLink) : router.back();
-            router.refresh();
-        }}
+        onClick={handleClick}
     />
 }
 
