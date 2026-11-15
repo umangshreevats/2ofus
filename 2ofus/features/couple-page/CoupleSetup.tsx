@@ -24,6 +24,17 @@ const CoupleSetup = ({ profileId }: { profileId: string }) => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
         e.preventDefault();
+
+        if (
+            !coupleName.trim() ||
+            !bioImage ||
+            !aniversaryDate ||
+            !description.trim() ||
+            !relationshipStatus.trim()
+        ) {
+            toast.error("One or more fields are missing.");
+            return;
+        }
         setLoading(true);
 
         try {

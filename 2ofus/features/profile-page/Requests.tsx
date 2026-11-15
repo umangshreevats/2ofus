@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useNotifications } from "@/app/notification-provider";
 import PhotoFrame from "@/components/commons/PhotoFrame";
+import PlayfulButton from "@/components/commons/PlayfulButton";
+import { RefreshCcw } from "lucide-react";
 
 /*
 This component is to display current user's requests received and the requests
@@ -18,6 +20,18 @@ const Requests = ({ requestsSend, requestsReceived }: { requestsSend: any, reque
     const { newRequest, setNewRequest, requestRejected, setRequestRejected } = useNotifications();
     const [reqSend, setReqSend] = useState(requestsSend);
     const [reqReceived, setReqReceived] = useState(requestsReceived);
+
+    const [showRefresh, setShowRefresh] = useState(false);
+
+    useEffect(() => {
+        const navigation = performance.getEntriesByType(
+            "navigation"
+        )[0] as PerformanceNavigationTiming;
+
+        if (navigation?.type === "navigate") {
+            setShowRefresh(true);
+        }
+    }, []);
 
     /*
     Function to do operations on the requests send or received by the user, they can be either accepting
@@ -70,7 +84,7 @@ const Requests = ({ requestsSend, requestsReceived }: { requestsSend: any, reque
 
     useEffect(() => {
 
-        if(requestRejected && requestRejected.length > 0) {
+        if (requestRejected && requestRejected.length > 0) {
             toast.info("Your coupling request have been rejected!");
             setReqSend((prev: any[]) => prev.filter(req => req.id !== requestRejected));
             setRequestRejected(null);
@@ -79,9 +93,13 @@ const Requests = ({ requestsSend, requestsReceived }: { requestsSend: any, reque
 
     return <div className="w-full grid grid-cols-1 grid-rows-[1fr_repeat(2, 2fr)] md:grid-rows-[1fr_2fr] md:grid-cols-2">
 
-        <h3 className="w-full md:col-span-2 p-2 text-2xl font-bold">
-            Check your requests status
-        </h3>
+        <div className="w-full flex items-center gap-5 md:col-span-2">
+            <h3 className="w-full p-2 text-2xl font-bold">
+                Check your requests status
+            </h3>
+
+            {showRefresh && <PlayfulButton text="Refresh to see if anything new" icon={RefreshCcw} onClick={() => window.location.reload()} />}
+        </div>
 
         {/*Requests send to which users*/}
         <div className="w-full h-full p-2 flex gap-1 flex-col">
