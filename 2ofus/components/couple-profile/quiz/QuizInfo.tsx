@@ -8,7 +8,7 @@ import type { QuizInfoProps } from "@/types/quiz";
 import { Copy, Ellipsis, Eye, Trash2 } from "lucide-react";
 import { Dropdown } from "@/types/dropdown";
 import DropDown from "@/components/commons/DropDown";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import Popups from "@/components/commons/Popups";
 import Delete from "@/components/commons/Delete";
@@ -46,7 +46,7 @@ const QuizInfo = ({
 
             const result = await response.json();
 
-            if(!response.ok) {
+            if (!response.ok) {
                 toast.error("Error deleting the quiz: " + result.message);
                 return;
             }
@@ -54,16 +54,24 @@ const QuizInfo = ({
             toast.success("Quiz Deleted Successfully");
             setDeleted(true);
         } catch (err) {
-            if(err instanceof Error) {
+            if (err instanceof Error) {
                 toast.error("Error deleting the quiz: " + err.message);
             }
         }
     }
-    const quizDropDown: Dropdown[] = [
+    const [quizDropDown, setQuizDropDown] = useState<Dropdown[]>([
         { id: "copy-link", name: "Copy Link", icon: Copy, onClick: () => handleCopy(`/home/my-couple/know-me/quiz/${quizInfo.id}`) },
-        { id: "view", name: "View", icon: Eye, href: `/home/my-couple/know-me/quiz/view/${quizInfo.id}` },
-        { id: "delete", name: "Delete", icon: Trash2, danger: true, onClick: () => setDel(true) }
-    ];
+        { id: "view", name: "View", icon: Eye, href: `/home/my-couple/know-me/quiz/view/${quizInfo.id}` }
+    ]);
+
+    useEffect(() => {
+        if (quizInfo.conductor_id === user.id) {
+            setQuizDropDown(prev => [...prev, {
+                id: "delete", name: "Delete",
+                icon: Trash2, danger: true, onClick: () => setDel(true)
+            }]);
+        }
+    }, [quizInfo]);
 
     const createdDate = new Date(quizInfo.created_at).toLocaleDateString(
         "en-IN",
@@ -104,7 +112,7 @@ const QuizInfo = ({
     };
 
 
-    if(deleted) {
+    if (deleted) {
         return null;
     }
 
@@ -198,7 +206,7 @@ const QuizInfo = ({
 
             </div>
             <Popups open={del} setOpen={setDel} className="rounded-2xl">
-                <Delete setOpen={setDel} deleteFunction={deleteQuiz} title="Delete Quiz" message="Are you sure you want to delete the quiz?"/>
+                <Delete setOpen={setDel} deleteFunction={deleteQuiz} title="Delete Quiz" message="Are you sure you want to delete the quiz?" />
             </Popups>
         </div>
     );
